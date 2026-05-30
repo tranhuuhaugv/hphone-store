@@ -136,6 +136,10 @@ nav{position:fixed;top:38px;left:0;right:0;z-index:100;background:rgba(10,10,10,
 .btn-detail:hover{background:var(--gray-800)}
 .btn-zalo{padding:10px 14px;background:transparent;color:var(--gray-600);font-family:var(--font-body);font-size:13px;font-weight:500;border:1px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;gap:6px}
 .btn-zalo:hover{background:#e8f4ff;border-color:#0068ff;color:#0068ff}
+.btn-buy-now{padding:10px 14px;background:var(--accent);color:var(--black);font-family:var(--font-body);font-size:13px;font-weight:600;border:none;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.btn-buy-now:hover{background:var(--accent-light)}
+.product-img .add-cart-overlay{position:absolute;bottom:0;left:0;right:0;background:rgba(10,10,10,0.75);color:#fff;font-size:13px;font-weight:600;text-align:center;padding:11px;cursor:pointer;transform:translateY(100%);transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:6px;border:none;width:100%}
+.product-card:hover .add-cart-overlay{transform:translateY(0)}
 .products-more{display:flex;justify-content:center;margin-top:40px}
 
 /* ── TRUST ── */
@@ -793,7 +797,11 @@ document.querySelector('.modal-close').addEventListener('click', function() {
     return `<div class="product-card" onclick="location.href='chi-tiet-san-pham?id=${p.id}'">
       <div class="product-img" style="position:relative">
         ${imgHTML}
-        <div class="product-badge ${badgeCls}">${p.badge||p.condition||''}</div>
+
+        <button class="add-cart-overlay" onclick="event.stopPropagation();tcAddToCart(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Thêm vào giỏ
+        </button>
       </div>
       <div class="product-body">
         <div class="product-name">${p.name}</div>
@@ -806,15 +814,32 @@ document.querySelector('.modal-close').addEventListener('click', function() {
         <div class="product-price">${p.price}<span class="currency">₫</span></div>
         <div class="product-actions">
           <a href="chi-tiet-san-pham?id=${p.id}" class="btn-detail" onclick="event.stopPropagation()">Xem chi tiết</a>
-          <button class="btn-zalo" onclick="event.stopPropagation();window.open('https://zalo.me/0379443613','_blank')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#0068ff"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.7 4.19 1.87 5.83L2.5 21.5l3.83-1.33C7.83 21.33 9.85 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
-            Chat Zalo
-          </button>
+          <button class="btn-buy-now" onclick="event.stopPropagation();tcBuyNow(${JSON.stringify(p).replace(/"/g,'&quot;')})">Mua ngay</button>
         </div>
       </div>
     </div>`;
   }).join('');
 })();
+
+function tcAddToCart(p) {
+  let cart = JSON.parse(localStorage.getItem('hphone_cart') || '[]');
+  const idx = cart.findIndex(x => x.id === p.id);
+  if(idx > -1) { cart[idx].qty = (cart[idx].qty || 1) + 1; }
+  else { cart.push({...p, qty: 1}); }
+  localStorage.setItem('hphone_cart', JSON.stringify(cart));
+  const badge = document.querySelector('.cart-badge');
+  if(badge) badge.textContent = cart.reduce((s,x)=>s+(x.qty||1),0);
+  const toast = document.createElement('div');
+  toast.textContent = '✓ Đã thêm vào giỏ hàng';
+  toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0a0a0a;color:#fff;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2)';
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.remove(), 2000);
+}
+
+function tcBuyNow(p) {
+  tcAddToCart(p);
+  window.location.href = 'gio-hang';
+}
 </script>
 </body>
 </html>
