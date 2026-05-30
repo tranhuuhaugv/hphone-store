@@ -146,6 +146,11 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 .product-card .btn-d:hover{background:var(--gray-800)}
 .product-card .btn-z{background:transparent;color:var(--gray-600);border:1px solid var(--gray-200);display:flex;align-items:center;justify-content:center;gap:5px}
 .product-card .btn-z:hover{background:#e8f4ff;border-color:#0068ff;color:#0068ff}
+.product-card .btn-buy{background:var(--accent);color:var(--black);border:none;font-weight:600}
+.product-card .btn-buy:hover{background:var(--accent-light)}
+.product-card .img{position:relative;overflow:hidden}
+.product-card .img .add-cart-overlay{position:absolute;bottom:0;left:0;right:0;background:rgba(10,10,10,0.75);color:#fff;font-size:13px;font-weight:600;text-align:center;padding:11px;cursor:pointer;transform:translateY(100%);transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:6px;border:none;width:100%}
+.product-card:hover .img .add-cart-overlay{transform:translateY(0)}
 .pagination{display:flex;justify-content:center;gap:8px;margin-top:44px}
 .page-btn{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--gray-200);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;cursor:pointer;transition:var(--transition);background:var(--white)}
 .page-btn:hover{border-color:var(--black)}
@@ -363,8 +368,8 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       const isLikeNew = (p.badge||'').toLowerCase().includes('like new') || (p.condition||'').toLowerCase().includes('like new');
       const badgeCls = isLikeNew ? 'gold' : 'dark';
       const imgBlock = p.img
-        ? `<div class="phone-mock img" style="position:relative"><img src="${p.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:var(--radius-lg)"><span class="badge ${badgeCls}" style="position:absolute;top:14px;left:14px">${p.badge||p.condition||''}</span></div>`
-        : `<div class="phone-mock${p.brand==='samsung'?' samsung':''} img"><span class="badge ${badgeCls}">${p.badge||p.condition||''}</span><div class="inner"><span>${p.short||p.name}</span></div></div>`;
+        ? `<div class="phone-mock img" style="position:relative"><img src="${p.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:var(--radius-lg)"><span class="badge ${badgeCls}" style="position:absolute;top:14px;left:14px">${p.badge||p.condition||''}</span><button class="add-cart-overlay" onclick="addToCart(${JSON.stringify(p).replace(/"/g,'&quot;')})"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Thêm vào giỏ</button></div>`
+        : `<div class="phone-mock${p.brand==='samsung'?' samsung':''} img"><span class="badge ${badgeCls}">${p.badge||p.condition||''}</span><div class="inner"><span>${p.short||p.name}</span></div><button class="add-cart-overlay" onclick="addToCart(${JSON.stringify(p).replace(/"/g,'&quot;')})"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Thêm vào giỏ</button></div>`;
       return `<div class="product-card">
         ${imgBlock}
         <div class="body">
@@ -378,8 +383,8 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
           <div class="price">${p.price}<span class="cur">₫</span>${p.old_price?`<span style="font-size:13px;font-family:var(--font-body);font-weight:400;color:var(--gray-400);text-decoration:line-through;margin-left:8px">${p.old_price}₫</span>`:''}</div>
           <div class="actions">
             <a href="chi-tiet-san-pham?id=${p.id}" class="btn-d">Xem chi tiết</a>
-            <a href="https://zalo.me/0379443613" target="_blank" class="btn-z">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.7 4.19 1.87 5.83L2.5 21.5l3.83-1.33C7.83 21.33 9.85 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg> Zalo
+            <a href="#" class="btn-z btn-buy" onclick="event.preventDefault();buyNow(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+              Mua ngay
             </a>
           </div>
         </div>
@@ -432,6 +437,28 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 
   loadAll();
 })();
+
+function addToCart(p) {
+  let cart = JSON.parse(localStorage.getItem('hphone_cart') || '[]');
+  const idx = cart.findIndex(x => x.id === p.id);
+  if(idx > -1) { cart[idx].qty = (cart[idx].qty || 1) + 1; }
+  else { cart.push({...p, qty: 1}); }
+  localStorage.setItem('hphone_cart', JSON.stringify(cart));
+  // Cập nhật badge
+  const badge = document.querySelector('.cart-badge');
+  if(badge) badge.textContent = cart.reduce((s,x)=>s+(x.qty||1),0);
+  // Toast thông báo
+  const toast = document.createElement('div');
+  toast.textContent = '✓ Đã thêm vào giỏ hàng';
+  toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0a0a0a;color:#fff;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2)';
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.remove(), 2000);
+}
+
+function buyNow(p) {
+  addToCart(p);
+  window.location.href = 'gio-hang';
+}
 </script>
 </body>
 </html>

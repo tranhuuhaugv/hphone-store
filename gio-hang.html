@@ -230,33 +230,7 @@ window.HPHONE_SUPABASE = {
 <div class="cart-layout">
   <!-- ITEMS -->
   <div>
-    <div class="cart-items" id="cartItems">
-      <div class="cart-item" data-price="32900000">
-        <div class="phone-mock thumb"><div class="inner"></div></div>
-        <div class="ci-info">
-          <div class="name">iPhone 15 Pro Max <span class="badge gold">Like New</span></div>
-          <div class="meta">256GB · Titan Tự Nhiên · Pin 94%</div>
-          <div class="price">32.900.000<span class="cur">₫</span><span class="strike">35.900.000₫</span></div>
-        </div>
-        <div class="ci-right">
-          <button class="ci-remove"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Xóa</button>
-          <div class="qty"><button class="minus">−</button><span>1</span><button class="plus">+</button></div>
-        </div>
-      </div>
-
-      <div class="cart-item" data-price="24900000">
-        <div class="phone-mock samsung thumb"><div class="inner"></div></div>
-        <div class="ci-info">
-          <div class="name">Samsung Galaxy S24 Ultra <span class="badge dark">Đẹp 98%</span></div>
-          <div class="meta">256GB · Titanium Gray · Pin 96%</div>
-          <div class="price">24.900.000<span class="cur">₫</span></div>
-        </div>
-        <div class="ci-right">
-          <button class="ci-remove"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Xóa</button>
-          <div class="qty"><button class="minus">−</button><span>1</span><button class="plus">+</button></div>
-        </div>
-      </div>
-    </div>
+    <div class="cart-items" id="cartItems"></div>
 
     <div class="cart-empty-note">
       <span>Muốn thêm máy khác?</span>
@@ -372,25 +346,91 @@ window.HPHONE_SUPABASE = {
 </div>
 
 <script>
-function fmt(n){return n.toLocaleString('vi-VN');}
-function recalc(){
-  let sub=0,count=0;
-  document.querySelectorAll('.cart-item').forEach(function(it){
-    const q=parseInt(it.querySelector('.qty span').textContent);
-    sub+=parseInt(it.dataset.price)*q;count+=q;
-  });
-  const discount=3000000;
-  document.getElementById('subtotal').textContent=fmt(sub)+'₫';
-  document.querySelector('.sum-row span').textContent='Tạm tính ('+count+' sản phẩm)';
-  document.getElementById('grandTotal').innerHTML=fmt(Math.max(sub-discount,0))+'<span class="cur">₫</span>';
+function fmt(n){return Number(n).toLocaleString('vi-VN');}
+
+// ===== ĐỌC GIỎ HÀNG TỪ localStorage =====
+function getCart(){ try{ return JSON.parse(localStorage.getItem('hphone_cart')||'[]'); }catch(e){ return []; } }
+function saveCart(cart){ localStorage.setItem('hphone_cart', JSON.stringify(cart)); }
+
+function parsePrice(p){ return parseInt(String(p).replace(/[^\d]/g,''))||0; }
+
+function renderCart(){
+  const cart = getCart();
+  const container = document.getElementById('cartItems');
+
+  // Cập nhật badge nav
+  const badge = document.querySelector('.cart-badge');
+  if(badge) badge.textContent = cart.reduce((s,x)=>s+(x.qty||1),0);
+
+  if(!cart.length){
+    container.innerHTML = `<div style="padding:48px;text-align:center;color:var(--gray-400)">
+      <div style="font-size:48px;margin-bottom:16px">🛒</div>
+      <div style="font-size:18px;font-weight:600;margin-bottom:8px">Giỏ hàng trống</div>
+      <a href="danh-sach-san-pham" style="color:var(--accent);font-weight:600;text-decoration:none">← Xem sản phẩm</a>
+    </div>`;
+    recalc(); return;
+  }
+
+  container.innerHTML = cart.map((p, idx) => {
+    const price = parsePrice(p.price);
+    const isSamsung = (p.brand||'').toLowerCase()==='samsung';
+    const isLikeNew = (p.badge||'').toLowerCase().includes('like new');
+    const badgeCls = isLikeNew ? 'gold' : 'dark';
+    const badgeLabel = p.badge || p.condition || '';
+    const thumbHtml = p.img
+      ? `<img src="${p.img}" style="width:96px;height:96px;object-fit:cover;border-radius:var(--radius-md);flex-shrink:0">`
+      : `<div class="phone-mock${isSamsung?' samsung':''} thumb"><div class="inner"></div></div>`;
+    const meta = [p.storage, p.battery?'Pin '+p.battery:'', p.condition].filter(Boolean).join(' · ');
+    return `<div class="cart-item" data-price="${price}" data-idx="${idx}">
+      ${thumbHtml}
+      <div class="ci-info">
+        <div class="name">${p.name}${badgeLabel?` <span class="badge ${badgeCls}">${badgeLabel}</span>`:''}</div>
+        <div class="meta">${meta}</div>
+        <div class="price">${fmt(price)}<span class="cur">₫</span>${p.old_price?`<span class="strike">${p.old_price}₫</span>`:''}</div>
+      </div>
+      <div class="ci-right">
+        <button class="ci-remove" onclick="removeItem(${idx})"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Xóa</button>
+        <div class="qty">
+          <button class="minus" onclick="changeQty(${idx},-1)">−</button>
+          <span>${p.qty||1}</span>
+          <button class="plus" onclick="changeQty(${idx},1)">+</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  recalc();
 }
-document.querySelectorAll('.cart-item').forEach(function(it){
-  const span=it.querySelector('.qty span');
-  it.querySelector('.plus').addEventListener('click',()=>{span.textContent=parseInt(span.textContent)+1;recalc();});
-  it.querySelector('.minus').addEventListener('click',()=>{let v=parseInt(span.textContent);if(v>1){span.textContent=v-1;recalc();}});
-  it.querySelector('.ci-remove').addEventListener('click',()=>{it.remove();recalc();});
-});
-recalc();
+
+function recalc(){
+  let sub=0, count=0;
+  document.querySelectorAll('.cart-item').forEach(function(it){
+    const q = parseInt(it.querySelector('.qty span').textContent)||1;
+    sub += parsePrice(it.dataset.price) * q;
+    count += q;
+  });
+  const discount = sub > 0 ? 0 : 0; // tắt giảm giá cứng
+  document.getElementById('subtotal').textContent = fmt(sub)+'₫';
+  const countEl = document.querySelector('.sum-row span');
+  if(countEl) countEl.textContent = 'Tạm tính ('+count+' sản phẩm)';
+  document.getElementById('grandTotal').innerHTML = fmt(Math.max(sub-discount,0))+'<span class="cur">₫</span>';
+}
+
+function changeQty(idx, delta){
+  const cart = getCart();
+  if(!cart[idx]) return;
+  cart[idx].qty = Math.max(1, (cart[idx].qty||1) + delta);
+  saveCart(cart);
+  renderCart();
+}
+
+function removeItem(idx){
+  const cart = getCart();
+  cart.splice(idx,1);
+  saveCart(cart);
+  renderCart();
+}
+
+renderCart();
 
 /* ===== SUPABASE CHECKOUT ===== */
 const _cfg = window.HPHONE_SUPABASE || {};
@@ -399,23 +439,20 @@ let _sb = null;
 if(_live && window.supabase){ try{ _sb = window.supabase.createClient(_cfg.url,_cfg.anonKey); }catch(e){} }
 
 function collectCart(){
-  const items=[]; let total=0;
-  document.querySelectorAll('.cart-item').forEach(function(it){
-    const q=parseInt(it.querySelector('.qty span').textContent)||1;
-    const price=parseInt(it.dataset.price)||0;
-    const nameEl=it.querySelector('.name');
-    const name=(nameEl.firstChild?nameEl.firstChild.textContent:nameEl.textContent).trim();
-    const meta=it.querySelector('.meta')?it.querySelector('.meta').textContent.trim():'';
-    const brand=it.querySelector('.phone-mock')&&it.querySelector('.phone-mock').classList.contains('samsung')?'samsung':'apple';
-    items.push({name:name,short:name,brand:brand,meta:meta,qty:q,price:price.toLocaleString('vi-VN')});
-    total+=price*q;
+  const cart = getCart();
+  let total = 0;
+  const items = cart.map(p => {
+    const price = parsePrice(p.price);
+    const q = p.qty||1;
+    total += price * q;
+    return {name:p.name,brand:p.brand||'apple',storage:p.storage||'',battery:p.battery||'',qty:q,price:p.price};
   });
-  return {items:items,total:total};
+  return {items, total};
 }
 function openCheckout(){
   const c=collectCart();
   if(!c.items.length){alert('Giỏ hàng đang trống.');return;}
-  document.getElementById('coTotal').textContent=c.total.toLocaleString('vi-VN')+'₫';
+  document.getElementById('coTotal').textContent=fmt(c.total)+'₫';
   document.getElementById('coErr').style.display='none';
   document.getElementById('coForm').style.display='block';
   document.getElementById('coDone').style.display='none';
@@ -445,6 +482,7 @@ async function submitOrder(){
       if(error) throw error;
       okCode='HP-'+(1000+data.id);
     }
+    localStorage.removeItem('hphone_cart');
     document.getElementById('coCode').textContent='Mã đơn: '+okCode;
     document.getElementById('coForm').style.display='none';
     document.getElementById('coDone').style.display='block';
