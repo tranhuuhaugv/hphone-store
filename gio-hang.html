@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giỏ hàng – HPHONE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0a0a0a;--white:#fafafa;--gray-100:#f5f5f5;--gray-200:#e8e8e8;
+  --gray-400:#a0a0a0;--gray-600:#606060;--gray-800:#2a2a2a;
+  --accent:#c8a96e;--accent-light:#e8d5a8;
+  --font-display:'Playfair Display',serif;--font-body:'DM Sans',sans-serif;
+  --radius-sm:8px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;
+  --transition:0.3s cubic-bezier(0.4,0,0.2,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--white);color:var(--black);font-size:15px;line-height:1.6;overflow-x:hidden}
+a{color:inherit}
+
+/* announce + nav */
+.announce-bar{background:var(--accent);text-align:center;padding:9px 24px;font-size:12px;font-weight:600;letter-spacing:0.5px;color:var(--black);position:relative;z-index:101}
+nav{position:sticky;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.07)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:20px;height:64px}
+.logo{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--white);letter-spacing:2px;text-decoration:none;flex-shrink:0}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:2px;flex:1;justify-content:center}
+.nav-links a{font-size:13px;font-weight:400;color:rgba(255,255,255,0.65);text-decoration:none;padding:6px 12px;border-radius:var(--radius-sm);transition:var(--transition);white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--white);background:rgba(255,255,255,0.08)}
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:30px;padding:7px 14px;transition:var(--transition)}
+.nav-search:hover{background:rgba(255,255,255,0.12)}
+.nav-search input{background:none;border:none;outline:none;color:var(--white);font-size:13px;font-family:var(--font-body);width:140px}
+.nav-search input::placeholder{color:rgba(255,255,255,0.4)}
+.nav-search svg{width:15px;height:15px;stroke:rgba(255,255,255,0.5);flex-shrink:0;fill:none;stroke-width:2}
+.nav-icon-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--white);position:relative}
+.nav-icon-btn:hover{background:rgba(255,255,255,0.15)}
+.nav-icon-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8}
+.nav-icon-btn .cart-badge{position:absolute;top:-4px;right:-4px;background:var(--accent);color:var(--black);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.zalo-btn{background:linear-gradient(135deg,#0068ff,#0052cc);border:none;padding:7px 14px;border-radius:30px;font-size:12px;font-weight:500;color:var(--white);cursor:pointer;white-space:nowrap;transition:var(--transition);text-decoration:none;display:flex;align-items:center;gap:6px}
+.zalo-btn:hover{opacity:0.85;transform:translateY(-1px)}
+
+/* breadcrumb */
+.breadcrumb{max-width:1280px;margin:0 auto;padding:20px 24px 0;font-size:13px;color:var(--gray-600);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.breadcrumb a{text-decoration:none;color:var(--gray-600);transition:var(--transition)}
+.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb span.sep{color:var(--gray-400)}
+.breadcrumb span.current{color:var(--black);font-weight:600}
+
+/* page header */
+.page-head{max-width:1280px;margin:0 auto;padding:36px 24px 8px}
+.page-head .section-label{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.page-head h1{font-family:var(--font-display);font-size:clamp(30px,4vw,46px);font-weight:700;line-height:1.1;letter-spacing:-0.4px}
+.page-head p.sub{color:var(--gray-600);font-size:16px;margin-top:12px;max-width:560px}
+
+/* buttons */
+.btn-primary{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:14px;font-weight:600;padding:14px 28px;border-radius:30px;border:none;cursor:pointer;transition:var(--transition);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.btn-primary:hover{background:var(--gray-800);transform:translateY(-2px)}
+.btn-gold{background:var(--accent);color:var(--black)}
+.btn-gold:hover{background:var(--accent-light)}
+.btn-outline{background:transparent;color:var(--black);font-family:var(--font-body);font-size:14px;font-weight:500;padding:13px 28px;border-radius:30px;border:1px solid var(--gray-200);cursor:pointer;transition:var(--transition);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.btn-outline:hover{border-color:var(--black)}
+.btn-zalo{padding:12px 16px;background:#e8f4ff;color:#0052cc;font-family:var(--font-body);font-size:13px;font-weight:600;border:1.5px solid #b3d8ff;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+.btn-zalo:hover{background:#d0eaff}
+.btn-mess{padding:12px 16px;background:#f0eaff;color:#5200cc;font-family:var(--font-body);font-size:13px;font-weight:600;border:1.5px solid #c8b3ff;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+.btn-mess:hover{background:#e4d8ff}
+
+/* generic phone mockup image block */
+.phone-mock{background:linear-gradient(135deg,var(--gray-100),var(--gray-200));border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.phone-mock .inner{width:62%;aspect-ratio:0.49;background:linear-gradient(145deg,#2a2a2a,#111);border-radius:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(0,0,0,0.3);position:relative}
+.phone-mock .inner::after{content:'';position:absolute;inset:0;border-radius:26px;background:linear-gradient(145deg,rgba(255,255,255,0.06),transparent 50%)}
+.phone-mock .inner span{font-family:var(--font-display);font-size:13px;font-weight:600;color:rgba(255,255,255,0.78);letter-spacing:1px}
+.phone-mock.samsung .inner{background:linear-gradient(145deg,#1a1a2e,#0d0d1a)}
+
+/* badges */
+.badge{font-size:10px;font-weight:600;letter-spacing:1px;padding:4px 10px;border-radius:30px;text-transform:uppercase}
+.badge.dark{background:var(--black);color:var(--white)}
+.badge.gold{background:var(--accent);color:var(--black)}
+
+/* footer */
+footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,255,255,0.06);margin-top:80px}
+.footer-inner{max-width:1280px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-logo{font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--white);letter-spacing:2px;margin-bottom:14px}
+.footer-logo span{color:var(--accent)}
+.footer-desc{font-size:13px;color:rgba(255,255,255,0.35);line-height:1.7;max-width:300px;margin-bottom:20px}
+.footer-social{display:flex;gap:10px}
+.social-link{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:var(--transition)}
+.social-link:hover{background:rgba(200,169,110,0.15);border-color:rgba(200,169,110,0.3)}
+.social-link svg{width:16px;height:16px;fill:rgba(255,255,255,0.6)}
+.footer-col-title{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:18px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;transition:var(--transition)}
+.footer-links a:hover{color:var(--white)}
+.footer-contact-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.footer-contact-item svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:1.8;flex-shrink:0;margin-top:2px}
+.footer-contact-item span{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.06);padding-top:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.25)}
+.footer-policy{display:flex;gap:20px}
+.footer-policy a{font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none;transition:var(--transition)}
+.footer-policy a:hover{color:rgba(255,255,255,0.6)}
+
+@media(max-width:1024px){.footer-top{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.nav-links,.nav-search{display:none}.footer-top{grid-template-columns:1fr}}
+
+
+.cart-layout{max-width:1280px;margin:0 auto;padding:24px 24px 0;display:grid;grid-template-columns:1fr 380px;gap:36px;align-items:start}
+.cart-items{display:flex;flex-direction:column;gap:16px}
+.cart-item{display:grid;grid-template-columns:96px 1fr auto;gap:18px;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:18px;align-items:center;transition:var(--transition)}
+.cart-item:hover{border-color:var(--gray-400)}
+.cart-item .thumb{width:96px;height:96px}
+.cart-item .thumb .inner{width:42%}
+.ci-info .name{font-size:16px;font-weight:600;margin-bottom:6px}
+.ci-info .meta{font-size:13px;color:var(--gray-600);margin-bottom:8px}
+.ci-info .meta .badge{margin-left:6px;vertical-align:middle}
+.ci-info .price{font-family:var(--font-display);font-size:19px;font-weight:700}
+.ci-info .price .cur{font-family:var(--font-body);font-size:12px;color:var(--gray-600)}
+.ci-info .strike{font-size:13px;color:var(--gray-400);text-decoration:line-through;margin-left:6px;font-family:var(--font-body);font-weight:400}
+.ci-right{display:flex;flex-direction:column;align-items:flex-end;gap:14px;height:100%;justify-content:space-between}
+.qty{display:flex;align-items:center;border:1.5px solid var(--gray-200);border-radius:30px;overflow:hidden}
+.qty button{width:34px;height:34px;border:none;background:var(--white);cursor:pointer;font-size:16px;color:var(--black);transition:var(--transition)}
+.qty button:hover{background:var(--gray-100)}
+.qty span{width:36px;text-align:center;font-size:14px;font-weight:600}
+.ci-remove{background:none;border:none;cursor:pointer;color:var(--gray-400);font-size:13px;display:flex;align-items:center;gap:5px;transition:var(--transition)}
+.ci-remove:hover{color:#c0392b}
+.ci-remove svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8}
+.cart-empty-note{font-size:13px;color:var(--gray-600);margin-top:8px;display:flex;align-items:center;gap:8px}
+.cart-empty-note a{color:var(--accent);text-decoration:none;font-weight:600}
+
+.cart-gifts{background:var(--gray-100);border-radius:var(--radius-lg);padding:18px 20px;margin-top:20px}
+.cart-gifts h4{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.gift-row{display:flex;gap:10px;font-size:13px;color:var(--gray-800);margin-bottom:9px;line-height:1.5}
+.gift-row:last-child{margin-bottom:0}
+.gift-row .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:7px}
+
+/* summary */
+.cart-summary{position:sticky;top:84px;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-xl);padding:26px;box-shadow:0 12px 32px rgba(0,0,0,0.05)}
+.cart-summary h3{font-family:var(--font-display);font-size:22px;font-weight:700;margin-bottom:20px}
+.coupon{display:flex;gap:8px;margin-bottom:22px}
+.coupon input{flex:1;padding:12px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-family:var(--font-body);font-size:13px;outline:none;transition:var(--transition)}
+.coupon input:focus{border-color:var(--accent)}
+.coupon button{padding:12px 18px;background:var(--gray-100);border:none;border-radius:var(--radius-md);font-weight:600;font-size:13px;cursor:pointer;transition:var(--transition)}
+.coupon button:hover{background:var(--gray-200)}
+.sum-row{display:flex;justify-content:space-between;font-size:14px;color:var(--gray-800);padding:9px 0}
+.sum-row.discount{color:#8a6a30}
+.sum-divider{height:1px;background:var(--gray-200);margin:10px 0}
+.sum-total{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0 20px}
+.sum-total .lbl{font-size:15px;font-weight:600}
+.sum-total .val{font-family:var(--font-display);font-size:28px;font-weight:700}
+.sum-total .val .cur{font-family:var(--font-body);font-size:14px;color:var(--gray-600)}
+.checkout-btn{width:100%;padding:16px;font-size:16px}
+.cart-trust{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+.cart-trust div{display:flex;gap:10px;font-size:12.5px;color:var(--gray-600);align-items:flex-start}
+.cart-trust svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:1.8;flex-shrink:0;margin-top:1px}
+@media(max-width:900px){.cart-layout{grid-template-columns:1fr}.cart-summary{position:static}}
+
+/* checkout modal */
+.co-overlay{position:fixed;inset:0;background:rgba(10,10,10,0.6);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:var(--transition)}
+.co-overlay.open{opacity:1;pointer-events:all}
+.co-modal{background:#fff;border-radius:var(--radius-xl);width:100%;max-width:460px;transform:translateY(16px);transition:var(--transition);overflow:hidden;position:relative}
+.co-overlay.open .co-modal{transform:translateY(0)}
+.co-head{padding:24px 28px 6px}
+.co-head h3{font-family:var(--font-display);font-size:24px;font-weight:700}
+.co-head p{font-size:13px;color:var(--gray-600);margin-top:4px}
+.co-body{padding:18px 28px 8px}
+.co-field{margin-bottom:14px}
+.co-field label{display:block;font-size:12px;font-weight:700;letter-spacing:0.5px;color:var(--gray-600);margin-bottom:6px;text-transform:uppercase}
+.co-field input,.co-field textarea{width:100%;padding:12px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-family:var(--font-body);font-size:14px;outline:none;transition:var(--transition)}
+.co-field input:focus,.co-field textarea:focus{border-color:var(--accent)}
+.co-field textarea{resize:vertical;min-height:64px}
+.co-summary{background:var(--gray-100);border-radius:var(--radius-md);padding:12px 16px;font-size:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.co-summary b{font-family:var(--font-display);font-size:18px}
+.co-foot{padding:8px 28px 26px;display:flex;flex-direction:column;gap:10px}
+.co-close{position:absolute;top:18px;right:20px;width:34px;height:34px;border-radius:50%;background:var(--gray-100);border:none;cursor:pointer;font-size:18px;z-index:2}
+.co-success{text-align:center;padding:40px 28px}
+.co-success .ok{width:62px;height:62px;border-radius:50%;background:#e7f5ee;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.co-success .ok svg{width:30px;height:30px;stroke:#2e9e63;fill:none;stroke-width:2.4}
+.co-success h3{font-family:var(--font-display);font-size:24px;margin-bottom:8px}
+.co-success p{color:var(--gray-600);font-size:14px;line-height:1.6}
+.co-success .code{display:inline-block;margin-top:14px;background:var(--black);color:#fff;padding:8px 18px;border-radius:30px;font-weight:600;letter-spacing:1px}
+.co-err{background:#fbeae8;color:#c0392b;font-size:13px;padding:10px 14px;border-radius:var(--radius-md);margin-bottom:12px;display:none}
+.co-mode{font-size:11px;color:var(--gray-400);text-align:center;margin-top:4px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+window.HPHONE_SUPABASE = {
+  url:     "https://pkmigreebudnbfkujplu.supabase.co",
+  anonKey: "sb_publishable_ygsHW9s7Q_iqp45DieNQQQ_d7HAFouY"
+};
+</script>
+</head>
+<body>
+<div class="announce-bar">🎉 Miễn phí kiểm tra IMEI — Bảo hành minh bạch — Giao hàng toàn quốc</div>
+<nav>
+  <div class="nav-inner">
+    <a href="trang-chu" class="logo">H<span>PHONE</span></a>
+    <div class="nav-links">
+      <a href="danh-sach-san-pham">iPhone</a>
+      <a href="danh-sach-san-pham">Samsung</a>
+      <a href="danh-sach-san-pham">Máy cũ</a>
+      <a href="danh-sach-san-pham">Phụ kiện</a>
+      <a href="thu-cu-doi-moi">Thu cũ đổi mới</a>
+      <a href="index.html#warranty">Bảo hành</a>
+      <a href="index.html#contact">Liên hệ</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Tìm sản phẩm...">
+      </div>
+      <a href="gio-hang" class="nav-icon-btn" aria-label="Giỏ hàng">
+        <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-badge">2</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="trang-chu">Trang chủ</a><span class="sep">/</span><span class="current">Giỏ hàng</span>
+</div>
+<div class="page-head">
+  <div class="section-label">Giỏ hàng</div>
+  <h1>Đơn hàng của bạn</h1>
+</div>
+
+<div class="cart-layout">
+  <!-- ITEMS -->
+  <div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-item" data-price="32900000">
+        <div class="phone-mock thumb"><div class="inner"></div></div>
+        <div class="ci-info">
+          <div class="name">iPhone 15 Pro Max <span class="badge gold">Like New</span></div>
+          <div class="meta">256GB · Titan Tự Nhiên · Pin 94%</div>
+          <div class="price">32.900.000<span class="cur">₫</span><span class="strike">35.900.000₫</span></div>
+        </div>
+        <div class="ci-right">
+          <button class="ci-remove"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Xóa</button>
+          <div class="qty"><button class="minus">−</button><span>1</span><button class="plus">+</button></div>
+        </div>
+      </div>
+
+      <div class="cart-item" data-price="24900000">
+        <div class="phone-mock samsung thumb"><div class="inner"></div></div>
+        <div class="ci-info">
+          <div class="name">Samsung Galaxy S24 Ultra <span class="badge dark">Đẹp 98%</span></div>
+          <div class="meta">256GB · Titanium Gray · Pin 96%</div>
+          <div class="price">24.900.000<span class="cur">₫</span></div>
+        </div>
+        <div class="ci-right">
+          <button class="ci-remove"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Xóa</button>
+          <div class="qty"><button class="minus">−</button><span>1</span><button class="plus">+</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-empty-note">
+      <span>Muốn thêm máy khác?</span>
+      <a href="danh-sach-san-pham">← Tiếp tục mua sắm</a>
+    </div>
+
+    <div class="cart-gifts">
+      <h4>Quà tặng kèm đơn hàng</h4>
+      <div class="gift-row"><span class="dot"></span>Ốp lưng + dán cường lực trị giá 350.000₫ cho mỗi máy.</div>
+      <div class="gift-row"><span class="dot"></span>Miễn phí kiểm tra IMEI &amp; chạy thử khi nhận hàng.</div>
+      <div class="gift-row"><span class="dot"></span>Phiếu bảo hành HPHONE 12 tháng, ghi rõ thời hạn.</div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="cart-summary">
+    <h3>Tóm tắt đơn hàng</h3>
+    <div class="coupon">
+      <input type="text" placeholder="Nhập mã giảm giá">
+      <button>Áp dụng</button>
+    </div>
+    <div class="sum-row"><span>Tạm tính (2 sản phẩm)</span><span id="subtotal">57.800.000₫</span></div>
+    <div class="sum-row discount"><span>Giảm giá</span><span>−3.000.000₫</span></div>
+    <div class="sum-row"><span>Phí vận chuyển</span><span>Miễn phí</span></div>
+    <div class="sum-divider"></div>
+    <div class="sum-total">
+      <span class="lbl">Tổng cộng</span>
+      <span class="val" id="grandTotal">54.800.000<span class="cur">₫</span></span>
+    </div>
+    <a href="#" class="btn-primary btn-gold checkout-btn" id="checkoutBtn">Tiến hành đặt hàng</a>
+    <div class="cart-trust">
+      <div><svg viewBox="0 0 24 24"><path d="M20.6 6A12 12 0 0 1 12 2.9 12 12 0 0 1 3.4 6 12 12 0 0 0 3 9c0 5.6 3.8 10.3 9 11.6C17.2 19.3 21 14.6 21 9a12 12 0 0 0-.4-3z"/><path d="M9 12l2 2 4-4"/></svg><span>Máy đã kiểm tra 20 bước, bảo hành 12 tháng tại HPHONE.</span></div>
+      <div><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg><span>Giao hàng nhanh toàn quốc, kiểm tra trước khi thanh toán.</span></div>
+      <div><svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>Đổi trả trong 7 ngày nếu lỗi không được thông báo trước.</span></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">H<span>PHONE</span></div>
+        <p class="footer-desc">Chuyên iPhone qua sử dụng chất lượng cao. Máy được tuyển chọn kỹ, giá minh bạch, bảo hành rõ ràng.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" class="social-link" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34l-.01-8.83a8.18 8.18 0 0 0 4.78 1.52V4.56a4.85 4.85 0 0 1-1-.13z"/></svg></a>
+          <a href="#" class="social-link" aria-label="Zalo"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.7 4.19 1.87 5.83L2.5 21.5l3.83-1.33C7.83 21.33 9.85 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Sản phẩm</div>
+        <ul class="footer-links">
+          <li><a href="danh-sach-san-pham">iPhone cũ</a></li>
+          <li><a href="danh-sach-san-pham">iPhone Like New</a></li>
+          <li><a href="danh-sach-san-pham">Samsung Flagship</a></li>
+          <li><a href="danh-sach-san-pham">Phụ kiện</a></li>
+          <li><a href="thu-cu-doi-moi">Thu cũ đổi mới</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Chính sách</div>
+        <ul class="footer-links">
+          <li><a href="#">Chính sách bảo hành</a></li>
+          <li><a href="#">Chính sách đổi trả</a></li>
+          <li><a href="#">Chính sách vận chuyển</a></li>
+          <li><a href="#">Bảo mật thông tin</a></li>
+          <li><a href="#">Điều khoản sử dụng</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Liên hệ</div>
+        <div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.83 5.83l.83-.83a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.17 16z"/></svg><span>0909.xxx.xxx (Hotline)</span></div>
+        <div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>123 Đường ABC, Phường XYZ,<br>TP. Huế, Thừa Thiên Huế</span></div>
+        <div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span>hello@hphone.store</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 HPHONE. Tất cả quyền được bảo lưu. Website: hphone.store</div>
+      <div class="footer-policy"><a href="#">Chính sách bảo mật</a><a href="#">Điều khoản</a><a href="#">Sitemap</a></div>
+    </div>
+  </div>
+</footer>
+<!-- CHECKOUT MODAL -->
+<div class="co-overlay" id="coOverlay">
+  <div class="co-modal">
+    <button class="co-close" onclick="closeCheckout()">✕</button>
+    <div id="coForm">
+      <div class="co-head"><h3>Thông tin nhận hàng</h3><p>HPHONE sẽ gọi xác nhận trước khi giao. Kiểm tra máy rồi mới thanh toán.</p></div>
+      <div class="co-body">
+        <div class="co-err" id="coErr"></div>
+        <div class="co-field"><label>Họ và tên *</label><input type="text" id="coName" placeholder="Nguyễn Văn A"></div>
+        <div class="co-field"><label>Số điện thoại *</label><input type="tel" id="coPhone" placeholder="09xx xxx xxx"></div>
+        <div class="co-field"><label>Địa chỉ nhận hàng *</label><textarea id="coAddr" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành"></textarea></div>
+        <div class="co-field"><label>Ghi chú (tùy chọn)</label><input type="text" id="coNote" placeholder="VD: giao giờ hành chính"></div>
+        <div class="co-summary"><span>Tổng cộng</span><b id="coTotal">0₫</b></div>
+      </div>
+      <div class="co-foot">
+        <button class="btn-primary btn-gold" style="width:100%" id="coSubmit" onclick="submitOrder()">Xác nhận đặt hàng</button>
+        <div class="co-mode" id="coMode"></div>
+      </div>
+    </div>
+    <div id="coDone" style="display:none">
+      <div class="co-success">
+        <div class="ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h3>Đặt hàng thành công!</h3>
+        <p>Cảm ơn bạn đã tin tưởng HPHONE.<br>Chúng tôi sẽ liên hệ xác nhận trong thời gian sớm nhất.</p>
+        <div class="code" id="coCode"></div>
+      </div>
+      <div class="co-foot"><button class="btn-outline" style="width:100%" onclick="closeCheckout()">Đóng</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function fmt(n){return n.toLocaleString('vi-VN');}
+function recalc(){
+  let sub=0,count=0;
+  document.querySelectorAll('.cart-item').forEach(function(it){
+    const q=parseInt(it.querySelector('.qty span').textContent);
+    sub+=parseInt(it.dataset.price)*q;count+=q;
+  });
+  const discount=3000000;
+  document.getElementById('subtotal').textContent=fmt(sub)+'₫';
+  document.querySelector('.sum-row span').textContent='Tạm tính ('+count+' sản phẩm)';
+  document.getElementById('grandTotal').innerHTML=fmt(Math.max(sub-discount,0))+'<span class="cur">₫</span>';
+}
+document.querySelectorAll('.cart-item').forEach(function(it){
+  const span=it.querySelector('.qty span');
+  it.querySelector('.plus').addEventListener('click',()=>{span.textContent=parseInt(span.textContent)+1;recalc();});
+  it.querySelector('.minus').addEventListener('click',()=>{let v=parseInt(span.textContent);if(v>1){span.textContent=v-1;recalc();}});
+  it.querySelector('.ci-remove').addEventListener('click',()=>{it.remove();recalc();});
+});
+recalc();
+
+/* ===== SUPABASE CHECKOUT ===== */
+const _cfg = window.HPHONE_SUPABASE || {};
+const _live = !!(_cfg.url && _cfg.anonKey && !_cfg.url.includes('YOUR-PROJECT'));
+let _sb = null;
+if(_live && window.supabase){ try{ _sb = window.supabase.createClient(_cfg.url,_cfg.anonKey); }catch(e){} }
+
+function collectCart(){
+  const items=[]; let total=0;
+  document.querySelectorAll('.cart-item').forEach(function(it){
+    const q=parseInt(it.querySelector('.qty span').textContent)||1;
+    const price=parseInt(it.dataset.price)||0;
+    const nameEl=it.querySelector('.name');
+    const name=(nameEl.firstChild?nameEl.firstChild.textContent:nameEl.textContent).trim();
+    const meta=it.querySelector('.meta')?it.querySelector('.meta').textContent.trim():'';
+    const brand=it.querySelector('.phone-mock')&&it.querySelector('.phone-mock').classList.contains('samsung')?'samsung':'apple';
+    items.push({name:name,short:name,brand:brand,meta:meta,qty:q,price:price.toLocaleString('vi-VN')});
+    total+=price*q;
+  });
+  return {items:items,total:total};
+}
+function openCheckout(){
+  const c=collectCart();
+  if(!c.items.length){alert('Giỏ hàng đang trống.');return;}
+  document.getElementById('coTotal').textContent=c.total.toLocaleString('vi-VN')+'₫';
+  document.getElementById('coErr').style.display='none';
+  document.getElementById('coForm').style.display='block';
+  document.getElementById('coDone').style.display='none';
+  document.getElementById('coMode').textContent=_sb?'':'⚠ Chưa kết nối database — đơn sẽ không được lưu (chế độ demo).';
+  document.getElementById('coOverlay').classList.add('open');
+}
+function closeCheckout(){document.getElementById('coOverlay').classList.remove('open');}
+document.getElementById('checkoutBtn').addEventListener('click',function(e){e.preventDefault();openCheckout();});
+document.getElementById('coOverlay').addEventListener('click',function(e){if(e.target.id==='coOverlay')closeCheckout();});
+
+async function submitOrder(){
+  const name=document.getElementById('coName').value.trim();
+  const phone=document.getElementById('coPhone').value.trim();
+  const addr=document.getElementById('coAddr').value.trim();
+  const note=document.getElementById('coNote').value.trim();
+  const err=document.getElementById('coErr');
+  if(!name||!phone||!addr){err.textContent='Vui lòng nhập đủ họ tên, số điện thoại và địa chỉ.';err.style.display='block';return;}
+  const c=collectCart();
+  const btn=document.getElementById('coSubmit');
+  btn.disabled=true;btn.textContent='Đang gửi...';
+  let okCode='HP-'+Math.floor(1000+Math.random()*9000);
+  try{
+    if(_sb){
+      const {data,error}=await _sb.from('orders').insert({
+        customer:name,phone:phone,address:addr,note:note,items:c.items,total:c.total,status:'new'
+      }).select('id').single();
+      if(error) throw error;
+      okCode='HP-'+(1000+data.id);
+    }
+    document.getElementById('coCode').textContent='Mã đơn: '+okCode;
+    document.getElementById('coForm').style.display='none';
+    document.getElementById('coDone').style.display='block';
+  }catch(ex){
+    err.textContent='Không gửi được đơn: '+(ex.message||'lỗi kết nối')+'. Vui lòng thử lại hoặc liên hệ Zalo.';
+    err.style.display='block';
+  }finally{
+    btn.disabled=false;btn.textContent='Xác nhận đặt hàng';
+  }
+}
+</script>
+</body>
+</html>

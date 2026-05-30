@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iPhone cũ tuyển chọn – HPHONE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0a0a0a;--white:#fafafa;--gray-100:#f5f5f5;--gray-200:#e8e8e8;
+  --gray-400:#a0a0a0;--gray-600:#606060;--gray-800:#2a2a2a;
+  --accent:#c8a96e;--accent-light:#e8d5a8;
+  --font-display:'Playfair Display',serif;--font-body:'DM Sans',sans-serif;
+  --radius-sm:8px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;
+  --transition:0.3s cubic-bezier(0.4,0,0.2,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--white);color:var(--black);font-size:15px;line-height:1.6;overflow-x:hidden}
+a{color:inherit}
+
+/* announce + nav */
+.announce-bar{background:var(--accent);text-align:center;padding:9px 24px;font-size:12px;font-weight:600;letter-spacing:0.5px;color:var(--black);position:relative;z-index:101}
+nav{position:sticky;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.07)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:20px;height:64px}
+.logo{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--white);letter-spacing:2px;text-decoration:none;flex-shrink:0}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:2px;flex:1;justify-content:center}
+.nav-links a{font-size:13px;font-weight:400;color:rgba(255,255,255,0.65);text-decoration:none;padding:6px 12px;border-radius:var(--radius-sm);transition:var(--transition);white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--white);background:rgba(255,255,255,0.08)}
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:30px;padding:7px 14px;transition:var(--transition)}
+.nav-search:hover{background:rgba(255,255,255,0.12)}
+.nav-search input{background:none;border:none;outline:none;color:var(--white);font-size:13px;font-family:var(--font-body);width:140px}
+.nav-search input::placeholder{color:rgba(255,255,255,0.4)}
+.nav-search svg{width:15px;height:15px;stroke:rgba(255,255,255,0.5);flex-shrink:0;fill:none;stroke-width:2}
+.nav-icon-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--white);position:relative}
+.nav-icon-btn:hover{background:rgba(255,255,255,0.15)}
+.nav-icon-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8}
+.nav-icon-btn .cart-badge{position:absolute;top:-4px;right:-4px;background:var(--accent);color:var(--black);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.zalo-btn{background:linear-gradient(135deg,#0068ff,#0052cc);border:none;padding:7px 14px;border-radius:30px;font-size:12px;font-weight:500;color:var(--white);cursor:pointer;white-space:nowrap;transition:var(--transition);text-decoration:none;display:flex;align-items:center;gap:6px}
+.zalo-btn:hover{opacity:0.85;transform:translateY(-1px)}
+
+/* breadcrumb */
+.breadcrumb{max-width:1280px;margin:0 auto;padding:20px 24px 0;font-size:13px;color:var(--gray-600);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.breadcrumb a{text-decoration:none;color:var(--gray-600);transition:var(--transition)}
+.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb span.sep{color:var(--gray-400)}
+.breadcrumb span.current{color:var(--black);font-weight:600}
+
+/* page header */
+.page-head{max-width:1280px;margin:0 auto;padding:36px 24px 8px}
+.page-head .section-label{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.page-head h1{font-family:var(--font-display);font-size:clamp(30px,4vw,46px);font-weight:700;line-height:1.1;letter-spacing:-0.4px}
+.page-head p.sub{color:var(--gray-600);font-size:16px;margin-top:12px;max-width:560px}
+
+/* buttons */
+.btn-primary{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:14px;font-weight:600;padding:14px 28px;border-radius:30px;border:none;cursor:pointer;transition:var(--transition);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.btn-primary:hover{background:var(--gray-800);transform:translateY(-2px)}
+.btn-gold{background:var(--accent);color:var(--black)}
+.btn-gold:hover{background:var(--accent-light)}
+.btn-outline{background:transparent;color:var(--black);font-family:var(--font-body);font-size:14px;font-weight:500;padding:13px 28px;border-radius:30px;border:1px solid var(--gray-200);cursor:pointer;transition:var(--transition);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.btn-outline:hover{border-color:var(--black)}
+.btn-zalo{padding:12px 16px;background:#e8f4ff;color:#0052cc;font-family:var(--font-body);font-size:13px;font-weight:600;border:1.5px solid #b3d8ff;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+.btn-zalo:hover{background:#d0eaff}
+.btn-mess{padding:12px 16px;background:#f0eaff;color:#5200cc;font-family:var(--font-body);font-size:13px;font-weight:600;border:1.5px solid #c8b3ff;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+.btn-mess:hover{background:#e4d8ff}
+
+/* generic phone mockup image block */
+.phone-mock{background:linear-gradient(135deg,var(--gray-100),var(--gray-200));border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.phone-mock .inner{width:62%;aspect-ratio:0.49;background:linear-gradient(145deg,#2a2a2a,#111);border-radius:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(0,0,0,0.3);position:relative}
+.phone-mock .inner::after{content:'';position:absolute;inset:0;border-radius:26px;background:linear-gradient(145deg,rgba(255,255,255,0.06),transparent 50%)}
+.phone-mock .inner span{font-family:var(--font-display);font-size:13px;font-weight:600;color:rgba(255,255,255,0.78);letter-spacing:1px}
+.phone-mock.samsung .inner{background:linear-gradient(145deg,#1a1a2e,#0d0d1a)}
+
+/* badges */
+.badge{font-size:10px;font-weight:600;letter-spacing:1px;padding:4px 10px;border-radius:30px;text-transform:uppercase}
+.badge.dark{background:var(--black);color:var(--white)}
+.badge.gold{background:var(--accent);color:var(--black)}
+
+/* footer */
+footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,255,255,0.06);margin-top:80px}
+.footer-inner{max-width:1280px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-logo{font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--white);letter-spacing:2px;margin-bottom:14px}
+.footer-logo span{color:var(--accent)}
+.footer-desc{font-size:13px;color:rgba(255,255,255,0.35);line-height:1.7;max-width:300px;margin-bottom:20px}
+.footer-social{display:flex;gap:10px}
+.social-link{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:var(--transition)}
+.social-link:hover{background:rgba(200,169,110,0.15);border-color:rgba(200,169,110,0.3)}
+.social-link svg{width:16px;height:16px;fill:rgba(255,255,255,0.6)}
+.footer-col-title{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:18px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;transition:var(--transition)}
+.footer-links a:hover{color:var(--white)}
+.footer-contact-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.footer-contact-item svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:1.8;flex-shrink:0;margin-top:2px}
+.footer-contact-item span{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.06);padding-top:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.25)}
+.footer-policy{display:flex;gap:20px}
+.footer-policy a{font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none;transition:var(--transition)}
+.footer-policy a:hover{color:rgba(255,255,255,0.6)}
+
+@media(max-width:1024px){.footer-top{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.nav-links,.nav-search{display:none}.footer-top{grid-template-columns:1fr}}
+
+
+.pl-layout{max-width:1280px;margin:0 auto;padding:24px 24px 0;display:grid;grid-template-columns:260px 1fr;gap:36px;align-items:start}
+.filters{position:sticky;top:84px;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:24px}
+.filter-group{padding-bottom:20px;margin-bottom:20px;border-bottom:1px solid var(--gray-100)}
+.filter-group:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.filter-group h4{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-600);margin-bottom:14px}
+.filter-opt{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--gray-800);padding:6px 0;cursor:pointer}
+.filter-opt .box{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--gray-200);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+.filter-opt.on .box{background:var(--accent);border-color:var(--accent)}
+.filter-opt.on .box::after{content:'';width:5px;height:9px;border:solid var(--black);border-width:0 2px 2px 0;transform:rotate(45deg);margin-top:-2px}
+.filter-opt .ct{margin-left:auto;font-size:12px;color:var(--gray-400)}
+.price-pills{display:flex;flex-wrap:wrap;gap:8px}
+.price-pill{font-size:12px;padding:6px 12px;border-radius:30px;border:1.5px solid var(--gray-200);cursor:pointer;transition:var(--transition)}
+.price-pill:hover{border-color:var(--black)}
+.price-pill.on{background:var(--black);color:var(--white);border-color:var(--black)}
+.pl-main .pl-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.pl-bar .count{font-size:14px;color:var(--gray-600)}
+.pl-bar .count b{color:var(--black)}
+.pl-sort{display:flex;gap:8px;flex-wrap:wrap}
+.sort-pill{font-size:13px;padding:8px 14px;border-radius:30px;border:1.5px solid var(--gray-200);cursor:pointer;transition:var(--transition)}
+.sort-pill:hover{border-color:var(--black)}
+.sort-pill.on{background:var(--black);color:var(--white);border-color:var(--black)}
+.product-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-xl);overflow:hidden;transition:var(--transition)}
+.product-card:hover{border-color:var(--gray-400);transform:translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,0.1)}
+.product-card .img{aspect-ratio:1;position:relative}
+.product-card .img .badge{position:absolute;top:14px;left:14px}
+.pl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+.product-card .body{padding:18px}
+.product-card .name{font-size:15px;font-weight:600;margin-bottom:10px}
+.product-card .specs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px}
+.product-card .spec-tag{font-size:11px;font-weight:500;color:var(--gray-600);background:var(--gray-100);border-radius:6px;padding:3px 8px}
+.product-card .spec-tag.hi{background:rgba(200,169,110,0.12);color:#8a6a30}
+.product-card .price{font-family:var(--font-display);font-size:21px;font-weight:700;margin-bottom:13px}
+.product-card .price .cur{font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--gray-600);margin-left:2px}
+.product-card .actions{display:flex;gap:8px}
+.product-card .actions a{flex:1;text-align:center;padding:10px;font-size:13px;font-weight:500;border-radius:var(--radius-md);text-decoration:none;transition:var(--transition)}
+.product-card .btn-d{background:var(--black);color:var(--white)}
+.product-card .btn-d:hover{background:var(--gray-800)}
+.product-card .btn-z{background:transparent;color:var(--gray-600);border:1px solid var(--gray-200);display:flex;align-items:center;justify-content:center;gap:5px}
+.product-card .btn-z:hover{background:#e8f4ff;border-color:#0068ff;color:#0068ff}
+.pagination{display:flex;justify-content:center;gap:8px;margin-top:44px}
+.page-btn{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--gray-200);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;cursor:pointer;transition:var(--transition);background:var(--white)}
+.page-btn:hover{border-color:var(--black)}
+.page-btn.on{background:var(--black);color:var(--white);border-color:var(--black)}
+@media(max-width:900px){.pl-layout{grid-template-columns:1fr}.filters{position:static}}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const _SB_URL="https://pkmigreebudnbfkujplu.supabase.co";
+const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrbWlncmVlYnVkbmJma3VqcGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTAyMjYsImV4cCI6MjA5NTYyNjIyNn0.Bb9Y6-FKshYfmxUrEU8GJfJKnnrbJ--vMtXzAwCHFns";
+</script>
+<style>
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-spinner{width:36px;height:36px;border:3px solid #e8e8e8;border-top-color:#c8a96e;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
+</style>
+</head>
+<body>
+<div class="announce-bar">🎉 Miễn phí kiểm tra IMEI — Bảo hành minh bạch — Giao hàng toàn quốc</div>
+<nav>
+  <div class="nav-inner">
+    <a href="trang-chu" class="logo">H<span>PHONE</span></a>
+    <div class="nav-links">
+      <a href="danh-sach-san-pham" class="active">iPhone</a>
+      <a href="danh-sach-san-pham">Phụ kiện</a>
+      <a href="thu-cu-doi-moi">Thu cũ đổi mới</a>
+      <a href="index.html#warranty">Bảo hành</a>
+      <a href="index.html#contact">Liên hệ</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Tìm sản phẩm...">
+      </div>
+      <a href="gio-hang" class="nav-icon-btn" aria-label="Giỏ hàng">
+        <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-badge">2</span>
+      </a>
+      <a href="#" class="zalo-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.7 4.19 1.87 5.83L2.5 21.5l3.83-1.33C7.83 21.33 9.85 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg> Chat Zalo</a>
+    </div>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="trang-chu">Trang chủ</a><span class="sep">/</span><span class="current">iPhone cũ</span>
+</div>
+<div class="page-head">
+  <div class="section-label">Danh mục</div>
+  <h1>iPhone tuyển chọn</h1>
+  <p class="sub">Mỗi máy đều kiểm tra kỹ IMEI, pin, màn hình và hiệu năng trước khi lên kệ. Giá niêm yết là giá thật.</p>
+</div>
+
+<div class="pl-layout">
+  <!-- FILTERS -->
+  <aside class="filters">
+    <div class="filter-group">
+      <h4>Hãng</h4>
+      <div class="filter-opt on"><span class="box"></span>Apple (iPhone) <span class="ct">8</span></div>
+      <div class="filter-opt"><span class="box"></span>Samsung <span class="ct">1</span></div>
+    </div>
+    <div class="filter-group">
+      <h4>Dòng máy</h4>
+      <div class="filter-opt"><span class="box"></span>iPhone 15 Series <span class="ct">2</span></div>
+      <div class="filter-opt"><span class="box"></span>iPhone 14 Series <span class="ct">2</span></div>
+      <div class="filter-opt"><span class="box"></span>iPhone 13 Series <span class="ct">2</span></div>
+      <div class="filter-opt"><span class="box"></span>iPhone 12 Series <span class="ct">2</span></div>
+    </div>
+    <div class="filter-group">
+      <h4>Khoảng giá</h4>
+      <div class="price-pills">
+        <span class="price-pill">Dưới 10tr</span>
+        <span class="price-pill on">10 – 20tr</span>
+        <span class="price-pill">20 – 30tr</span>
+        <span class="price-pill">Trên 30tr</span>
+      </div>
+    </div>
+    <div class="filter-group">
+      <h4>Tình trạng</h4>
+      <div class="filter-opt"><span class="box"></span>Like New 99%</div>
+      <div class="filter-opt"><span class="box"></span>Đẹp 97 – 98%</div>
+      <div class="filter-opt"><span class="box"></span>Giá tốt 95%</div>
+    </div>
+    <div class="filter-group">
+      <h4>Dung lượng</h4>
+      <div class="price-pills">
+        <span class="price-pill">64GB</span>
+        <span class="price-pill">128GB</span>
+        <span class="price-pill">256GB</span>
+        <span class="price-pill">512GB+</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="pl-main">
+    <div class="pl-bar">
+      <div class="count">Tìm thấy <b id="plCount">...</b></div>
+      <div class="pl-sort">
+        <span class="sort-pill on">Mới nhất</span>
+        <span class="sort-pill">Giá thấp → cao</span>
+        <span class="sort-pill">Giá cao → thấp</span>
+        <span class="sort-pill">Bán chạy</span>
+      </div>
+    </div>
+    <div class="pl-grid" id="plGrid">
+      <div style="grid-column:1/-1;padding:64px;text-align:center;color:var(--gray-400)">
+        <div class="loading-spinner"></div>Đang tải sản phẩm...
+      </div>
+    </div>
+    <div class="pagination" id="plPagination" style="display:none">
+      <div class="page-btn">‹</div>
+      <div class="page-btn on">1</div>
+      <div class="page-btn">2</div>
+      <div class="page-btn">3</div>
+      <div class="page-btn">›</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">H<span>PHONE</span></div>
+        <p class="footer-desc">Chuyên iPhone qua sử dụng chất lượng cao. Máy được tuyển chọn kỹ, giá minh bạch, bảo hành rõ ràng.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" class="social-link" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34l-.01-8.83a8.18 8.18 0 0 0 4.78 1.52V4.56a4.85 4.85 0 0 1-1-.13z"/></svg></a>
+          <a href="#" class="social-link" aria-label="Zalo"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.7 4.19 1.87 5.83L2.5 21.5l3.83-1.33C7.83 21.33 9.85 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Sản phẩm</div>
+        <ul class="footer-links">
+          <li><a href="danh-sach-san-pham">iPhone cũ</a></li>
+          <li><a href="danh-sach-san-pham">iPhone Like New</a></li>
+          <li><a href="danh-sach-san-pham">Samsung Flagship</a></li>
+          <li><a href="danh-sach-san-pham">Phụ kiện</a></li>
+          <li><a href="thu-cu-doi-moi">Thu cũ đổi mới</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Chính sách</div>
+        <ul class="footer-links">
+          <li><a href="#">Chính sách bảo hành</a></li>
+          <li><a href="#">Chính sách đổi trả</a></li>
+          <li><a href="#">Chính sách vận chuyển</a></li>
+          <li><a href="#">Bảo mật thông tin</a></li>
+          <li><a href="#">Điều khoản sử dụng</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Liên hệ</div>
+        <div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.83 5.83l.83-.83a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.17 16z"/></svg><span>0909.xxx.xxx (Hotline)</span></div>
+        <div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>123 Đường ABC, Phường XYZ,<br>TP. Huế, Thừa Thiên Huế</span></div>
+        <div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span>hello@hphone.store</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 HPHONE. Tất cả quyền được bảo lưu. Website: hphone.store</div>
+      <div class="footer-policy"><a href="#">Chính sách bảo mật</a><a href="#">Điều khoản</a><a href="#">Sitemap</a></div>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+(async function(){
+  if(!window.supabase){ document.getElementById('plGrid').innerHTML='<div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--gray-400)">Không thể kết nối dữ liệu.</div>'; return; }
+  const sb = window.supabase.createClient(_SB_URL, _SB_KEY);
+  let allProducts = [];
+
+  async function loadAll(){
+    const {data,error} = await sb.from('products').select('*').order('id',{ascending:false});
+    allProducts = (!error && data) ? data : [];
+    render();
+  }
+
+  let filterBrand='all', filterStatus='all', filterStorage='all', filterPrice='all', sortBy='newest';
+  let searchQ = '';
+
+  function render(){
+    let list = allProducts.filter(p => {
+      if(filterBrand==='apple' && p.brand!=='apple') return false;
+      if(filterBrand==='samsung' && p.brand!=='samsung') return false;
+      if(filterStatus==='instock' && p.status!=='instock') return false;
+      if(filterStatus==='outofstock' && p.status!=='outofstock') return false;
+      if(filterStorage!=='all'){
+        const s = (p.storage||'').toLowerCase();
+        if(filterStorage==='64' && !s.includes('64')) return false;
+        if(filterStorage==='128' && !s.includes('128')) return false;
+        if(filterStorage==='256' && !s.includes('256')) return false;
+        if(filterStorage==='512' && !s.includes('512') && !s.includes('1t')) return false;
+      }
+      if(filterPrice!=='all'){
+        const price = parseInt(String(p.price).replace(/[^\d]/g,''));
+        if(filterPrice==='under10' && price>=10000000) return false;
+        if(filterPrice==='10to20' && (price<10000000 || price>=20000000)) return false;
+        if(filterPrice==='20to30' && (price<20000000 || price>=30000000)) return false;
+        if(filterPrice==='over30' && price<30000000) return false;
+      }
+      if(searchQ && !p.name.toLowerCase().includes(searchQ)) return false;
+      return true;
+    });
+    if(sortBy==='asc') list.sort((a,b)=>parseInt(String(a.price).replace(/[^\d]/g,''))-parseInt(String(b.price).replace(/[^\d]/g,'')));
+    if(sortBy==='desc') list.sort((a,b)=>parseInt(String(b.price).replace(/[^\d]/g,''))-parseInt(String(a.price).replace(/[^\d]/g,'')));
+
+    document.getElementById('plCount').innerHTML = list.length + ' sản phẩm';
+    const grid = document.getElementById('plGrid');
+    if(!list.length){
+      grid.innerHTML='<div style="grid-column:1/-1;padding:48px;text-align:center;color:var(--gray-400)">Không tìm thấy sản phẩm phù hợp.</div>';
+      return;
+    }
+    grid.innerHTML = list.map(p => {
+      const isLikeNew = (p.badge||'').toLowerCase().includes('like new') || (p.condition||'').toLowerCase().includes('like new');
+      const badgeCls = isLikeNew ? 'gold' : 'dark';
+      const imgBlock = p.img
+        ? `<div class="phone-mock img" style="position:relative"><img src="${p.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:var(--radius-lg)"><span class="badge ${badgeCls}" style="position:absolute;top:14px;left:14px">${p.badge||p.condition||''}</span></div>`
+        : `<div class="phone-mock${p.brand==='samsung'?' samsung':''} img"><span class="badge ${badgeCls}">${p.badge||p.condition||''}</span><div class="inner"><span>${p.short||p.name}</span></div></div>`;
+      return `<div class="product-card">
+        ${imgBlock}
+        <div class="body">
+          <div class="name">${p.name}</div>
+          <div class="specs">
+            ${p.storage?`<span class="spec-tag">${p.storage}</span>`:''}
+            ${p.battery?`<span class="spec-tag hi">Pin ${p.battery}</span>`:''}
+            ${p.condition?`<span class="spec-tag">${p.condition}</span>`:''}
+            ${p.status==='outofstock'?'<span class="spec-tag" style="background:#fbeae8;color:#c0392b">Hết hàng</span>':''}
+          </div>
+          <div class="price">${p.price}<span class="cur">₫</span>${p.old_price?`<span style="font-size:13px;font-family:var(--font-body);font-weight:400;color:var(--gray-400);text-decoration:line-through;margin-left:8px">${p.old_price}₫</span>`:''}</div>
+          <div class="actions">
+            <a href="chi-tiet-san-pham?id=${p.id}" class="btn-d">Xem chi tiết</a>
+            <a href="https://zalo.me/0379443613" target="_blank" class="btn-z">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.7 4.19 1.87 5.83L2.5 21.5l3.83-1.33C7.83 21.33 9.85 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg> Zalo
+            </a>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Filter interactions
+  document.querySelectorAll('.filter-opt').forEach(o => o.addEventListener('click', function(){
+    this.classList.toggle('on');
+    const txt = this.textContent.trim().toLowerCase();
+    if(txt.startsWith('apple')) filterBrand = this.classList.contains('on') ? 'apple' : 'all';
+    if(txt.startsWith('samsung')) filterBrand = this.classList.contains('on') ? 'samsung' : 'all';
+    render();
+  }));
+  document.querySelectorAll('.price-pill').forEach(p => p.addEventListener('click', function(){
+    const txt = this.textContent.trim();
+    const map = {'Dưới 10tr':'under10','10 – 20tr':'10to20','20 – 30tr':'20to30','Trên 30tr':'over30'};
+    const val = map[txt];
+    if(val){
+      const wasOn = this.classList.contains('on');
+      document.querySelectorAll('.price-pill').forEach(x=>x.classList.remove('on'));
+      if(!wasOn){ this.classList.add('on'); filterPrice=val; } else { filterPrice='all'; }
+    }
+    const storageMap = {'64GB':'64','128GB':'128','256GB':'256','512GB+':'512'};
+    const sv = storageMap[txt];
+    if(sv){
+      const wasOn = this.classList.contains('on');
+      document.querySelectorAll('.price-pill').forEach(x=>{ if(storageMap[x.textContent.trim()]) x.classList.remove('on'); });
+      if(!wasOn){ this.classList.add('on'); filterStorage=sv; } else { filterStorage='all'; }
+    }
+    render();
+  }));
+  document.querySelectorAll('.sort-pill').forEach(s => s.addEventListener('click', function(){
+    document.querySelectorAll('.sort-pill').forEach(x=>x.classList.remove('on'));
+    this.classList.add('on');
+    const txt = this.textContent.trim();
+    if(txt.includes('thấp → cao')) sortBy='asc';
+    else if(txt.includes('cao → thấp')) sortBy='desc';
+    else sortBy='newest';
+    render();
+  }));
+
+  // Search
+  const searchInput = document.querySelector('.nav-search input');
+  if(searchInput) searchInput.addEventListener('input', function(){
+    searchQ = this.value.trim().toLowerCase();
+    render();
+  });
+
+  loadAll();
+})();
+</script>
+</body>
+</html>

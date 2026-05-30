@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HPHONE Admin – Quản lý cửa hàng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0a0a0a;--white:#fafafa;--gray-100:#f5f5f5;--gray-200:#e8e8e8;
+  --gray-400:#a0a0a0;--gray-600:#606060;--gray-800:#2a2a2a;
+  --accent:#c8a96e;--accent-light:#e8d5a8;
+  --font-display:'Playfair Display',serif;--font-body:'DM Sans',sans-serif;
+  --radius-sm:8px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;
+  --transition:0.25s cubic-bezier(0.4,0,0.2,1);
+  --green:#2e9e63;--green-bg:#e7f5ee;--blue:#2b6fd6;--blue-bg:#e8f1fd;
+  --orange:#cc8a2e;--orange-bg:#fbf2e3;--red:#c0392b;--red-bg:#fbeae8;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--gray-100);color:var(--black);font-size:14px;line-height:1.55;min-height:100vh}
+
+/* ─── SIDEBAR ─── */
+.sidebar{width:248px;background:var(--black);color:#fff;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:30;overflow-y:auto}
+.sb-logo{font-family:var(--font-display);font-size:24px;font-weight:700;letter-spacing:2px;padding:24px 24px 6px}
+.sb-logo span{color:var(--accent)}
+.sb-tag{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);padding:0 24px 24px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.sb-nav{flex:1;padding:18px 14px;display:flex;flex-direction:column;gap:4px}
+.sb-item{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:var(--radius-md);color:rgba(255,255,255,0.6);cursor:pointer;font-weight:500;transition:var(--transition);font-size:14px}
+.sb-item svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0}
+.sb-item:hover{color:#fff;background:rgba(255,255,255,0.06)}
+.sb-item.active{color:var(--black);background:var(--accent)}
+.sb-item .count{margin-left:auto;background:rgba(255,255,255,0.12);font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
+.sb-item.active .count{background:rgba(10,10,10,0.18)}
+.sb-foot{padding:18px 24px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:12px}
+.sb-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#8a6a30);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--black);font-size:13px}
+.sb-foot .who{font-size:13px;font-weight:600;color:#fff}
+.sb-foot .role{font-size:11px;color:rgba(255,255,255,0.4)}
+
+/* ─── MAIN ─── */
+.main{margin-left:248px;min-width:0;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid var(--gray-200);padding:0 32px;height:68px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20}
+.topbar h1{font-family:var(--font-display);font-size:24px;font-weight:700}
+.topbar .tb-right{display:flex;align-items:center;gap:12px}
+.tb-search{display:flex;align-items:center;gap:8px;background:var(--gray-100);border:1px solid var(--gray-200);border-radius:30px;padding:9px 16px}
+.tb-search svg{width:15px;height:15px;stroke:var(--gray-400);fill:none;stroke-width:2}
+.tb-search input{border:none;background:none;outline:none;font-family:var(--font-body);font-size:13px;width:180px}
+.content{padding:28px 32px 60px}
+.view{display:none}
+.view.active{display:block}
+
+/* buttons */
+.btn{font-family:var(--font-body);font-size:14px;font-weight:600;padding:11px 20px;border-radius:var(--radius-md);border:none;cursor:pointer;transition:var(--transition);display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.btn-dark{background:var(--black);color:#fff}
+.btn-dark:hover{background:var(--gray-800)}
+.btn-gold{background:var(--accent);color:var(--black)}
+.btn-gold:hover{background:var(--accent-light)}
+.btn-ghost{background:#fff;border:1.5px solid var(--gray-200);color:var(--black)}
+.btn-ghost:hover{border-color:var(--black)}
+.btn-sm{padding:8px 14px;font-size:13px}
+.btn-icon{width:34px;height:34px;padding:0;justify-content:center;border-radius:9px}
+
+/* stat cards */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px}
+.stat{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:22px;position:relative;overflow:hidden}
+.stat::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-light))}
+.stat .ic{width:42px;height:42px;border-radius:var(--radius-sm);background:rgba(200,169,110,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.stat .ic svg{width:20px;height:20px;stroke:var(--accent);fill:none;stroke-width:1.8}
+.stat .val{font-family:var(--font-display);font-size:30px;font-weight:700;line-height:1}
+.stat .lbl{font-size:13px;color:var(--gray-600);margin-top:6px}
+
+/* card / panel */
+.panel{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden}
+.panel-head{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;border-bottom:1px solid var(--gray-100);flex-wrap:wrap;gap:12px}
+.panel-head h2{font-family:var(--font-display);font-size:20px;font-weight:700}
+.panel-head .sub{font-size:13px;color:var(--gray-600);margin-top:2px}
+
+/* filter pills */
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{font-size:13px;padding:7px 14px;border-radius:30px;border:1.5px solid var(--gray-200);cursor:pointer;transition:var(--transition);background:#fff;white-space:nowrap}
+.pill:hover{border-color:var(--black)}
+.pill.on{background:var(--black);color:#fff;border-color:var(--black)}
+
+/* table */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--gray-600);padding:14px 22px;border-bottom:1px solid var(--gray-100);background:var(--gray-100)}
+.tbl td{padding:14px 22px;border-bottom:1px solid var(--gray-100);font-size:14px;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr{transition:var(--transition)}
+.tbl tbody tr:hover{background:#fcfaf6}
+.prod-cell{display:flex;align-items:center;gap:14px}
+.prod-thumb{width:52px;height:52px;border-radius:11px;flex-shrink:0;overflow:hidden;background:linear-gradient(135deg,var(--gray-100),var(--gray-200));display:flex;align-items:center;justify-content:center}
+.prod-thumb img{width:100%;height:100%;object-fit:cover}
+.prod-thumb .mini{width:38%;aspect-ratio:0.49;background:linear-gradient(145deg,#2a2a2a,#111);border-radius:5px}
+.prod-thumb.samsung .mini{background:linear-gradient(145deg,#1a1a2e,#0d0d1a)}
+.prod-cell .pn{font-weight:600}
+.prod-cell .pm{font-size:12px;color:var(--gray-600)}
+.price-cell{font-weight:600;font-family:var(--font-display);font-size:16px}
+.price-cell small{display:block;font-family:var(--font-body);font-size:12px;font-weight:400;color:var(--gray-400);text-decoration:line-through}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px}
+.tag.green{background:var(--green-bg);color:var(--green)}
+.tag.red{background:var(--red-bg);color:var(--red)}
+.tag.blue{background:var(--blue-bg);color:var(--blue)}
+.tag.orange{background:var(--orange-bg);color:var(--orange)}
+.tag.gray{background:var(--gray-100);color:var(--gray-600)}
+.row-actions{display:flex;gap:7px;justify-content:flex-end}
+.act-btn{width:32px;height:32px;border-radius:9px;border:1.5px solid var(--gray-200);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition)}
+.act-btn svg{width:15px;height:15px;stroke:var(--gray-600);fill:none;stroke-width:1.8}
+.act-btn:hover{border-color:var(--black)}.act-btn:hover svg{stroke:var(--black)}
+.act-btn.del:hover{border-color:var(--red);background:var(--red-bg)}.act-btn.del:hover svg{stroke:var(--red)}
+.empty{padding:54px;text-align:center;color:var(--gray-400);font-size:14px}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(10,10,10,0.6);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;opacity:0;pointer-events:none;transition:var(--transition);overflow-y:auto}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:var(--radius-xl);width:100%;max-width:680px;transform:translateY(16px);transition:var(--transition);margin:auto 0}
+.overlay.open .modal{transform:translateY(0)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:24px 28px;border-bottom:1px solid var(--gray-100)}
+.modal-head h3{font-family:var(--font-display);font-size:22px;font-weight:700}
+.modal-close{width:34px;height:34px;border-radius:50%;background:var(--gray-100);border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+.modal-close:hover{background:var(--gray-200)}
+.modal-body{padding:24px 28px}
+.modal-foot{padding:18px 28px;border-top:1px solid var(--gray-100);display:flex;justify-content:flex-end;gap:10px}
+
+/* form */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{margin-bottom:16px}
+.field.full{grid-column:1 / -1}
+.field label{display:block;font-size:12px;font-weight:700;letter-spacing:0.5px;color:var(--gray-600);margin-bottom:7px;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;padding:11px 13px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-family:var(--font-body);font-size:14px;outline:none;transition:var(--transition);background:#fff;color:var(--black)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+.field textarea{resize:vertical;min-height:90px;line-height:1.6}
+.field .hint{font-size:11px;color:var(--gray-400);margin-top:5px;font-weight:400;text-transform:none;letter-spacing:0}
+/* image uploader */
+.img-up{display:flex;gap:16px;align-items:flex-start}
+.img-preview{width:110px;height:110px;border-radius:var(--radius-md);border:1.5px dashed var(--gray-200);flex-shrink:0;overflow:hidden;background:linear-gradient(135deg,var(--gray-100),var(--gray-200));display:flex;align-items:center;justify-content:center;position:relative}
+.img-preview img{width:100%;height:100%;object-fit:cover}
+.img-preview .ph{width:40%;aspect-ratio:0.49;background:linear-gradient(145deg,#2a2a2a,#111);border-radius:6px}
+.img-up-controls{flex:1}
+.img-up-controls .file-btn{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;padding:9px 16px;border-radius:var(--radius-md);border:1.5px solid var(--gray-200);cursor:pointer;transition:var(--transition);margin-bottom:10px}
+.img-up-controls .file-btn:hover{border-color:var(--black)}
+.img-up-controls .file-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8}
+
+/* order detail drawer */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:460px;max-width:92vw;background:#fff;z-index:110;transform:translateX(100%);transition:var(--transition);display:flex;flex-direction:column;box-shadow:-12px 0 40px rgba(0,0,0,0.15)}
+.drawer.open{transform:translateX(0)}
+.drawer-mask{position:fixed;inset:0;background:rgba(10,10,10,0.4);z-index:109;opacity:0;pointer-events:none;transition:var(--transition)}
+.drawer-mask.open{opacity:1;pointer-events:all}
+.drawer-head{padding:24px 26px;border-bottom:1px solid var(--gray-100);display:flex;justify-content:space-between;align-items:flex-start}
+.drawer-head .oid{font-family:var(--font-display);font-size:22px;font-weight:700}
+.drawer-head .odate{font-size:13px;color:var(--gray-600);margin-top:3px}
+.drawer-body{flex:1;overflow-y:auto;padding:24px 26px}
+.dsec{margin-bottom:26px}
+.dsec h4{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray-600);margin-bottom:12px}
+.dinfo-row{display:flex;justify-content:space-between;font-size:14px;padding:6px 0}
+.dinfo-row .k{color:var(--gray-600)}
+.dinfo-row .v{font-weight:500;text-align:right}
+.ditem{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--gray-100)}
+.ditem:last-child{border-bottom:none}
+.ditem .dt{width:46px;height:46px;border-radius:9px;background:linear-gradient(135deg,var(--gray-100),var(--gray-200));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ditem .dt .mini{width:36%;aspect-ratio:0.49;background:linear-gradient(145deg,#2a2a2a,#111);border-radius:4px}
+.ditem .di-name{font-weight:600;font-size:14px}
+.ditem .di-meta{font-size:12px;color:var(--gray-600)}
+.ditem .di-price{margin-left:auto;font-weight:600;white-space:nowrap}
+.dtotal{display:flex;justify-content:space-between;align-items:baseline;padding-top:14px;margin-top:6px;border-top:1px solid var(--gray-200)}
+.dtotal .lbl{font-weight:600}
+.dtotal .amt{font-family:var(--font-display);font-size:24px;font-weight:700}
+.drawer-foot{padding:18px 26px;border-top:1px solid var(--gray-100)}
+.status-select{width:100%;padding:12px 13px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-family:var(--font-body);font-size:14px;font-weight:600;outline:none;cursor:pointer;margin-bottom:10px}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--black);color:#fff;padding:13px 22px;border-radius:30px;font-size:14px;font-weight:500;z-index:200;opacity:0;pointer-events:none;transition:var(--transition);display:flex;align-items:center;gap:9px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast svg{width:17px;height:17px;stroke:var(--accent);fill:none;stroke-width:2.2}
+
+.note{background:var(--orange-bg);border:1px solid #f0d9a8;border-radius:var(--radius-md);padding:13px 16px;font-size:13px;color:#7a5a18;line-height:1.6;margin-bottom:24px;display:flex;gap:10px}
+.note svg{width:17px;height:17px;stroke:var(--orange);fill:none;stroke-width:2;flex-shrink:0;margin-top:1px}
+
+@media(max-width:1100px){.stats{grid-template-columns:1fr 1fr}}
+@media(max-width:860px){.sidebar{display:none}.main{margin-left:0}.form-grid{grid-template-columns:1fr}.tb-search{display:none}}
+
+/* login gate */
+.login-gate{position:fixed;inset:0;background:var(--black);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{background:#fff;border-radius:var(--radius-xl);width:100%;max-width:380px;padding:38px 34px;text-align:center}
+.login-card .lg-logo{font-family:var(--font-display);font-size:30px;font-weight:700;letter-spacing:2px;margin-bottom:4px}
+.login-card .lg-logo span{color:var(--accent)}
+.login-card .lg-tag{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-400);margin-bottom:26px}
+.login-card .lg-field{text-align:left;margin-bottom:14px}
+.login-card .lg-field label{display:block;font-size:12px;font-weight:700;letter-spacing:0.5px;color:var(--gray-600);margin-bottom:6px;text-transform:uppercase}
+.login-card .lg-field input{width:100%;padding:12px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-family:var(--font-body);font-size:14px;outline:none;transition:var(--transition)}
+.login-card .lg-field input:focus{border-color:var(--accent)}
+.login-card .lg-btn{width:100%;background:var(--black);color:#fff;font-family:var(--font-body);font-weight:600;font-size:15px;padding:13px;border:none;border-radius:var(--radius-md);cursor:pointer;margin-top:6px;transition:var(--transition)}
+.login-card .lg-btn:hover{background:var(--gray-800)}
+.login-card .lg-err{background:#fbeae8;color:#c0392b;font-size:13px;padding:10px 14px;border-radius:var(--radius-md);margin-bottom:14px;display:none;text-align:left}
+.login-card .lg-note{font-size:12px;color:var(--gray-400);margin-top:18px;line-height:1.6}
+.mode-badge{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:20px}
+.mode-badge.live{background:var(--green-bg);color:var(--green)}
+.mode-badge.demo{background:var(--orange-bg);color:var(--orange)}
+.logout-btn{background:none;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition)}
+.logout-btn:hover{border-color:var(--black)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+window.HPHONE_SUPABASE = {
+  url:     "https://pkmigreebudnbfkujplu.supabase.co",
+  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrbWlncmVlYnVkbmJma3VqcGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTAyMjYsImV4cCI6MjA5NTYyNjIyNn0.Bb9Y6-FKshYfmxUrEU8GJfJKnnrbJ--vMtXzAwCHFns"
+};
+</script>
+</head>
+<body>
+
+<!-- LOGIN GATE (chỉ hiện khi đã kết nối Supabase và chưa đăng nhập) -->
+<div class="login-gate" id="loginGate" style="display:none">
+  <div class="login-card">
+    <div class="lg-logo">H<span>PHONE</span></div>
+    <div class="lg-tag">Trang quản trị</div>
+    <div class="lg-err" id="lgErr"></div>
+    <div class="lg-field"><label>Email</label><input type="email" id="lgEmail" placeholder="admin@hphone.store"></div>
+    <div class="lg-field"><label>Mật khẩu</label><input type="password" id="lgPass" placeholder="••••••••"></div>
+    <button class="lg-btn" id="lgBtn" onclick="doLogin()">Đăng nhập</button>
+    <div class="lg-note">Tài khoản được tạo trong Supabase (Authentication → Users). Nếu chưa thiết lập, trang sẽ chạy ở chế độ demo.</div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">H<span>PHONE</span></div>
+  <div class="sb-tag">Trang quản trị</div>
+  <nav class="sb-nav">
+    <div class="sb-item active" data-view="dashboard">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+      Tổng quan
+    </div>
+    <div class="sb-item" data-view="products">
+      <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      Sản phẩm <span class="count" id="navProdCount">0</span>
+    </div>
+    <div class="sb-item" data-view="orders">
+      <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Đơn hàng <span class="count" id="navOrderCount">0</span>
+    </div>
+    <div class="sb-item" data-view="tradein">
+      <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      Thu cũ đổi mới <span class="count" id="navTradeCount">0</span>
+    </div>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-avatar">AD</div>
+    <div><div class="who">Quản trị viên</div><div class="role">HPHONE Store</div></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <h1 id="pageTitle">Tổng quan</h1>
+    <div class="tb-right">
+      <span class="mode-badge demo" id="modeBadge">Demo</span>
+      <div class="tb-search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="globalSearch" placeholder="Tìm sản phẩm, đơn hàng...">
+      </div>
+      <a href="trang-chu" class="btn btn-ghost btn-sm" target="_blank">Xem website ↗</a>
+      <button class="logout-btn" id="logoutBtn" style="display:none" onclick="doLogout()">Đăng xuất</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ════ DASHBOARD ════ -->
+    <section class="view active" id="view-dashboard">
+      <div class="stats" id="statCards"></div>
+      <div class="panel">
+        <div class="panel-head"><div><h2>Đơn hàng gần đây</h2><div class="sub">5 đơn mới nhất từ website</div></div>
+          <button class="btn btn-ghost btn-sm" onclick="go('orders')">Xem tất cả →</button></div>
+        <table class="tbl">
+          <thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Sản phẩm</th><th>Tổng tiền</th><th>Trạng thái</th><th>Ngày</th></tr></thead>
+          <tbody id="recentOrders"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ════ PRODUCTS ════ -->
+    <section class="view" id="view-products">
+      <div class="note">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div>Dữ liệu được lưu tạm trên trình duyệt của bạn (demo). Khi triển khai thật, các thao tác thêm/sửa/xóa cần kết nối tới API &amp; cơ sở dữ liệu của HPHONE.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <div class="pills" id="prodFilter">
+            <span class="pill on" data-f="all">Tất cả</span>
+            <span class="pill" data-f="apple">iPhone</span>
+            <span class="pill" data-f="samsung">Samsung</span>
+            <span class="pill" data-f="instock">Còn hàng</span>
+            <span class="pill" data-f="outofstock">Hết hàng</span>
+          </div>
+          <button class="btn btn-gold" onclick="openProductModal()">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Thêm sản phẩm
+          </button>
+        </div>
+        <table class="tbl">
+          <thead><tr><th>Sản phẩm</th><th>Dung lượng</th><th>Pin</th><th>Tình trạng</th><th>Giá bán</th><th>Trạng thái</th><th style="text-align:right">Thao tác</th></tr></thead>
+          <tbody id="prodTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ════ ORDERS ════ -->
+    <section class="view" id="view-orders">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="pills" id="orderFilter">
+            <span class="pill on" data-f="all">Tất cả</span>
+            <span class="pill" data-f="new">Mới</span>
+            <span class="pill" data-f="confirmed">Đã xác nhận</span>
+            <span class="pill" data-f="shipping">Đang giao</span>
+            <span class="pill" data-f="done">Hoàn tất</span>
+            <span class="pill" data-f="cancelled">Đã hủy</span>
+          </div>
+          <div class="sub" id="orderSummary"></div>
+        </div>
+        <table class="tbl">
+          <thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Sản phẩm</th><th>Tổng tiền</th><th>Trạng thái</th><th>Ngày đặt</th></tr></thead>
+          <tbody id="orderTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ════ TRADE-IN ════ -->
+    <section class="view" id="view-tradein">
+      <div class="note">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div>Các đơn thu máy được gửi từ trang <b>Thu cũ đổi mới</b>. Nhấn vào một đơn để xem chi tiết và cập nhật trạng thái.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <div class="pills" id="tradeFilter">
+            <span class="pill on" data-f="all">Tất cả</span>
+            <span class="pill" data-f="new">Mới</span>
+            <span class="pill" data-f="contacted">Đã liên hệ</span>
+            <span class="pill" data-f="inspecting">Đang kiểm tra</span>
+            <span class="pill" data-f="done">Hoàn tất</span>
+            <span class="pill" data-f="cancelled">Đã hủy</span>
+          </div>
+          <div class="sub" id="tradeSummary"></div>
+        </div>
+        <table class="tbl">
+          <thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Máy thu</th><th>Giá ước tính</th><th>Sửa chữa</th><th>Trạng thái</th><th>Ngày gửi</th></tr></thead>
+          <tbody id="tradeTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="overlay" id="prodOverlay">
+  <div class="modal">
+    <div class="modal-head"><h3 id="modalTitle">Thêm sản phẩm</h3><button class="modal-close" onclick="closeProductModal()">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="f_id">
+      <div class="field full">
+        <label>Hình ảnh sản phẩm</label>
+        <div class="img-up">
+          <div class="img-preview" id="imgPreview"><div class="ph"></div></div>
+          <div class="img-up-controls">
+            <label class="file-btn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Tải ảnh lên<input type="file" id="f_file" accept="image/*" hidden></label>
+            <div class="field" style="margin-bottom:0"><input type="text" id="f_imgurl" placeholder="Hoặc dán URL ảnh..."><div class="hint">Chấp nhận ảnh tải lên hoặc đường dẫn ảnh trực tuyến.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field full"><label>Tên sản phẩm</label><input type="text" id="f_name" placeholder="VD: iPhone 15 Pro Max"></div>
+        <div class="field"><label>Nhãn rút gọn (ảnh)</label><input type="text" id="f_short" placeholder="VD: 15 Pro Max"></div>
+        <div class="field"><label>Hãng</label><select id="f_brand"><option value="apple">Apple (iPhone)</option><option value="samsung">Samsung</option></select></div>
+        <div class="field"><label>Dung lượng</label><input type="text" id="f_storage" placeholder="VD: 256GB"></div>
+        <div class="field"><label>Màu sắc</label><input type="text" id="f_color" placeholder="VD: Titan Tự Nhiên"></div>
+        <div class="field"><label>Sức khỏe pin</label><input type="text" id="f_battery" placeholder="VD: 94%"></div>
+        <div class="field"><label>Tình trạng</label><input type="text" id="f_condition" placeholder="VD: Like New 99%"></div>
+        <div class="field"><label>Nhãn (badge)</label><input type="text" id="f_badge" placeholder="VD: Like New / Đẹp 98%"></div>
+        <div class="field"><label>Bảo hành</label><input type="text" id="f_warranty" placeholder="VD: 12 tháng"></div>
+        <div class="field"><label>Giá bán (₫)</label><input type="text" id="f_price" placeholder="VD: 32.900.000"></div>
+        <div class="field"><label>Giá gốc (₫)</label><input type="text" id="f_old" placeholder="VD: 35.900.000 (tùy chọn)"></div>
+        <div class="field"><label>Trạng thái kho</label><select id="f_status"><option value="instock">Còn hàng</option><option value="outofstock">Hết hàng</option></select></div>
+        <div class="field full"><label>Mô tả</label><textarea id="f_desc" placeholder="Mô tả ngắn về sản phẩm, tình trạng máy, điểm nổi bật..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeProductModal()">Hủy</button>
+      <button class="btn btn-dark" onclick="saveProduct()">Lưu sản phẩm</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM -->
+<div class="overlay" id="delOverlay">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-body" style="text-align:center;padding:36px 28px 14px">
+      <div style="width:54px;height:54px;border-radius:50%;background:var(--red-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 18px">
+        <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:var(--red);fill:none;stroke-width:2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </div>
+      <h3 style="font-family:var(--font-display);font-size:21px;margin-bottom:8px">Xóa sản phẩm?</h3>
+      <p style="color:var(--gray-600);font-size:14px" id="delName"></p>
+    </div>
+    <div class="modal-foot" style="justify-content:center;border-top:none;padding-bottom:28px">
+      <button class="btn btn-ghost" onclick="closeDel()">Hủy</button>
+      <button class="btn btn-dark" style="background:var(--red)" onclick="confirmDel()">Xóa</button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER DRAWER -->
+<div class="drawer-mask" id="drawerMask" onclick="closeDrawer()"></div>
+<div class="drawer" id="orderDrawer">
+  <div class="drawer-head">
+    <div><div class="oid" id="d_id"></div><div class="odate" id="d_date"></div></div>
+    <button class="modal-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="dsec">
+      <h4>Khách hàng</h4>
+      <div class="dinfo-row"><span class="k">Họ tên</span><span class="v" id="d_cust"></span></div>
+      <div class="dinfo-row"><span class="k">Số điện thoại</span><span class="v" id="d_phone"></span></div>
+      <div class="dinfo-row"><span class="k">Địa chỉ</span><span class="v" id="d_addr"></span></div>
+    </div>
+    <div class="dsec">
+      <h4>Sản phẩm</h4>
+      <div id="d_items"></div>
+      <div class="dtotal"><span class="lbl">Tổng cộng</span><span class="amt" id="d_total"></span></div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <h4 style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray-600);margin-bottom:10px">Cập nhật trạng thái</h4>
+    <select class="status-select" id="d_status">
+      <option value="new">Mới</option>
+      <option value="confirmed">Đã xác nhận</option>
+      <option value="shipping">Đang giao</option>
+      <option value="done">Hoàn tất</option>
+      <option value="cancelled">Đã hủy</option>
+    </select>
+    <button class="btn btn-gold" style="width:100%" onclick="saveOrderStatus()">Lưu thay đổi</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span id="toastMsg"></span></div>
+
+<!-- TRADE-IN DRAWER -->
+<div class="drawer-mask" id="tradeMask" onclick="closeTradeDrawer()"></div>
+<div class="drawer" id="tradeDrawer">
+  <div class="drawer-head">
+    <div><div class="oid" id="td_id"></div><div class="odate" id="td_date"></div></div>
+    <button class="modal-close" onclick="closeTradeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="dsec">
+      <h4>Khách hàng</h4>
+      <div class="dinfo-row"><span class="k">Họ tên</span><span class="v" id="td_cust"></span></div>
+      <div class="dinfo-row"><span class="k">Số điện thoại</span><span class="v" id="td_phone"></span></div>
+      <div class="dinfo-row"><span class="k">Địa chỉ</span><span class="v" id="td_addr"></span></div>
+    </div>
+    <div class="dsec">
+      <h4>Thông tin máy thu</h4>
+      <div class="dinfo-row"><span class="k">Máy</span><span class="v" id="td_device"></span></div>
+      <div class="dinfo-row"><span class="k">Tình trạng</span><span class="v" id="td_cond"></span></div>
+      <div class="dinfo-row"><span class="k">Pin</span><span class="v" id="td_bat"></span></div>
+      <div class="dtotal"><span class="lbl">Giá ước tính</span><span class="amt" id="td_price" style="color:var(--accent)"></span></div>
+    </div>
+    <div class="dsec">
+      <h4>Tình trạng sửa chữa</h4>
+      <div class="dinfo-row"><span class="k">Sửa chữa</span><span class="v" id="td_repair"></span></div>
+    </div>
+    <div class="dsec" id="td_noteWrap">
+      <h4>Ghi chú</h4>
+      <p id="td_note" style="font-size:14px;line-height:1.7;color:var(--gray-600)"></p>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <h4 style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray-600);margin-bottom:10px">Cập nhật trạng thái</h4>
+    <select class="status-select" id="td_status">
+      <option value="new">Mới</option>
+      <option value="contacted">Đã liên hệ</option>
+      <option value="inspecting">Đang kiểm tra</option>
+      <option value="done">Hoàn tất</option>
+      <option value="cancelled">Đã hủy</option>
+    </select>
+    <button class="btn btn-gold" style="width:100%" onclick="saveTradeStatus()">Lưu thay đổi</button>
+  </div>
+</div>
+
+<script>
+/* ───────── DATA ───────── */
+const STATUS = {
+  new:{label:'Mới',cls:'blue'}, confirmed:{label:'Đã xác nhận',cls:'orange'},
+  shipping:{label:'Đang giao',cls:'orange'}, done:{label:'Hoàn tất',cls:'green'},
+  cancelled:{label:'Đã hủy',cls:'red'}
+};
+
+const seedProducts = [
+ {id:1,name:'iPhone 15 Pro Max',short:'15 Pro Max',brand:'apple',storage:'256GB',color:'Titan Tự Nhiên',battery:'94%',condition:'Like New 99%',badge:'Like New',warranty:'12 tháng',price:'32.900.000',old:'35.900.000',status:'instock',img:'',desc:'Máy đẹp Like New 99%, khung titan nguyên bản, pin 94% kiểm tra thực tế.'},
+ {id:2,name:'iPhone 15',short:'15',brand:'apple',storage:'128GB',color:'Xanh',battery:'97%',condition:'Like New 99%',badge:'Like New',warranty:'12 tháng',price:'18.500.000',old:'',status:'instock',img:'',desc:'iPhone 15 Like New, pin cao 97%, ngoại hình đẹp.'},
+ {id:3,name:'iPhone 14 Pro',short:'14 Pro',brand:'apple',storage:'128GB',color:'Tím',battery:'91%',condition:'Đẹp 98%',badge:'Đẹp 98%',warranty:'12 tháng',price:'22.500.000',old:'',status:'instock',img:'',desc:'Máy zin đẹp, pin 91%, đầy đủ tính năng Pro.'},
+ {id:4,name:'iPhone 14 Pro Max',short:'14 Pro Max',brand:'apple',storage:'256GB',color:'Đen',battery:'90%',condition:'Đẹp 98%',badge:'Đẹp 98%',warranty:'12 tháng',price:'26.900.000',old:'',status:'instock',img:'',desc:'Bản Pro Max màn lớn, pin 90%, ngoại hình đẹp 98%.'},
+ {id:5,name:'iPhone 13',short:'13',brand:'apple',storage:'128GB',color:'Hồng',battery:'89%',condition:'Đẹp 97%',badge:'Đẹp 97%',warranty:'6 tháng',price:'13.900.000',old:'',status:'instock',img:'',desc:'iPhone 13 giá tốt, pin 89%, máy zin.'},
+ {id:6,name:'iPhone 13 Pro Max',short:'13 Pro Max',brand:'apple',storage:'128GB',color:'Xanh Sierra',battery:'88%',condition:'Đẹp 97%',badge:'Đẹp 97%',warranty:'6 tháng',price:'15.900.000',old:'',status:'outofstock',img:'',desc:'Pro Max màn 120Hz, pin 88%, ngoại hình đẹp.'},
+ {id:7,name:'iPhone 12 Pro Max',short:'12 Pro Max',brand:'apple',storage:'128GB',color:'Vàng đồng',battery:'85%',condition:'Đẹp 95%',badge:'Giá tốt',warranty:'3 tháng',price:'11.200.000',old:'',status:'instock',img:'',desc:'Giá tốt, máy đẹp 95%, pin 85%.'},
+ {id:8,name:'Samsung Galaxy S24 Ultra',short:'S24 Ultra',brand:'samsung',storage:'256GB',color:'Titanium Gray',battery:'96%',condition:'Đẹp 98%',badge:'Samsung',warranty:'12 tháng',price:'24.900.000',old:'',status:'instock',img:'',desc:'Flagship Samsung, bút S-Pen, pin 96%, máy đẹp.'},
+ {id:9,name:'iPhone 12',short:'12',brand:'apple',storage:'64GB',color:'Trắng',battery:'84%',condition:'Đẹp 95%',badge:'Giá tốt',warranty:'3 tháng',price:'8.900.000',old:'',status:'instock',img:'',desc:'iPhone 12 giá rẻ, phù hợp nhu cầu cơ bản.'}
+];
+
+const seedOrders = [
+ {id:'HP-1048',customer:'Trần Linh',phone:'0901 234 567',addr:'12 Lê Lợi, P. Vĩnh Ninh, TP. Huế',date:'29/05/2026',status:'new',items:[{name:'iPhone 15 Pro Max',short:'15 Pro Max',brand:'apple',meta:'256GB · Titan Tự Nhiên',qty:1,price:'32.900.000'}]},
+ {id:'HP-1047',customer:'Minh Khôi',phone:'0912 888 222',addr:'45 Hùng Vương, TP. Huế',date:'29/05/2026',status:'confirmed',items:[{name:'iPhone 15',short:'15',brand:'apple',meta:'128GB · Xanh',qty:1,price:'18.500.000'},{name:'Ốp lưng MagSafe',short:'OP',brand:'apple',meta:'Phụ kiện',qty:1,price:'350.000'}]},
+ {id:'HP-1046',customer:'Hương Yến',phone:'0987 111 333',addr:'8 Nguyễn Huệ, TP. Huế',date:'28/05/2026',status:'shipping',items:[{name:'iPhone 13',short:'13',brand:'apple',meta:'256GB · Hồng',qty:1,price:'13.900.000'}]},
+ {id:'HP-1045',customer:'Quốc Huy',phone:'0934 555 777',addr:'102 Bà Triệu, TP. Huế',date:'28/05/2026',status:'done',items:[{name:'Samsung Galaxy S24 Ultra',short:'S24 Ultra',brand:'samsung',meta:'256GB · Titanium Gray',qty:1,price:'24.900.000'}]},
+ {id:'HP-1044',customer:'Ngọc Phương',phone:'0976 222 444',addr:'30 Trần Phú, TP. Huế',date:'27/05/2026',status:'done',items:[{name:'iPhone 14 Pro',short:'14 Pro',brand:'apple',meta:'128GB · Tím',qty:1,price:'22.500.000'}]},
+ {id:'HP-1043',customer:'Đức Anh',phone:'0908 333 121',addr:'77 Lý Thường Kiệt, TP. Huế',date:'27/05/2026',status:'cancelled',items:[{name:'iPhone 12 Pro Max',short:'12 Pro Max',brand:'apple',meta:'128GB · Vàng đồng',qty:1,price:'11.200.000'}]},
+ {id:'HP-1042',customer:'Thu Hà',phone:'0945 678 909',addr:'5 Phan Đình Phùng, TP. Huế',date:'26/05/2026',status:'done',items:[{name:'iPhone 15',short:'15',brand:'apple',meta:'128GB · Xanh',qty:1,price:'18.500.000'}]}
+];
+
+/* ───────── SUPABASE / DATA LAYER ───────── */
+let products, orders;
+function safeLS(){ try{ return window.localStorage || null; }catch(e){ return null; } }
+
+const _cfg = window.HPHONE_SUPABASE || {};
+const LIVE = !!(_cfg.url && _cfg.anonKey && !_cfg.url.includes('YOUR-PROJECT'));
+let _sb = null;
+if(LIVE && window.supabase){ try{ _sb = window.supabase.createClient(_cfg.url,_cfg.anonKey); }catch(e){ _sb=null; } }
+
+/* map DB <-> JS */
+function fmtDate(iso){ try{ const d=new Date(iso); return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear(); }catch(e){ return ''; } }
+function mapProd(r){ return {id:r.id,name:r.name,short:r.short||'',brand:r.brand||'apple',storage:r.storage||'',color:r.color||'',battery:r.battery||'',condition:r.condition||'',badge:r.badge||'',warranty:r.warranty||'',price:r.price||'',old:r.old_price||'',status:r.status||'instock',img:r.img||'',desc:r.description||''}; }
+function prodPayload(p){ return {name:p.name,short:p.short,brand:p.brand,storage:p.storage,color:p.color,battery:p.battery,condition:p.condition,badge:p.badge,warranty:p.warranty,price:p.price,old_price:p.old||null,status:p.status,img:p.img||null,description:p.desc||null}; }
+function mapOrder(r){ return {id:'HP-'+(1000+r.id),dbid:r.id,customer:r.customer,phone:r.phone,addr:r.address||'',note:r.note||'',items:Array.isArray(r.items)?r.items:[],total:r.total,status:r.status||'new',date:fmtDate(r.created_at)}; }
+
+/* demo data (when Supabase not configured) */
+function loadDemo(){
+  products = seedProducts.slice(); orders = seedOrders.slice();
+  try{
+    const ls = safeLS(); if(!ls) return;
+    const p = ls.getItem('hphone_products'); const o = ls.getItem('hphone_orders');
+    if(p){ const arr=JSON.parse(p); if(Array.isArray(arr)&&arr.length) products=arr; }
+    if(o){ const arr=JSON.parse(o); if(Array.isArray(arr)&&arr.length) orders=arr; }
+  }catch(e){ products = seedProducts.slice(); orders = seedOrders.slice(); }
+}
+function persist(){
+  if(_sb) return; // live mode persists to Supabase, not localStorage
+  try{
+    const ls=safeLS(); if(!ls) return;
+    ls.setItem('hphone_products',JSON.stringify(products));
+    ls.setItem('hphone_orders',JSON.stringify(orders));
+  }catch(e){
+    // localStorage có thể bị block (private mode) hoặc đầy – bỏ qua lỗi lặng
+    console.warn('persist failed:',e);
+  }
+}
+
+/* live fetch */
+async function reloadProducts(){
+  const {data,error}=await _sb.from('products').select('*').order('id',{ascending:true});
+  products = (!error&&data)?data.map(mapProd):[];
+}
+async function reloadOrders(){
+  const {data,error}=await _sb.from('orders').select('*').order('id',{ascending:false});
+  orders = (!error&&data)?data.map(mapOrder):[];
+}
+async function loadLive(){ await reloadProducts(); await reloadOrders(); }
+
+function renderAll(){
+  try{ renderDashboard(); }catch(e){ console.warn('dashboard',e); }
+  try{ renderProducts(); }catch(e){ console.warn('products',e); }
+  try{ renderOrders(); }catch(e){ console.warn('orders',e); }
+  try{ renderTradeIns(); }catch(e){ console.warn('tradein',e); }
+}
+function setBadge(mode){
+  const b=document.getElementById('modeBadge'); if(!b) return;
+  if(mode==='live'){ b.textContent='Live'; b.className='mode-badge live'; }
+  else{ b.textContent='Demo'; b.className='mode-badge demo'; }
+}
+
+/* auth */
+function showLogin(){ document.getElementById('loginGate').style.display='flex'; document.getElementById('logoutBtn').style.display='none'; }
+async function showApp(){
+  document.getElementById('loginGate').style.display='none';
+  document.getElementById('logoutBtn').style.display='inline-flex';
+  try{ await loadLive(); }catch(e){ products=[];orders=[]; }
+  renderAll();
+}
+async function doLogin(){
+  const email=document.getElementById('lgEmail').value.trim();
+  const pass=document.getElementById('lgPass').value;
+  const err=document.getElementById('lgErr'); const btn=document.getElementById('lgBtn');
+  if(!email||!pass){ err.textContent='Vui lòng nhập email và mật khẩu.'; err.style.display='block'; return; }
+  btn.disabled=true; btn.textContent='Đang đăng nhập...';
+  try{
+    const {error}=await _sb.auth.signInWithPassword({email:email,password:pass});
+    if(error) throw error;
+    err.style.display='none'; await showApp();
+  }catch(ex){ err.textContent='Đăng nhập thất bại: '+(ex.message||'sai thông tin'); err.style.display='block'; }
+  finally{ btn.disabled=false; btn.textContent='Đăng nhập'; }
+}
+async function doLogout(){ try{ await _sb.auth.signOut(); }catch(e){} showLogin(); }
+
+/* ───────── HELPERS ───────── */
+function num(p){ return parseInt(String(p).replace(/[^\d]/g,''))||0; }
+function fmt(n){ return n.toLocaleString('vi-VN'); }
+function orderTotal(o){ return o.items.reduce((s,i)=>s+num(i.price)*(i.qty||1),0); }
+function thumb(p,small){
+  const sm = p.brand==='samsung'?' samsung':'';
+  if(p.img) return '<div class="prod-thumb'+(small?' dt':'')+'"><img src="'+p.img+'"></div>';
+  return '<div class="prod-thumb'+sm+(small?' dt':'')+'"><div class="mini"></div></div>';
+}
+function toast(msg){
+  document.getElementById('toastMsg').textContent=msg;
+  const t=document.getElementById('toast');t.classList.add('show');
+  clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* ───────── NAV ───────── */
+const TITLES={dashboard:'Tổng quan',products:'Quản lý sản phẩm',orders:'Quản lý đơn hàng',tradein:'Đơn thu cũ đổi mới'};
+function go(view){
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.toggle('active',i.dataset.view===view));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  document.getElementById('pageTitle').textContent=TITLES[view];
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.sb-item').forEach(i=>i.addEventListener('click',()=>go(i.dataset.view)));
+
+/* ───────── DASHBOARD ───────── */
+function renderDashboard(){
+  const revenue = orders.filter(o=>o.status==='done').reduce((s,o)=>s+orderTotal(o),0);
+  const newCount = orders.filter(o=>o.status==='new').length;
+  const lowStock = products.filter(p=>p.status==='outofstock').length;
+  const newTrade = (tradeIns||[]).filter(t=>t.status==='new').length;
+  const cards=[
+    {ic:'<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>',val:products.length,lbl:'Sản phẩm đang bán'},
+    {ic:'<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',val:newCount,lbl:'Đơn hàng mới'},
+    {ic:'<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>',val:fmt(Math.round(revenue/1000000))+'tr',lbl:'Doanh thu hoàn tất'},
+    {ic:'<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',val:newTrade,lbl:'Đơn thu máy mới'}
+  ];
+  document.getElementById('statCards').innerHTML=cards.map(c=>
+    '<div class="stat"><div class="ic"><svg viewBox="0 0 24 24">'+c.ic+'</svg></div><div class="val">'+c.val+'</div><div class="lbl">'+c.lbl+'</div></div>'
+  ).join('');
+  document.getElementById('recentOrders').innerHTML=orders.slice(0,5).map(o=>{
+    const s=STATUS[o.status];
+    return '<tr style="cursor:pointer" onclick="openDrawer(\''+o.id+'\')"><td><b>'+o.id+'</b></td><td>'+o.customer+'</td><td>'+o.items[0].name+(o.items.length>1?' +'+(o.items.length-1):'')+'</td><td class="price-cell">'+fmt(orderTotal(o))+'₫</td><td><span class="tag '+s.cls+'">'+s.label+'</span></td><td style="color:var(--gray-600)">'+o.date+'</td></tr>';
+  }).join('');
+}
+
+/* ───────── PRODUCTS ───────── */
+let prodFilter='all', search='';
+function renderProducts(){
+  document.getElementById('navProdCount').textContent=products.length;
+  let list=products.filter(p=>{
+    if(prodFilter==='apple'&&p.brand!=='apple')return false;
+    if(prodFilter==='samsung'&&p.brand!=='samsung')return false;
+    if(prodFilter==='instock'&&p.status!=='instock')return false;
+    if(prodFilter==='outofstock'&&p.status!=='outofstock')return false;
+    if(search&&!p.name.toLowerCase().includes(search))return false;
+    return true;
+  });
+  const tb=document.getElementById('prodTable');
+  if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty">Không có sản phẩm nào.</div></td></tr>';return;}
+  tb.innerHTML=list.map(p=>{
+    const st = p.status==='instock'?'<span class="tag green">Còn hàng</span>':'<span class="tag red">Hết hàng</span>';
+    return '<tr><td><div class="prod-cell">'+thumb(p)+'<div><div class="pn">'+p.name+'</div><div class="pm">'+(p.badge||'')+(p.color?' · '+p.color:'')+'</div></div></div></td>'
+      +'<td>'+p.storage+'</td><td>'+(p.battery||'-')+'</td><td>'+p.condition+'</td>'
+      +'<td class="price-cell">'+p.price+'₫'+(p.old?'<small>'+p.old+'₫</small>':'')+'</td>'
+      +'<td>'+st+'</td>'
+      +'<td><div class="row-actions">'
+      +'<button class="act-btn" title="Sửa" onclick="openProductModal('+p.id+')"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></button>'
+      +'<button class="act-btn del" title="Xóa" onclick="askDel('+p.id+')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>'
+      +'</div></td></tr>';
+  }).join('');
+}
+document.querySelectorAll('#prodFilter .pill').forEach(p=>p.addEventListener('click',function(){
+  document.querySelectorAll('#prodFilter .pill').forEach(x=>x.classList.remove('on'));
+  this.classList.add('on');prodFilter=this.dataset.f;renderProducts();
+}));
+
+/* product modal */
+let editingId=null, pendingImg='';
+function openProductModal(id){
+  editingId=(id!==undefined && id!==null && id!=='')?id:null; pendingImg='';
+  const m=document.getElementById('prodOverlay');
+  const set=(k,v)=>document.getElementById('f_'+k).value=v;
+  if(editingId!==null){
+    // eslint-disable-next-line eqeqeq
+    const p=products.find(x=>x.id==editingId);
+    document.getElementById('modalTitle').textContent='Sửa sản phẩm';
+    set('id',p.id);set('name',p.name);set('short',p.short||'');set('brand',p.brand);set('storage',p.storage||'');
+    set('color',p.color||'');set('battery',p.battery||'');set('condition',p.condition||'');set('badge',p.badge||'');
+    set('warranty',p.warranty||'');set('price',p.price||'');set('old',p.old||'');set('status',p.status);set('desc',p.desc||'');set('imgurl','');
+    pendingImg=p.img||'';
+    document.getElementById('imgPreview').innerHTML=p.img?'<img src="'+p.img+'">':'<div class="ph"></div>';
+  }else{
+    document.getElementById('modalTitle').textContent='Thêm sản phẩm';
+    ['id','name','short','color','battery','condition','badge','warranty','price','old','desc','imgurl','storage'].forEach(k=>set(k,''));
+    set('brand','apple');set('status','instock');
+    document.getElementById('imgPreview').innerHTML='<div class="ph"></div>';
+  }
+  m.classList.add('open');
+}
+function closeProductModal(){document.getElementById('prodOverlay').classList.remove('open');}
+document.getElementById('f_file').addEventListener('change',function(e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=function(ev){pendingImg=ev.target.result;document.getElementById('imgPreview').innerHTML='<img src="'+pendingImg+'">';};
+  r.readAsDataURL(file);
+});
+document.getElementById('f_imgurl').addEventListener('input',function(e){
+  const u=e.target.value.trim();
+  if(u){pendingImg=u;document.getElementById('imgPreview').innerHTML='<img src="'+u+'" onerror="this.parentNode.innerHTML=\'<div class=ph></div>\'">';}
+});
+async function saveProduct(){
+  const g=k=>document.getElementById('f_'+k).value.trim();
+  if(!g('name')){toast('Vui lòng nhập tên sản phẩm');return;}
+  if(!g('price')){toast('Vui lòng nhập giá bán');return;}
+  const imgVal = document.getElementById('f_imgurl').value.trim();
+  const finalImg = imgVal ? imgVal : pendingImg;
+  const data={
+    name:g('name'),short:g('short')||g('name'),brand:g('brand'),storage:g('storage'),color:g('color'),
+    battery:g('battery'),condition:g('condition'),badge:g('badge'),warranty:g('warranty'),
+    price:g('price'),old:g('old'),status:g('status'),desc:g('desc'),img:finalImg
+  };
+  if(_sb){
+    try{
+      if(editingId!==null){
+        const {error}=await _sb.from('products').update(prodPayload(data)).eq('id',editingId);
+        if(error) throw error; toast('Đã cập nhật sản phẩm');
+      }else{
+        const {error}=await _sb.from('products').insert(prodPayload(data));
+        if(error) throw error; toast('Đã thêm sản phẩm mới');
+      }
+      await reloadProducts();
+    }catch(ex){ toast('Lỗi lưu: '+(ex.message||'kết nối')); return; }
+  }else{
+    if(editingId!==null){
+      // eslint-disable-next-line eqeqeq
+      const p=products.find(x=>x.id==editingId);
+      if(!p){toast('Không tìm thấy sản phẩm!');return;}
+      Object.assign(p,data);toast('Đã cập nhật sản phẩm');
+    }else{ data.id=Date.now();products.unshift(data);toast('Đã thêm sản phẩm mới'); }
+    persist();
+  }
+  renderProducts();renderDashboard();closeProductModal();
+}
+
+/* delete */
+let delId=null;
+function askDel(id){delId=id;
+  // eslint-disable-next-line eqeqeq
+  const p=products.find(x=>x.id==id);
+  document.getElementById('delName').textContent=p.name+' ('+p.storage+')';
+  document.getElementById('delOverlay').classList.add('open');}
+function closeDel(){document.getElementById('delOverlay').classList.remove('open');}
+async function confirmDel(){
+  if(_sb){
+    try{ const {error}=await _sb.from('products').delete().eq('id',delId); if(error) throw error; await reloadProducts(); }
+    catch(ex){ toast('Lỗi xóa: '+(ex.message||'kết nối')); closeDel(); return; }
+  }else{
+    // eslint-disable-next-line eqeqeq
+    products=products.filter(p=>p.id!=delId);persist();
+  }
+  renderProducts();renderDashboard();closeDel();toast('Đã xóa sản phẩm');
+}
+
+/* ───────── ORDERS ───────── */
+let orderFilter='all';
+function renderOrders(){
+  document.getElementById('navOrderCount').textContent=orders.filter(o=>o.status==='new').length;
+  let list=orders.filter(o=>{
+    if(orderFilter!=='all'&&o.status!==orderFilter)return false;
+    if(search&&!(o.id.toLowerCase().includes(search)||o.customer.toLowerCase().includes(search)))return false;
+    return true;
+  });
+  document.getElementById('orderSummary').textContent=list.length+' đơn hàng';
+  const tb=document.getElementById('orderTable');
+  if(!list.length){tb.innerHTML='<tr><td colspan="6"><div class="empty">Không có đơn hàng nào.</div></td></tr>';return;}
+  tb.innerHTML=list.map(o=>{
+    const s=STATUS[o.status];
+    return '<tr style="cursor:pointer" onclick="openDrawer(\''+o.id+'\')"><td><b>'+o.id+'</b></td><td>'+o.customer+'<div class="pm" style="font-size:12px;color:var(--gray-600)">'+o.phone+'</div></td><td>'+o.items[0].name+(o.items.length>1?' <span style="color:var(--gray-400)">+'+(o.items.length-1)+'</span>':'')+'</td><td class="price-cell">'+fmt(orderTotal(o))+'₫</td><td><span class="tag '+s.cls+'">'+s.label+'</span></td><td style="color:var(--gray-600)">'+o.date+'</td></tr>';
+  }).join('');
+}
+document.querySelectorAll('#orderFilter .pill').forEach(p=>p.addEventListener('click',function(){
+  document.querySelectorAll('#orderFilter .pill').forEach(x=>x.classList.remove('on'));
+  this.classList.add('on');orderFilter=this.dataset.f;renderOrders();
+}));
+
+/* drawer */
+let drawerOrderId=null;
+function openDrawer(id){
+  const o=orders.find(x=>x.id===id);if(!o)return;drawerOrderId=id;
+  document.getElementById('d_id').textContent=o.id;
+  document.getElementById('d_date').textContent='Đặt ngày '+o.date;
+  document.getElementById('d_cust').textContent=o.customer;
+  document.getElementById('d_phone').textContent=o.phone;
+  document.getElementById('d_addr').textContent=o.addr;
+  document.getElementById('d_items').innerHTML=o.items.map(it=>{
+    const sm=it.brand==='samsung'?' samsung':'';
+    return '<div class="ditem"><div class="dt'+sm+'"><div class="mini"></div></div><div><div class="di-name">'+it.name+'</div><div class="di-meta">'+it.meta+' · SL '+(it.qty||1)+'</div></div><div class="di-price">'+it.price+'₫</div></div>';
+  }).join('');
+  document.getElementById('d_total').textContent=fmt(orderTotal(o))+'₫';
+  document.getElementById('d_status').value=o.status;
+  document.getElementById('orderDrawer').classList.add('open');
+  document.getElementById('drawerMask').classList.add('open');
+}
+function closeDrawer(){document.getElementById('orderDrawer').classList.remove('open');document.getElementById('drawerMask').classList.remove('open');}
+async function saveOrderStatus(){
+  const o=orders.find(x=>x.id===drawerOrderId);if(!o)return;
+  const newStatus=document.getElementById('d_status').value;
+  if(_sb){
+    try{ const {error}=await _sb.from('orders').update({status:newStatus}).eq('id',o.dbid); if(error) throw error; o.status=newStatus; }
+    catch(ex){ toast('Lỗi cập nhật: '+(ex.message||'kết nối')); return; }
+  }else{ o.status=newStatus; persist(); }
+  renderOrders();renderDashboard();closeDrawer();toast('Đã cập nhật trạng thái đơn '+o.id);
+}
+
+/* search */
+document.getElementById('globalSearch').addEventListener('input',function(e){
+  search=e.target.value.toLowerCase().trim();renderProducts();renderOrders();renderTradeIns();
+});
+
+/* ───────── TRADE-IN ───────── */
+const TI_STATUS={
+  new:{label:'Mới',cls:'blue'},
+  contacted:{label:'Đã liên hệ',cls:'orange'},
+  inspecting:{label:'Đang kiểm tra',cls:'orange'},
+  done:{label:'Hoàn tất',cls:'green'},
+  cancelled:{label:'Đã hủy',cls:'red'}
+};
+let tradeIns=[], tradeFilter='all';
+function loadTradeIns(){
+  try{
+    const ls=window.localStorage;
+    const r=ls.getItem('hphone_tradein');
+    tradeIns=r?JSON.parse(r):[];
+  }catch(e){ tradeIns=[]; }
+  // seed demo data if empty
+  if(!tradeIns.length){
+    tradeIns=[
+      {id:'TI-DEMO1',type:'tradein',customer:'Nguyễn Văn Bình',phone:'0905 111 222',addr:'15 Trần Hưng Đạo, TP. Huế',device:'iPhone 14 Pro · 256GB',condition:'Đẹp 95%',battery:'85 – 90%',estimatedPrice:'14.900.000₫',repair:'Đã thay màn hình',note:'Màn zin hãng, pin zin.',status:'new',date:'29/05/2026'},
+      {id:'TI-DEMO2',type:'tradein',customer:'Lê Thị Mai',phone:'0912 333 444',addr:'78 Nguyễn Trãi, TP. Huế',device:'iPhone 13 · 128GB',condition:'Đẹp 99%',battery:'Trên 90%',estimatedPrice:'10.500.000₫',repair:'Chưa sửa / Zin hoàn toàn',note:'',status:'contacted',date:'28/05/2026'}
+    ];
+  }
+}
+function saveTradeIns(){
+  try{ window.localStorage.setItem('hphone_tradein',JSON.stringify(tradeIns)); }catch(e){}
+}
+function renderTradeIns(){
+  const newCount=tradeIns.filter(t=>t.status==='new').length;
+  document.getElementById('navTradeCount').textContent=newCount;
+  let list=tradeIns.filter(t=>{
+    if(tradeFilter!=='all'&&t.status!==tradeFilter)return false;
+    if(search&&!(t.id.toLowerCase().includes(search)||t.customer.toLowerCase().includes(search)||t.device.toLowerCase().includes(search)))return false;
+    return true;
+  });
+  document.getElementById('tradeSummary').textContent=list.length+' đơn thu máy';
+  const tb=document.getElementById('tradeTable');
+  if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty">Không có đơn thu máy nào.</div></td></tr>';return;}
+  tb.innerHTML=list.map(t=>{
+    const s=TI_STATUS[t.status]||TI_STATUS.new;
+    return '<tr style="cursor:pointer" onclick="openTradeDrawer(\''+t.id+'\')">'
+      +'<td><b>'+t.id+'</b></td>'
+      +'<td>'+t.customer+'<div class="pm" style="font-size:12px;color:var(--gray-600)">'+t.phone+'</div></td>'
+      +'<td><b>'+t.device+'</b><div class="pm" style="font-size:12px;color:var(--gray-600)">'+t.condition+' · Pin '+t.battery+'</div></td>'
+      +'<td class="price-cell" style="color:var(--accent)">'+t.estimatedPrice+'</td>'
+      +'<td style="font-size:13px">'+t.repair+'</td>'
+      +'<td><span class="tag '+s.cls+'">'+s.label+'</span></td>'
+      +'<td style="color:var(--gray-600)">'+t.date+'</td>'
+      +'</tr>';
+  }).join('');
+}
+document.querySelectorAll('#tradeFilter .pill').forEach(p=>p.addEventListener('click',function(){
+  document.querySelectorAll('#tradeFilter .pill').forEach(x=>x.classList.remove('on'));
+  this.classList.add('on');tradeFilter=this.dataset.f;renderTradeIns();
+}));
+
+let tradeDrawerId=null;
+function openTradeDrawer(id){
+  const t=tradeIns.find(x=>x.id===id);if(!t)return;tradeDrawerId=id;
+  document.getElementById('td_id').textContent=t.id;
+  document.getElementById('td_date').textContent='Gửi ngày '+t.date;
+  document.getElementById('td_cust').textContent=t.customer;
+  document.getElementById('td_phone').textContent=t.phone;
+  document.getElementById('td_addr').textContent=t.addr;
+  document.getElementById('td_device').textContent=t.device;
+  document.getElementById('td_cond').textContent=t.condition;
+  document.getElementById('td_bat').textContent=t.battery;
+  document.getElementById('td_price').textContent=t.estimatedPrice;
+  document.getElementById('td_repair').textContent=t.repair||'(không ghi)';
+  const nw=document.getElementById('td_noteWrap');
+  if(t.note){document.getElementById('td_note').textContent=t.note;nw.style.display='block';}
+  else{nw.style.display='none';}
+  document.getElementById('td_status').value=t.status||'new';
+  document.getElementById('tradeDrawer').classList.add('open');
+  document.getElementById('tradeMask').classList.add('open');
+}
+function closeTradeDrawer(){
+  document.getElementById('tradeDrawer').classList.remove('open');
+  document.getElementById('tradeMask').classList.remove('open');
+}
+function saveTradeStatus(){
+  const t=tradeIns.find(x=>x.id===tradeDrawerId);if(!t)return;
+  t.status=document.getElementById('td_status').value;
+  saveTradeIns();renderTradeIns();renderDashboard();closeTradeDrawer();
+  toast('Đã cập nhật trạng thái đơn '+t.id);
+}
+
+/* overlay click-out */
+document.getElementById('prodOverlay').addEventListener('click',e=>{if(e.target.id==='prodOverlay')closeProductModal();});
+document.getElementById('delOverlay').addEventListener('click',e=>{if(e.target.id==='delOverlay')closeDel();});
+
+/* init — demo (no backend) or live (Supabase + login) */
+async function boot(){
+  loadTradeIns();
+  if(!_sb){                       // CHẾ ĐỘ DEMO
+    setBadge('demo');
+    try{ loadDemo(); }catch(e){ products=seedProducts.slice(); orders=seedOrders.slice(); }
+    renderAll();
+    return;
+  }
+  setBadge('live');               // CHẾ ĐỘ LIVE (Supabase)
+  try{
+    const {data}=await _sb.auth.getSession();
+    if(data && data.session){ await showApp(); }
+    else{ showLogin(); }
+  }catch(e){ showLogin(); }
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+else boot();
+</script>
+</body>
+</html>
