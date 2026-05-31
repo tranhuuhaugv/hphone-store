@@ -734,26 +734,77 @@ document.querySelector('.modal-close').addEventListener('click', function() {
 });
 </script>
 
+<style>
+.series-block{grid-column:1/-1;margin-top:40px}
+.series-block:first-child{margin-top:0}
+.series-title{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--black);margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--gray-200);display:flex;align-items:center;gap:10px}
+.series-title::before{content:'';display:inline-block;width:4px;height:22px;background:var(--accent);border-radius:2px}
+.series-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+</style>
 <script>
 (async function(){
   if(!window.supabase) return;
   const sb = window.supabase.createClient(_SB_URL, _SB_KEY);
-  const {data, error} = await sb.from('products').select('*').eq('status','instock').order('id',{ascending:false}).limit(6);
+  const {data, error} = await sb.from('products').select('*').eq('status','instock').order('id',{ascending:false});
   const grid = document.getElementById('homeProductGrid');
   if(error || !data || !data.length){
     grid.innerHTML = '<div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--gray-400)">Chưa có sản phẩm nào.</div>';
     return;
   }
-  grid.innerHTML = data.map(p => {
-    const isLikeNew = (p.badge||'').toLowerCase().includes('like new') || (p.condition||'').toLowerCase().includes('like new');
-    const badgeCls = isLikeNew ? 'like-new' : '';
+
+  // Nhóm sản phẩm theo series
+  function getSeries(name) {
+    const n = (name||'').toLowerCase();
+    if(n.includes('17 pro max')) return 'iPhone 17 Pro Max Series';
+    if(n.includes('17 pro')) return 'iPhone 17 Pro Series';
+    if(n.includes('17 plus')) return 'iPhone 17 Plus Series';
+    if(n.includes('17')) return 'iPhone 17 Series';
+    if(n.includes('16 pro max')) return 'iPhone 16 Pro Max Series';
+    if(n.includes('16 pro')) return 'iPhone 16 Pro Series';
+    if(n.includes('16 plus')) return 'iPhone 16 Plus Series';
+    if(n.includes('16')) return 'iPhone 16 Series';
+    if(n.includes('15 pro max')) return 'iPhone 15 Pro Max Series';
+    if(n.includes('15 pro')) return 'iPhone 15 Pro Series';
+    if(n.includes('15 plus')) return 'iPhone 15 Plus Series';
+    if(n.includes('15')) return 'iPhone 15 Series';
+    if(n.includes('14 pro max')) return 'iPhone 14 Pro Max Series';
+    if(n.includes('14 pro')) return 'iPhone 14 Pro Series';
+    if(n.includes('14 plus')) return 'iPhone 14 Plus Series';
+    if(n.includes('14')) return 'iPhone 14 Series';
+    if(n.includes('13 pro max')) return 'iPhone 13 Pro Max Series';
+    if(n.includes('13 pro')) return 'iPhone 13 Pro Series';
+    if(n.includes('13 mini')) return 'iPhone 13 Mini Series';
+    if(n.includes('13')) return 'iPhone 13 Series';
+    if(n.includes('12 pro max')) return 'iPhone 12 Pro Max Series';
+    if(n.includes('12 pro')) return 'iPhone 12 Pro Series';
+    if(n.includes('12 mini')) return 'iPhone 12 Mini Series';
+    if(n.includes('12')) return 'iPhone 12 Series';
+    if(n.includes('11 pro max')) return 'iPhone 11 Pro Max Series';
+    if(n.includes('11 pro')) return 'iPhone 11 Pro Series';
+    if(n.includes('11')) return 'iPhone 11 Series';
+    if(n.includes('xs max')) return 'iPhone XS Max Series';
+    if(n.includes('xs')) return 'iPhone XS Series';
+    if(n.includes('xr')) return 'iPhone XR Series';
+    if(n.includes('x')) return 'iPhone X Series';
+    if(n.includes('se')) return 'iPhone SE Series';
+    return 'Khác';
+  }
+
+  // Group theo series
+  const seriesMap = {};
+  data.forEach(p => {
+    const s = getSeries(p.name);
+    if(!seriesMap[s]) seriesMap[s] = [];
+    seriesMap[s].push(p);
+  });
+
+  function cardHTML(p) {
     const imgHTML = p.img
       ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:inherit">`
-      : `<div class="product-img-inner${p.brand==='samsung'?' samsung':''}"><span class="product-model-label">${p.short||p.name}</span></div>`;
+      : `<div class="product-img-inner"><span class="product-model-label">${p.short||p.name}</span></div>`;
     return `<div class="product-card" onclick="location.href='chi-tiet-san-pham?id=${p.id}'">
       <div class="product-img" style="position:relative">
         ${imgHTML}
-
         <button class="add-cart-overlay" onclick="event.stopPropagation();tcAddToCart(${JSON.stringify(p).replace(/"/g,'&quot;')})">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
           Thêm vào giỏ
@@ -774,7 +825,14 @@ document.querySelector('.modal-close').addEventListener('click', function() {
         </div>
       </div>
     </div>`;
-  }).join('');
+  }
+
+  grid.innerHTML = Object.entries(seriesMap).map(([series, products]) => `
+    <div class="series-block">
+      <div class="series-title">${series}</div>
+      <div class="series-grid">${products.map(cardHTML).join('')}</div>
+    </div>
+  `).join('');
 })();
 
 function tcAddToCart(p) {
