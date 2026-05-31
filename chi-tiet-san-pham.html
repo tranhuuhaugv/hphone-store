@@ -386,18 +386,24 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 
   const modelColors = getColorsForModel(p.name);
 
+  function formatPrice(val){
+    const n = parseInt(String(val).replace(/[^\d]/g,''));
+    if(!n) return val;
+    return n.toLocaleString('vi-VN');
+  }
+
   function buildPriceBox(priceVal, oldPriceVal){
     const saving = oldPriceVal ? (() => {
       const cur = parseInt(String(priceVal).replace(/[^\d]/g,''));
       const old = parseInt(String(oldPriceVal).replace(/[^\d]/g,''));
-      if(cur && old && old>cur) return `<div class="pd-save-badge">🎉 Tiết kiệm ${(old-cur).toLocaleString('vi')}₫</div>`;
+      if(cur && old && old>cur) return `<div class="pd-save-badge">🎉 Tiết kiệm ${(old-cur).toLocaleString('vi-VN')}₫</div>`;
       return '';
     })() : '';
     return `
     <div class="pd-price-box">
       <div class="pd-price-box-left">
-        <div class="pd-price" id="pdPrice">${priceVal}<span class="cur">₫</span></div>
-        ${oldPriceVal?`<div class="pd-strike">${oldPriceVal}₫</div>`:''}
+        <div class="pd-price" id="pdPrice">${formatPrice(priceVal)}<span class="cur">₫</span></div>
+        ${oldPriceVal?`<div class="pd-strike">${formatPrice(oldPriceVal)}₫</div>`:''}
         ${saving}
       </div>
       <div class="pd-price-box-right">
@@ -554,7 +560,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     function updatePrice(){
       const match = p.variants.find(v=>v.storage===selectedStorage && (v.color===selectedColor||!v.color));
       if(match && match.price){
-        document.getElementById('pdPrice').innerHTML = match.price+'<span class="cur">₫</span>';
+        document.getElementById('pdPrice').innerHTML = formatPrice(match.price)+'<span class="cur">₫</span>';
       }
     }
     updateColorGrid();
