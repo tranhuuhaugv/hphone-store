@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="pageTitle">Chi tiết sản phẩm – HPHONE</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -14,7 +12,7 @@
   --black:#0a0a0a;--white:#fafafa;--gray-100:#f5f5f5;--gray-200:#e8e8e8;
   --gray-400:#a0a0a0;--gray-600:#606060;--gray-800:#2a2a2a;
   --accent:#c8a96e;--accent-light:#e8d5a8;
-  --font-display:'Inter',sans-serif;--font-body:'Inter',sans-serif;
+  --font-display:'Playfair Display',serif;--font-body:'DM Sans',sans-serif;
   --radius-sm:8px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;
   --transition:0.3s cubic-bezier(0.4,0,0.2,1);
 }
@@ -121,21 +119,34 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 .pd-rating{display:flex;align-items:center;gap:8px;margin-bottom:18px;font-size:13px;color:var(--gray-600)}
 .pd-stars{display:flex;gap:3px}
 .star{width:14px;height:14px;background:var(--accent);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
-.pd-price-row{display:flex;align-items:baseline;gap:12px;margin-bottom:22px}
-.pd-price{font-family:var(--font-display);font-size:34px;font-weight:700}
-.pd-price .cur{font-family:var(--font-body);font-size:18px;font-weight:500;color:var(--gray-600)}
-.pd-strike{font-size:16px;color:var(--gray-400);text-decoration:line-through}
-.pd-save{font-size:12px;font-weight:600;color:#8a6a30;background:rgba(200,169,110,0.14);padding:3px 9px;border-radius:6px}
-.pd-opt-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray-600);margin-bottom:10px}
+/* Price box */
+.pd-price-box{background:linear-gradient(135deg,#1a6fd4 0%,#1250a0 100%);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.pd-price-box-left{}
+.pd-price{font-family:var(--font-display);font-size:34px;font-weight:700;color:#fff;line-height:1}
+.pd-price .cur{font-family:var(--font-body);font-size:18px;font-weight:500;color:rgba(255,255,255,0.8)}
+.pd-strike{font-size:15px;color:rgba(255,255,255,0.55);text-decoration:line-through;margin-top:4px}
+.pd-save-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:11px;font-weight:700;color:#fff;padding:3px 9px;margin-top:6px;letter-spacing:0.5px}
+.pd-price-box-right{text-align:right}
+.pd-stock-label{font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:4px}
+.pd-stock-badge{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:11px;font-weight:600;padding:3px 10px;border-radius:30px}
+
+/* Options */
+.pd-opt-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray-600);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.pd-opt-label .selected-val{color:var(--black);font-family:var(--font-body);font-size:13px;font-weight:600;letter-spacing:0;text-transform:none}
 .pd-block{margin-bottom:22px}
 .opt-grid{display:flex;flex-wrap:wrap;gap:9px}
-.opt-btn{padding:9px 18px;border-radius:var(--radius-sm);border:1.5px solid var(--gray-200);background:var(--white);font-size:13px;font-weight:500;cursor:pointer;transition:var(--transition)}
+.opt-btn{padding:9px 18px;border-radius:var(--radius-sm);border:1.5px solid var(--gray-200);background:var(--white);font-size:13px;font-weight:500;cursor:pointer;transition:var(--transition);font-family:var(--font-body)}
 .opt-btn:hover{border-color:var(--black)}
 .opt-btn.active{background:var(--black);color:var(--white);border-color:var(--black)}
-.color-grid{display:flex;gap:12px}
-.color-dot{width:38px;height:38px;border-radius:50%;border:2px solid transparent;cursor:pointer;position:relative;transition:var(--transition)}
-.color-dot span{position:absolute;inset:3px;border-radius:50%;box-shadow:inset 0 2px 5px rgba(0,0,0,0.25)}
-.color-dot.active{border-color:var(--accent)}
+.opt-btn:disabled{opacity:0.35;cursor:not-allowed;text-decoration:line-through}
+
+/* Color dots */
+.color-grid{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.color-dot{width:36px;height:36px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;position:relative;transition:var(--transition);outline-offset:3px}
+.color-dot .dot-inner{position:absolute;inset:3px;border-radius:50%;box-shadow:inset 0 2px 6px rgba(0,0,0,0.2),0 1px 3px rgba(0,0,0,0.15)}
+.color-dot:hover{transform:scale(1.12)}
+.color-dot.active{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,0.25)}
+.color-dot[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0a0a0a;color:#fff;font-size:11px;font-weight:500;white-space:nowrap;padding:4px 8px;border-radius:6px;pointer-events:none;font-family:var(--font-body)}
 .pd-promo{border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:20px;margin-bottom:24px;position:relative;overflow:hidden}
 .pd-promo::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-light))}
 .pd-promo h4{font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;color:var(--accent)}
@@ -209,7 +220,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 <div class="announce-bar">🎉 Miễn phí kiểm tra IMEI — Bảo hành minh bạch — Giao hàng toàn quốc</div>
 <nav>
   <div class="nav-inner">
-    <a href="index.html" class="logo">H<span>PHONE</span></a>
+    <a href="trang-chu" class="logo">H<span>PHONE</span></a>
     <div class="nav-links">
       <a href="danh-sach-san-pham" class="active">iPhone</a>
       <a href="danh-sach-san-pham">Phụ kiện</a>
@@ -321,6 +332,11 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   const {data:p, error} = await sb.from('products').select('*').eq('id', pid).single();
   if(error || !p) return showError('Sản phẩm không tồn tại hoặc đã bị xóa. <a href="danh-sach-san-pham" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
 
+  // Chuẩn hóa mảng ảnh: ưu tiên images[], fallback về img
+  if(!Array.isArray(p.images) || !p.images.length){
+    p.images = p.img ? [p.img] : [];
+  }
+
   // Update title & breadcrumb
   document.title = p.name + ' – HPHONE';
   document.getElementById('breadcrumbCurrent').textContent = p.name;
@@ -332,21 +348,95 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-xl);position:absolute;inset:0">`
     : `<div class="inner"><span>${p.short||p.name}</span></div>`;
 
-  const oldPriceRow = p.old_price
-    ? `<div class="pd-strike">${p.old_price}₫</div><div class="pd-save">Giá tốt</div>`
-    : '';
+  // Bảng màu iPhone theo model
+  const IPHONE_COLORS = {
+    'iphone x':      [{name:'Space Gray',hex:'#3a3a3c'},{name:'Silver',hex:'#e8e8e8'}],
+    'iphone xs':     [{name:'Space Gray',hex:'#3a3a3c'},{name:'Silver',hex:'#e8e8e8'},{name:'Gold',hex:'#f5cfa0'}],
+    'iphone xr':     [{name:'Black',hex:'#1c1c1e'},{name:'White',hex:'#f5f5f0'},{name:'Blue',hex:'#3e6fa3'},{name:'Yellow',hex:'#ffe566'},{name:'Coral',hex:'#f4694b'},{name:'(PRODUCT)RED',hex:'#c8102e'}],
+    'iphone 11':     [{name:'Black',hex:'#1c1c1e'},{name:'White',hex:'#f5f5f0'},{name:'Green',hex:'#aee1c1'},{name:'Yellow',hex:'#fde87e'},{name:'Purple',hex:'#c8b2d8'},{name:'(PRODUCT)RED',hex:'#c8102e'}],
+    'iphone 11 pro': [{name:'Space Gray',hex:'#3a3a3c'},{name:'Silver',hex:'#e8e8e8'},{name:'Gold',hex:'#f5cfa0'},{name:'Midnight Green',hex:'#3d524a'}],
+    'iphone 12':     [{name:'Black',hex:'#1c1c1e'},{name:'White',hex:'#f5f5f0'},{name:'Blue',hex:'#2e5fa3'},{name:'Green',hex:'#cde8cf'},{name:'Purple',hex:'#d9c8e8'},{name:'(PRODUCT)RED',hex:'#c8102e'}],
+    'iphone 12 pro': [{name:'Graphite',hex:'#54524f'},{name:'Silver',hex:'#e8e8e8'},{name:'Gold',hex:'#f5cfa0'},{name:'Pacific Blue',hex:'#2d6387'}],
+    'iphone 13':     [{name:'Midnight',hex:'#1c2029'},{name:'Starlight',hex:'#f5f0e8'},{name:'Blue',hex:'#2a4b8d'},{name:'Pink',hex:'#faddd7'},{name:'Green',hex:'#4caf6e'},{name:'(PRODUCT)RED',hex:'#c8102e'}],
+    'iphone 13 pro': [{name:'Graphite',hex:'#54524f'},{name:'Silver',hex:'#e8e8e8'},{name:'Gold',hex:'#f5cfa0'},{name:'Sierra Blue',hex:'#a7c4d2'},{name:'Alpine Green',hex:'#4b6856'}],
+    'iphone 14':     [{name:'Midnight',hex:'#1c2029'},{name:'Starlight',hex:'#f5f0e8'},{name:'Blue',hex:'#a2b8d4'},{name:'Purple',hex:'#cdc1d8'},{name:'Yellow',hex:'#f9e179'},{name:'(PRODUCT)RED',hex:'#c8102e'}],
+    'iphone 14 pro': [{name:'Space Black',hex:'#2c2b2d'},{name:'Silver',hex:'#e8e8e8'},{name:'Gold',hex:'#f5cfa0'},{name:'Deep Purple',hex:'#4e3d6b'}],
+    'iphone 15':     [{name:'Black',hex:'#1c1c1e'},{name:'Blue',hex:'#a2c4d4'},{name:'Green',hex:'#cce3cb'},{name:'Yellow',hex:'#f9e87e'},{name:'Pink',hex:'#f7cdc5'}],
+    'iphone 15 pro': [{name:'Black Titanium',hex:'#2c2b2d'},{name:'White Titanium',hex:'#e8e6e0'},{name:'Blue Titanium',hex:'#4a6f8a'},{name:'Natural Titanium',hex:'#c4b49a'}],
+    'iphone 16':     [{name:'Black',hex:'#1c1c1e'},{name:'White',hex:'#f5f5f0'},{name:'Pink',hex:'#f7b8c2'},{name:'Teal',hex:'#3d7d72'},{name:'Ultramarine',hex:'#3a4a8a'}],
+    'iphone 16 pro': [{name:'Black Titanium',hex:'#2c2b2d'},{name:'White Titanium',hex:'#e8e6e0'},{name:'Natural Titanium',hex:'#c4b49a'},{name:'Desert Titanium',hex:'#c8a97a'}],
+    'iphone 17':     [{name:'Black',hex:'#1c1c1e'},{name:'White',hex:'#f5f5f0'},{name:'Lavender',hex:'#c8b8e0'},{name:'Sage',hex:'#9bb89a'},{name:'Mist Blue',hex:'#a0b8cc'}],
+    'iphone 17 pro': [{name:'Silver',hex:'#e8e8e8'},{name:'Deep Blue',hex:'#1a3a5c'},{name:'Cosmic Orange',hex:'#d4622a'}],
+    'iphone 17 air': [{name:'Space Black',hex:'#1c1c1e'},{name:'Cloud White',hex:'#f5f5f0'},{name:'Light Gold',hex:'#e8d4a8'},{name:'Sky Blue',hex:'#88b8d8'}],
+  };
+
+  function getColorsForModel(name){
+    const n = (name||'').toLowerCase();
+    // ưu tiên match dài nhất
+    const keys = Object.keys(IPHONE_COLORS).sort((a,b)=>b.length-a.length);
+    for(const k of keys){ if(n.includes(k)) return IPHONE_COLORS[k]; }
+    return [];
+  }
+
+  const modelColors = getColorsForModel(p.name);
+
+  function buildPriceBox(priceVal, oldPriceVal){
+    const saving = oldPriceVal ? (() => {
+      const cur = parseInt(String(priceVal).replace(/[^\d]/g,''));
+      const old = parseInt(String(oldPriceVal).replace(/[^\d]/g,''));
+      if(cur && old && old>cur) return `<div class="pd-save-badge">🎉 Tiết kiệm ${(old-cur).toLocaleString('vi')}₫</div>`;
+      return '';
+    })() : '';
+    return `
+    <div class="pd-price-box">
+      <div class="pd-price-box-left">
+        <div class="pd-price" id="pdPrice">${priceVal}<span class="cur">₫</span></div>
+        ${oldPriceVal?`<div class="pd-strike">${oldPriceVal}₫</div>`:''}
+        ${saving}
+      </div>
+      <div class="pd-price-box-right">
+        <div class="pd-stock-label">Tình trạng</div>
+        <div class="pd-stock-badge">${p.status==='outofstock'?'⚠ Hết hàng':'✓ Còn hàng'}</div>
+      </div>
+    </div>`;
+  }
+
+  function buildColorDots(colors, selectedColor){
+    if(!colors.length) return '';
+    return `
+    <div class="pd-block" id="colorBlock">
+      <div class="pd-opt-label">Màu sắc <span class="selected-val" id="selectedColorLabel">${selectedColor||colors[0]?.name||''}</span></div>
+      <div class="color-grid" id="variantColorGrid">
+        ${colors.map(c=>`
+          <div class="color-dot${(selectedColor||colors[0]?.name)===c.name?' active':''}"
+               title="${c.name}"
+               onclick="selectColor('${c.name.replace(/'/g,"\\'")}')"
+               style="border-color:${(selectedColor||colors[0]?.name)===c.name?'var(--accent)':'transparent'}">
+            <div class="dot-inner" style="background:${c.hex}"></div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Build danh sách ảnh từ images[] hoặc fallback về img
+  const allImgs = (Array.isArray(p.images) && p.images.length) ? p.images : (p.img ? [p.img] : []);
+
+  const thumbsHtml = allImgs.length > 0
+    ? allImgs.map((src,i)=>`
+        <div class="pd-thumb${i===0?' active':''}" onclick="switchMainImg(${i})" style="cursor:pointer">
+          <img src="${src}" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none'">
+        </div>`).join('')
+    : `<div class="pd-thumb active"><div class="mini"></div></div>
+       <div class="pd-thumb"><div class="mini"></div></div>
+       <div class="pd-thumb"><div class="mini"></div></div>`;
 
   document.getElementById('pdWrap').innerHTML = `
     <div class="pd-gallery">
-      <div class="phone-mock${p.brand==='samsung'?' samsung':''} pd-main-img" style="position:relative">
+      <div class="phone-mock${p.brand==='samsung'?' samsung':''} pd-main-img" id="pdMainImg" style="position:relative">
         <span class="badge ${badgeCls}" style="position:absolute;top:18px;left:18px;z-index:1">${p.badge||p.condition||''}</span>
         ${mainImgInner}
       </div>
-      <div class="pd-thumbs">
-        <div class="pd-thumb active"><div class="mini"></div></div>
-        <div class="pd-thumb"><div class="mini"></div></div>
-        <div class="pd-thumb"><div class="mini"></div></div>
-      </div>
+      <div class="pd-thumbs" id="pdThumbs">${thumbsHtml}</div>
     </div>
     <div class="pd-info">
       <h1>${p.name}</h1>
@@ -354,13 +444,10 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
         <div class="pd-stars">${'<div class="star"></div>'.repeat(5)}</div>
         <span>Đã kiểm tra kỹ · Còn bảo hành ${p.warranty||''}</span>
       </div>
-      <div class="pd-price-row">
-        <div class="pd-price" id="pdPrice">${p.price}<span class="cur">₫</span></div>
-        ${oldPriceRow}
-      </div>
+      ${buildPriceBox(p.price, p.old_price)}
       ${(p.variants && p.variants.length) ? `
       <div class="pd-block">
-        <div class="pd-opt-label">Dung lượng</div>
+        <div class="pd-opt-label">Dung lượng <span class="selected-val" id="selectedStorageLabel">${p.variants[0]?.storage||''}</span></div>
         <div class="opt-grid" id="variantStorageGrid">
           ${[...new Map(p.variants.map(v=>[v.storage,v])).values()].map((v,i)=>`
             <button class="opt-btn${i===0?' active':''}" onclick="selectVariant('${v.storage}','')">
@@ -369,18 +456,15 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
         </div>
       </div>
       <div class="pd-block" id="colorBlock">
-        <div class="pd-opt-label">Màu sắc: <span id="selectedColorLabel" style="color:var(--black);font-weight:600">${p.variants[0]?.color||''}</span></div>
-        <div class="opt-grid" id="variantColorGrid"></div>
+        <div class="pd-opt-label">Màu sắc <span class="selected-val" id="selectedColorLabel">${p.variants[0]?.color||''}</span></div>
+        <div class="color-grid" id="variantColorGrid"></div>
       </div>` : `
       ${p.storage ? `
       <div class="pd-block">
         <div class="pd-opt-label">Dung lượng</div>
         <div class="opt-grid"><button class="opt-btn active">${p.storage}</button></div>
       </div>` : ''}
-      ${p.color ? `
-      <div class="pd-block">
-        <div class="pd-opt-label">Màu sắc: <span style="color:var(--black);font-weight:600">${p.color}</span></div>
-      </div>` : ''}`}
+      ${buildColorDots(modelColors, p.color)}`}
       <div class="pd-promo">
         <h4>Ưu đãi tại HPHONE</h4>
         <div class="promo-item"><span class="dot"></span><div>Tặng <b>ốp lưng + dán cường lực</b> trị giá 350.000₫ cho mọi đơn hàng.</div></div>
@@ -427,27 +511,32 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     document.getElementById(this.dataset.tab).classList.add('active');
   }));
 
-  // Variant selection
+  // Variant selection (khi sản phẩm có variants từ DB)
   if(p.variants && p.variants.length){
     let selectedStorage = p.variants[0]?.storage||'';
     let selectedColor = p.variants[0]?.color||'';
 
     function updateColorGrid(){
-      const colors = p.variants.filter(v=>v.storage===selectedStorage).map(v=>v.color).filter(Boolean);
-      const grid = document.getElementById('variantColorGrid');
+      const varColors = p.variants.filter(v=>v.storage===selectedStorage).map(v=>v.color).filter(Boolean);
       const block = document.getElementById('colorBlock');
-      if(!colors.length){ block.style.display='none'; return; }
+      if(!varColors.length){ block.style.display='none'; return; }
       block.style.display='block';
-      if(!colors.includes(selectedColor)) selectedColor = colors[0];
-      grid.innerHTML = colors.map(c=>`<button class="opt-btn${c===selectedColor?' active':''}" onclick="selectVariant('','${c}')">${c}</button>`).join('');
+      if(!varColors.includes(selectedColor)) selectedColor = varColors[0];
+      // Map tên màu → hex từ modelColors
+      const colorMap = Object.fromEntries(modelColors.map(c=>[c.name.toLowerCase(),c.hex]));
+      document.getElementById('variantColorGrid').innerHTML = varColors.map(c=>{
+        const hex = colorMap[c.toLowerCase()] || '#cccccc';
+        return `<div class="color-dot${c===selectedColor?' active':''}" title="${c}" onclick="selectVariant('','${c.replace(/'/g,"\\'")}')" style="${c===selectedColor?'border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,0.25)':''}">
+          <div class="dot-inner" style="background:${hex}"></div>
+        </div>`;
+      }).join('');
       document.getElementById('selectedColorLabel').textContent = selectedColor;
       updatePrice();
     }
 
     window.selectVariant = function(storage, color){
-      if(storage){ selectedStorage=storage; }
+      if(storage){ selectedStorage=storage; document.getElementById('selectedStorageLabel').textContent=storage; }
       if(color){ selectedColor=color; }
-      // update storage buttons
       document.querySelectorAll('#variantStorageGrid .opt-btn').forEach(btn=>{
         btn.classList.toggle('active', btn.textContent.trim()===selectedStorage);
       });
@@ -460,15 +549,38 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
         document.getElementById('pdPrice').innerHTML = match.price+'<span class="cur">₫</span>';
       }
     }
-
     updateColorGrid();
   }
 
-  // Thumbnail click
-  document.querySelectorAll('.pd-thumb').forEach(t => t.addEventListener('click', function(){
-    document.querySelectorAll('.pd-thumb').forEach(x=>x.classList.remove('active'));
+  // selectColor cho màu tĩnh (từ modelColors, không có variants)
+  window.selectColor = function(colorName){
+    document.querySelectorAll('#variantColorGrid .color-dot').forEach(d=>{
+      const active = d.title===colorName;
+      d.classList.toggle('active',active);
+      d.style.borderColor = active?'var(--accent)':'transparent';
+      d.style.boxShadow = active?'0 0 0 3px rgba(200,169,110,0.25)':'';
+    });
+    const lbl = document.getElementById('selectedColorLabel');
+    if(lbl) lbl.textContent = colorName;
+  };
+
+  // Thumbnail click — đổi ảnh chính theo allImgs[]
+  window.switchMainImg = function(idx){
+    const src = allImgs[idx];
+    if(!src) return;
+    const mainEl = document.getElementById('pdMainImg');
+    if(mainEl){
+      const badge = mainEl.querySelector('.badge');
+      mainEl.innerHTML = (badge ? badge.outerHTML : '') +
+        '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-xl);position:absolute;inset:0">';
+    }
+    document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t,i){ t.classList.toggle('active',i===idx); });
+  };
+  document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t,i){ t.addEventListener('click', function(){
+    if(allImgs.length > 1) return;
+    document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(x){ x.classList.remove('active'); });
     this.classList.add('active');
-  }));
+  }); });
 
   // Related products
   const {data:related} = await sb.from('products').select('*').neq('id', p.id).eq('status','instock').order('id',{ascending:false}).limit(4);
