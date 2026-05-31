@@ -6,14 +6,14 @@
 <title>HPHONE Admin – Quản lý cửa hàng</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --black:#0a0a0a;--white:#fafafa;--gray-100:#f5f5f5;--gray-200:#e8e8e8;
   --gray-400:#a0a0a0;--gray-600:#606060;--gray-800:#2a2a2a;
   --accent:#c8a96e;--accent-light:#e8d5a8;
-  --font-display:'Inter',sans-serif;--font-body:'Inter',sans-serif;
+  --font-display:'Playfair Display',serif;--font-body:'DM Sans',sans-serif;
   --radius-sm:8px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;
   --transition:0.25s cubic-bezier(0.4,0,0.2,1);
   --green:#2e9e63;--green-bg:#e7f5ee;--blue:#2b6fd6;--blue-bg:#e8f1fd;
@@ -576,8 +576,8 @@ if(LIVE && window.supabase){ try{ _sb = window.supabase.createClient(_cfg.url,_c
 
 /* map DB <-> JS */
 function fmtDate(iso){ try{ const d=new Date(iso); return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear(); }catch(e){ return ''; } }
-function mapProd(r){ return {id:r.id,name:r.name,short:r.short||'',brand:r.brand||'apple',storage:r.storage||'',color:r.color||'',battery:r.battery||'',condition:r.condition||'',badge:r.badge||'',warranty:r.warranty||'',price:r.price||'',old:r.old_price||'',status:r.status||'instock',img:r.img||'',desc:r.description||''}; }
-function prodPayload(p){ return {name:p.name,short:p.short,brand:p.brand,storage:p.storage,color:p.color,battery:p.battery,condition:p.condition,badge:p.badge,warranty:p.warranty,price:p.price,old_price:p.old||null,status:p.status,img:p.img||null,description:p.desc||null}; }
+function mapProd(r){ return {id:r.id,name:r.name,short:r.short||'',brand:r.brand||'apple',storage:r.storage||'',color:r.color||'',battery:r.battery||'',condition:r.condition||'',badge:r.badge||'',warranty:r.warranty||'',price:r.price||'',old:r.old_price||'',status:r.status||'instock',img:r.img||'',desc:r.description||'',variants:Array.isArray(r.variants)?r.variants:[]}; }
+function prodPayload(p){ return {name:p.name,short:p.short,brand:p.brand,storage:p.storage,color:p.color,battery:p.battery,condition:p.condition,badge:p.badge,warranty:p.warranty,price:p.price,old_price:p.old||null,status:p.status,img:p.img||null,description:p.desc||null,variants:(p.variants&&p.variants.length)?p.variants:null}; }
 function mapOrder(r){ return {id:'HP-'+(1000+r.id),dbid:r.id,customer:r.customer,phone:r.phone,addr:r.address||'',note:r.note||'',items:Array.isArray(r.items)?r.items:[],total:r.total,status:r.status||'new',date:fmtDate(r.created_at)}; }
 
 /* demo data (when Supabase not configured) */
