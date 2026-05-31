@@ -356,6 +356,20 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
         <div class="pd-price" id="pdPrice">${p.price}<span class="cur">₫</span></div>
         ${oldPriceRow}
       </div>
+      ${(p.variants && p.variants.length) ? `
+      <div class="pd-block">
+        <div class="pd-opt-label">Dung lượng</div>
+        <div class="opt-grid" id="variantStorageGrid">
+          ${[...new Map(p.variants.map(v=>[v.storage,v])).values()].map((v,i)=>`
+            <button class="opt-btn${i===0?' active':''}" onclick="selectVariant('${v.storage}','')">
+              ${v.storage}
+            </button>`).join('')}
+        </div>
+      </div>
+      <div class="pd-block" id="colorBlock">
+        <div class="pd-opt-label">Màu sắc: <span id="selectedColorLabel" style="color:var(--black);font-weight:600">${p.variants[0]?.color||''}</span></div>
+        <div class="opt-grid" id="variantColorGrid"></div>
+      </div>` : `
       ${p.storage ? `
       <div class="pd-block">
         <div class="pd-opt-label">Dung lượng</div>
@@ -363,8 +377,8 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       </div>` : ''}
       ${p.color ? `
       <div class="pd-block">
-        <div class="pd-opt-label">Màu sắc: <span style="color:var(--black);font-weight:600;letter-spacing:0;text-transform:none">${p.color}</span></div>
-      </div>` : ''}
+        <div class="pd-opt-label">Màu sắc: <span style="color:var(--black);font-weight:600">${p.color}</span></div>
+      </div>` : ''}`}
       <div class="pd-promo">
         <h4>Ưu đãi tại HPHONE</h4>
         <div class="promo-item"><span class="dot"></span><div>Tặng <b>ốp lưng + dán cường lực</b> trị giá 350.000₫ cho mọi đơn hàng.</div></div>
@@ -410,6 +424,43 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     this.classList.add('active');
     document.getElementById(this.dataset.tab).classList.add('active');
   }));
+
+  // Variant selection
+  if(p.variants && p.variants.length){
+    let selectedStorage = p.variants[0]?.storage||'';
+    let selectedColor = p.variants[0]?.color||'';
+
+    function updateColorGrid(){
+      const colors = p.variants.filter(v=>v.storage===selectedStorage).map(v=>v.color).filter(Boolean);
+      const grid = document.getElementById('variantColorGrid');
+      const block = document.getElementById('colorBlock');
+      if(!colors.length){ block.style.display='none'; return; }
+      block.style.display='block';
+      if(!colors.includes(selectedColor)) selectedColor = colors[0];
+      grid.innerHTML = colors.map(c=>`<button class="opt-btn${c===selectedColor?' active':''}" onclick="selectVariant('','${c}')">${c}</button>`).join('');
+      document.getElementById('selectedColorLabel').textContent = selectedColor;
+      updatePrice();
+    }
+
+    window.selectVariant = function(storage, color){
+      if(storage){ selectedStorage=storage; }
+      if(color){ selectedColor=color; }
+      // update storage buttons
+      document.querySelectorAll('#variantStorageGrid .opt-btn').forEach(btn=>{
+        btn.classList.toggle('active', btn.textContent.trim()===selectedStorage);
+      });
+      updateColorGrid();
+    };
+
+    function updatePrice(){
+      const match = p.variants.find(v=>v.storage===selectedStorage && (v.color===selectedColor||!v.color));
+      if(match && match.price){
+        document.getElementById('pdPrice').innerHTML = match.price+'<span class="cur">₫</span>';
+      }
+    }
+
+    updateColorGrid();
+  }
 
   // Thumbnail click
   document.querySelectorAll('.pd-thumb').forEach(t => t.addEventListener('click', function(){

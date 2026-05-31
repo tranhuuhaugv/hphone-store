@@ -135,16 +135,29 @@ body{font-family:var(--font-body);background:var(--gray-100);color:var(--black);
 .field textarea{resize:vertical;min-height:90px;line-height:1.6}
 .field .hint{font-size:11px;color:var(--gray-400);margin-top:5px;font-weight:400;text-transform:none;letter-spacing:0}
 /* image uploader */
-.img-up{display:flex;gap:16px;align-items:flex-start}
-.img-preview{width:110px;height:110px;border-radius:var(--radius-md);border:1.5px dashed var(--gray-200);flex-shrink:0;overflow:hidden;background:linear-gradient(135deg,var(--gray-100),var(--gray-200));display:flex;align-items:center;justify-content:center;position:relative}
-.img-preview img{width:100%;height:100%;object-fit:cover}
-.img-preview .ph{width:40%;aspect-ratio:0.49;background:linear-gradient(145deg,#2a2a2a,#111);border-radius:6px}
-.img-up-controls{flex:1}
+.img-up{display:flex;gap:16px;align-items:flex-start;flex-direction:column}
+.img-up-controls{width:100%}
 .img-up-controls .file-btn{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;padding:9px 16px;border-radius:var(--radius-md);border:1.5px solid var(--gray-200);cursor:pointer;transition:var(--transition);margin-bottom:10px}
 .img-up-controls .file-btn:hover{border-color:var(--black)}
 .img-up-controls .file-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8}
+.img-gallery{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.img-thumb{width:90px;height:90px;border-radius:var(--radius-md);border:1.5px solid var(--gray-200);overflow:hidden;position:relative;flex-shrink:0}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+.img-thumb .del-img{position:absolute;top:4px;right:4px;background:rgba(10,10,10,0.7);color:#fff;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;line-height:1}
+.img-thumb.main-img{border-color:var(--accent);border-width:2px}
+.img-thumb.main-img::after{content:'Chính';position:absolute;bottom:0;left:0;right:0;background:rgba(200,169,110,0.9);color:#000;font-size:10px;font-weight:700;text-align:center;padding:2px}
 
-/* order detail drawer */
+/* variants */
+.variants-wrap{border:1px solid var(--gray-200);border-radius:var(--radius-md);overflow:hidden;margin-top:4px}
+.variant-row{display:grid;grid-template-columns:1fr 1fr 80px 36px;gap:8px;padding:10px 12px;border-bottom:1px solid var(--gray-100);align-items:center}
+.variant-row:last-child{border-bottom:none}
+.variant-row input{border:1px solid var(--gray-200);border-radius:var(--radius-sm);padding:7px 10px;font-family:var(--font-body);font-size:13px;width:100%;outline:none}
+.variant-row input:focus{border-color:var(--black)}
+.variant-row .del-var{width:30px;height:30px;border:none;background:var(--gray-100);border-radius:var(--radius-sm);cursor:pointer;color:var(--red);font-size:16px;display:flex;align-items:center;justify-content:center}
+.variant-row .del-var:hover{background:var(--red-bg)}
+.variant-head{display:grid;grid-template-columns:1fr 1fr 80px 36px;gap:8px;padding:8px 12px;background:var(--gray-100);font-size:12px;font-weight:600;color:var(--gray-600);letter-spacing:0.5px}
+.add-var-btn{display:flex;align-items:center;gap:6px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--accent);background:none;border:none;cursor:pointer;width:100%;border-top:1px dashed var(--gray-200)}
+.add-var-btn:hover{background:rgba(200,169,110,0.06)}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:460px;max-width:92vw;background:#fff;z-index:110;transform:translateX(100%);transition:var(--transition);display:flex;flex-direction:column;box-shadow:-12px 0 40px rgba(0,0,0,0.15)}
 .drawer.open{transform:translateX(0)}
 .drawer-mask{position:fixed;inset:0;background:rgba(10,10,10,0.4);z-index:109;opacity:0;pointer-events:none;transition:var(--transition)}
@@ -365,13 +378,13 @@ window.HPHONE_SUPABASE = {
     <div class="modal-body">
       <input type="hidden" id="f_id">
       <div class="field full">
-        <label>Hình ảnh sản phẩm</label>
+        <label>Hình ảnh sản phẩm <span style="font-weight:400;color:var(--gray-400)">(ảnh đầu tiên là ảnh chính)</span></label>
         <div class="img-up">
-          <div class="img-preview" id="imgPreview"><div class="ph"></div></div>
           <div class="img-up-controls">
-            <label class="file-btn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Tải ảnh lên<input type="file" id="f_file" accept="image/*" hidden></label>
-            <div class="field" style="margin-bottom:0"><input type="text" id="f_imgurl" placeholder="Hoặc dán URL ảnh..."><div class="hint">Chấp nhận ảnh tải lên hoặc đường dẫn ảnh trực tuyến.</div></div>
+            <label class="file-btn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Tải nhiều ảnh lên<input type="file" id="f_file" accept="image/*" multiple hidden></label>
+            <div class="field" style="margin-bottom:0"><input type="text" id="f_imgurl" placeholder="Hoặc dán URL ảnh rồi nhấn Enter..."><div class="hint">Upload nhiều ảnh hoặc dán URL. Ảnh đầu tiên sẽ hiển thị trên trang sản phẩm.</div></div>
           </div>
+          <div class="img-gallery" id="imgGallery"></div>
         </div>
       </div>
       <div class="form-grid">
@@ -388,6 +401,14 @@ window.HPHONE_SUPABASE = {
         <div class="field"><label>Giá gốc (₫)</label><input type="text" id="f_old" placeholder="VD: 35.900.000 (tùy chọn)"></div>
         <div class="field"><label>Trạng thái kho</label><select id="f_status"><option value="instock">Còn hàng</option><option value="outofstock">Hết hàng</option></select></div>
         <div class="field full"><label>Mô tả</label><textarea id="f_desc" placeholder="Mô tả ngắn về sản phẩm, tình trạng máy, điểm nổi bật..."></textarea></div>
+        <div class="field full">
+          <label>Biến thể (Dung lượng / Màu sắc / Giá) <span style="font-weight:400;color:var(--gray-400)">— để trống nếu chỉ có 1 biến thể</span></label>
+          <div class="variants-wrap">
+            <div class="variant-head"><span>Dung lượng</span><span>Màu sắc</span><span>Giá (₫)</span><span></span></div>
+            <div id="variantRows"></div>
+            <button type="button" class="add-var-btn" onclick="addVariantRow()">＋ Thêm biến thể</button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="modal-foot">
@@ -501,15 +522,37 @@ const STATUS = {
 };
 
 const seedProducts = [
- {id:1,name:'iPhone 15 Pro Max',short:'15 Pro Max',brand:'apple',storage:'256GB',color:'Titan Tự Nhiên',battery:'94%',condition:'Like New 99%',badge:'Like New',warranty:'12 tháng',price:'32.900.000',old:'35.900.000',status:'instock',img:'',desc:'Máy đẹp Like New 99%, khung titan nguyên bản, pin 94% kiểm tra thực tế.'},
- {id:2,name:'iPhone 15',short:'15',brand:'apple',storage:'128GB',color:'Xanh',battery:'97%',condition:'Like New 99%',badge:'Like New',warranty:'12 tháng',price:'18.500.000',old:'',status:'instock',img:'',desc:'iPhone 15 Like New, pin cao 97%, ngoại hình đẹp.'},
- {id:3,name:'iPhone 14 Pro',short:'14 Pro',brand:'apple',storage:'128GB',color:'Tím',battery:'91%',condition:'Đẹp 98%',badge:'Đẹp 98%',warranty:'12 tháng',price:'22.500.000',old:'',status:'instock',img:'',desc:'Máy zin đẹp, pin 91%, đầy đủ tính năng Pro.'},
- {id:4,name:'iPhone 14 Pro Max',short:'14 Pro Max',brand:'apple',storage:'256GB',color:'Đen',battery:'90%',condition:'Đẹp 98%',badge:'Đẹp 98%',warranty:'12 tháng',price:'26.900.000',old:'',status:'instock',img:'',desc:'Bản Pro Max màn lớn, pin 90%, ngoại hình đẹp 98%.'},
- {id:5,name:'iPhone 13',short:'13',brand:'apple',storage:'128GB',color:'Hồng',battery:'89%',condition:'Đẹp 97%',badge:'Đẹp 97%',warranty:'6 tháng',price:'13.900.000',old:'',status:'instock',img:'',desc:'iPhone 13 giá tốt, pin 89%, máy zin.'},
- {id:6,name:'iPhone 13 Pro Max',short:'13 Pro Max',brand:'apple',storage:'128GB',color:'Xanh Sierra',battery:'88%',condition:'Đẹp 97%',badge:'Đẹp 97%',warranty:'6 tháng',price:'15.900.000',old:'',status:'outofstock',img:'',desc:'Pro Max màn 120Hz, pin 88%, ngoại hình đẹp.'},
- {id:7,name:'iPhone 12 Pro Max',short:'12 Pro Max',brand:'apple',storage:'128GB',color:'Vàng đồng',battery:'85%',condition:'Đẹp 95%',badge:'Giá tốt',warranty:'3 tháng',price:'11.200.000',old:'',status:'instock',img:'',desc:'Giá tốt, máy đẹp 95%, pin 85%.'},
- {id:8,name:'Samsung Galaxy S24 Ultra',short:'S24 Ultra',brand:'samsung',storage:'256GB',color:'Titanium Gray',battery:'96%',condition:'Đẹp 98%',badge:'Samsung',warranty:'12 tháng',price:'24.900.000',old:'',status:'instock',img:'',desc:'Flagship Samsung, bút S-Pen, pin 96%, máy đẹp.'},
- {id:9,name:'iPhone 12',short:'12',brand:'apple',storage:'64GB',color:'Trắng',battery:'84%',condition:'Đẹp 95%',badge:'Giá tốt',warranty:'3 tháng',price:'8.900.000',old:'',status:'instock',img:'',desc:'iPhone 12 giá rẻ, phù hợp nhu cầu cơ bản.'}
+ {id:1,name:'iPhone 17 Pro Max',short:'17 Pro Max',brand:'apple',storage:'256GB',color:'',battery:'100%',condition:'Like New 99%',badge:'Like New',warranty:'12 tháng',price:'39.000.000',old:'',status:'instock',img:'',desc:'iPhone 17 Pro Max mới nhất, pin 100%, ngoại hình đẹp Like New.'},
+ {id:2,name:'iPhone 17 Pro',short:'17 Pro',brand:'apple',storage:'256GB',color:'',battery:'100%',condition:'Like New 99%',badge:'Like New',warranty:'12 tháng',price:'35.000.000',old:'',status:'instock',img:'',desc:'iPhone 17 Pro chip mới nhất, camera Pro, pin 100%.'},
+ {id:3,name:'iPhone 17 Plus',short:'17 Plus',brand:'apple',storage:'128GB',color:'',battery:'100%',condition:'Like New 99%',badge:'Like New',warranty:'12 tháng',price:'30.000.000',old:'',status:'instock',img:'',desc:'iPhone 17 Plus màn hình lớn, pin trâu, máy đẹp.'},
+ {id:4,name:'iPhone 17',short:'17',brand:'apple',storage:'128GB',color:'',battery:'100%',condition:'Like New 99%',badge:'Like New',warranty:'12 tháng',price:'27.000.000',old:'',status:'instock',img:'',desc:'iPhone 17 bản tiêu chuẩn, mới nhất, pin 100%.'},
+ {id:5,name:'iPhone 16 Pro Max',short:'16 Pro Max',brand:'apple',storage:'256GB',color:'',battery:'98%',condition:'Like New 99%',badge:'Like New',warranty:'12 tháng',price:'33.500.000',old:'',status:'instock',img:'',desc:'iPhone 16 Pro Max chip A18 Pro, camera 5x, pin 98%.'},
+ {id:6,name:'iPhone 16 Pro',short:'16 Pro',brand:'apple',storage:'256GB',color:'',battery:'97%',condition:'Like New 99%',badge:'Like New',warranty:'12 tháng',price:'29.500.000',old:'',status:'instock',img:'',desc:'iPhone 16 Pro màn hình 6.3 inch, chip A18 Pro, pin 97%.'},
+ {id:7,name:'iPhone 16 Plus',short:'16 Plus',brand:'apple',storage:'128GB',color:'',battery:'98%',condition:'Đẹp 98%',badge:'Đẹp 98%',warranty:'12 tháng',price:'24.500.000',old:'',status:'instock',img:'',desc:'iPhone 16 Plus màn lớn, pin 98%, máy đẹp.'},
+ {id:8,name:'iPhone 16',short:'16',brand:'apple',storage:'128GB',color:'',battery:'97%',condition:'Đẹp 98%',badge:'Đẹp 98%',warranty:'12 tháng',price:'22.500.000',old:'',status:'instock',img:'',desc:'iPhone 16 chip A18, camera cải tiến, pin 97%.'},
+ {id:9,name:'iPhone 15 Pro Max',short:'15 Pro Max',brand:'apple',storage:'256GB',color:'Titan Tự Nhiên',battery:'94%',condition:'Like New 99%',badge:'Like New',warranty:'12 tháng',price:'28.500.000',old:'32.900.000',status:'instock',img:'',desc:'Khung titan nguyên bản, camera 5x, pin 94%.'},
+ {id:10,name:'iPhone 15 Pro',short:'15 Pro',brand:'apple',storage:'256GB',color:'Titan Đen',battery:'93%',condition:'Like New 99%',badge:'Like New',warranty:'12 tháng',price:'25.500.000',old:'',status:'instock',img:'',desc:'iPhone 15 Pro chip A17 Pro, action button, pin 93%.'},
+ {id:11,name:'iPhone 15 Plus',short:'15 Plus',brand:'apple',storage:'128GB',color:'',battery:'95%',condition:'Đẹp 98%',badge:'Đẹp 98%',warranty:'12 tháng',price:'20.500.000',old:'',status:'instock',img:'',desc:'iPhone 15 Plus màn lớn 6.7 inch, pin 95%.'},
+ {id:12,name:'iPhone 15',short:'15',brand:'apple',storage:'128GB',color:'Xanh',battery:'97%',condition:'Like New 99%',badge:'Like New',warranty:'12 tháng',price:'18.500.000',old:'',status:'instock',img:'',desc:'iPhone 15 cổng USB-C, camera 48MP, pin 97%.'},
+ {id:13,name:'iPhone 14 Pro Max',short:'14 Pro Max',brand:'apple',storage:'256GB',color:'Đen',battery:'90%',condition:'Đẹp 98%',badge:'Đẹp 98%',warranty:'12 tháng',price:'22.500.000',old:'26.900.000',status:'instock',img:'',desc:'Dynamic Island, camera 48MP, pin 90%, máy đẹp.'},
+ {id:14,name:'iPhone 14 Pro',short:'14 Pro',brand:'apple',storage:'128GB',color:'Tím',battery:'91%',condition:'Đẹp 98%',badge:'Đẹp 98%',warranty:'12 tháng',price:'19.500.000',old:'',status:'instock',img:'',desc:'iPhone 14 Pro Dynamic Island, pin 91%, zin đẹp.'},
+ {id:15,name:'iPhone 14 Plus',short:'14 Plus',brand:'apple',storage:'128GB',color:'',battery:'92%',condition:'Đẹp 97%',badge:'Đẹp 97%',warranty:'6 tháng',price:'16.500.000',old:'',status:'instock',img:'',desc:'iPhone 14 Plus màn lớn, pin trâu 92%, giá tốt.'},
+ {id:16,name:'iPhone 14',short:'14',brand:'apple',storage:'128GB',color:'',battery:'91%',condition:'Đẹp 97%',badge:'Đẹp 97%',warranty:'6 tháng',price:'14.500.000',old:'',status:'instock',img:'',desc:'iPhone 14 chip A15, camera cải tiến, pin 91%.'},
+ {id:17,name:'iPhone 13 Pro Max',short:'13 Pro Max',brand:'apple',storage:'128GB',color:'Xanh Sierra',battery:'88%',condition:'Đẹp 97%',badge:'Đẹp 97%',warranty:'6 tháng',price:'15.500.000',old:'',status:'instock',img:'',desc:'Pro Max màn 120Hz ProMotion, pin 88%, ngoại hình đẹp.'},
+ {id:18,name:'iPhone 13 Pro',short:'13 Pro',brand:'apple',storage:'128GB',color:'',battery:'87%',condition:'Đẹp 97%',badge:'Đẹp 97%',warranty:'6 tháng',price:'13.500.000',old:'',status:'instock',img:'',desc:'iPhone 13 Pro màn 120Hz, camera Pro, pin 87%.'},
+ {id:19,name:'iPhone 13 Mini',short:'13 Mini',brand:'apple',storage:'128GB',color:'',battery:'86%',condition:'Đẹp 95%',badge:'Giá tốt',warranty:'3 tháng',price:'9.500.000',old:'',status:'instock',img:'',desc:'iPhone 13 Mini nhỏ gọn, chip A15, pin 86%.'},
+ {id:20,name:'iPhone 13',short:'13',brand:'apple',storage:'128GB',color:'Hồng',battery:'89%',condition:'Đẹp 97%',badge:'Đẹp 97%',warranty:'6 tháng',price:'10.500.000',old:'13.900.000',status:'instock',img:'',desc:'iPhone 13 chip A15, camera kép, pin 89%.'},
+ {id:21,name:'iPhone 12 Pro Max',short:'12 Pro Max',brand:'apple',storage:'128GB',color:'Vàng đồng',battery:'85%',condition:'Đẹp 95%',badge:'Giá tốt',warranty:'3 tháng',price:'9.500.000',old:'11.200.000',status:'instock',img:'',desc:'Giá tốt, máy đẹp 95%, camera Pro, pin 85%.'},
+ {id:22,name:'iPhone 12 Pro',short:'12 Pro',brand:'apple',storage:'128GB',color:'',battery:'84%',condition:'Đẹp 95%',badge:'Giá tốt',warranty:'3 tháng',price:'8.500.000',old:'',status:'instock',img:'',desc:'iPhone 12 Pro LiDAR, camera Pro, pin 84%.'},
+ {id:23,name:'iPhone 12 Mini',short:'12 Mini',brand:'apple',storage:'64GB',color:'',battery:'83%',condition:'Đẹp 95%',badge:'Giá tốt',warranty:'3 tháng',price:'5.500.000',old:'',status:'instock',img:'',desc:'iPhone 12 Mini nhỏ gọn, 5G, chip A14, pin 83%.'},
+ {id:24,name:'iPhone 12',short:'12',brand:'apple',storage:'64GB',color:'Trắng',battery:'84%',condition:'Đẹp 95%',badge:'Giá tốt',warranty:'3 tháng',price:'6.500.000',old:'8.900.000',status:'instock',img:'',desc:'iPhone 12 5G, chip A14, màn OLED, pin 84%.'},
+ {id:25,name:'iPhone 11 Pro Max',short:'11 Pro Max',brand:'apple',storage:'64GB',color:'',battery:'82%',condition:'Đẹp 95%',badge:'Giá tốt',warranty:'3 tháng',price:'6.200.000',old:'',status:'instock',img:'',desc:'iPhone 11 Pro Max camera triple, màn Super Retina XDR, pin 82%.'},
+ {id:26,name:'iPhone 11 Pro',short:'11 Pro',brand:'apple',storage:'64GB',color:'',battery:'81%',condition:'Đẹp 95%',badge:'Giá tốt',warranty:'3 tháng',price:'5.500.000',old:'',status:'instock',img:'',desc:'iPhone 11 Pro camera 3 ống kính, chip A13, pin 81%.'},
+ {id:27,name:'iPhone 11',short:'11',brand:'apple',storage:'64GB',color:'',battery:'83%',condition:'Đẹp 95%',badge:'Giá tốt',warranty:'3 tháng',price:'4.500.000',old:'',status:'instock',img:'',desc:'iPhone 11 chip A13, camera kép, pin 83%, giá rẻ.'},
+ {id:28,name:'iPhone XS Max',short:'XS Max',brand:'apple',storage:'64GB',color:'',battery:'80%',condition:'Đẹp 90%',badge:'Giá tốt',warranty:'1 tháng',price:'3.900.000',old:'',status:'instock',img:'',desc:'iPhone XS Max màn lớn 6.5 inch, Face ID, pin 80%.'},
+ {id:29,name:'iPhone XS',short:'XS',brand:'apple',storage:'64GB',color:'',battery:'79%',condition:'Đẹp 90%',badge:'Giá tốt',warranty:'1 tháng',price:'3.500.000',old:'',status:'instock',img:'',desc:'iPhone XS chip A12, Face ID, màn OLED, pin 79%.'},
+ {id:30,name:'iPhone XR',short:'XR',brand:'apple',storage:'64GB',color:'',battery:'81%',condition:'Đẹp 90%',badge:'Giá tốt',warranty:'1 tháng',price:'3.200.000',old:'',status:'instock',img:'',desc:'iPhone XR màn Liquid Retina, nhiều màu sắc, pin 81%.'},
+ {id:31,name:'iPhone X',short:'X',brand:'apple',storage:'64GB',color:'',battery:'78%',condition:'Đẹp 88%',badge:'Giá tốt',warranty:'1 tháng',price:'2.900.000',old:'',status:'instock',img:'',desc:'iPhone X đầu tiên có Face ID, màn OLED, pin 78%.'},
 ];
 
 const seedOrders = [
@@ -684,49 +727,88 @@ document.querySelectorAll('#prodFilter .pill').forEach(p=>p.addEventListener('cl
 }));
 
 /* product modal */
-let editingId=null, pendingImg='';
+let editingId=null, pendingImgs=[];
 function openProductModal(id){
-  editingId=(id!==undefined && id!==null && id!=='')?id:null; pendingImg='';
+  editingId=(id!==undefined && id!==null && id!=='')?id:null; pendingImgs=[];
   const m=document.getElementById('prodOverlay');
   const set=(k,v)=>document.getElementById('f_'+k).value=v;
   if(editingId!==null){
-    // eslint-disable-next-line eqeqeq
     const p=products.find(x=>x.id==editingId);
     document.getElementById('modalTitle').textContent='Sửa sản phẩm';
     set('id',p.id);set('name',p.name);set('short',p.short||'');set('brand',p.brand);set('storage',p.storage||'');
     set('color',p.color||'');set('battery',p.battery||'');set('condition',p.condition||'');set('badge',p.badge||'');
     set('warranty',p.warranty||'');set('price',p.price||'');set('old',p.old||'');set('status',p.status);set('desc',p.desc||'');set('imgurl','');
-    pendingImg=p.img||'';
-    document.getElementById('imgPreview').innerHTML=p.img?'<img src="'+p.img+'">':'<div class="ph"></div>';
+    // load ảnh cũ vào gallery
+    if(p.images && p.images.length) pendingImgs=[...p.images];
+    else if(p.img) pendingImgs=[p.img];
+    renderGallery();
+    // load biến thể cũ
+    document.getElementById('variantRows').innerHTML='';
+    if(p.variants && p.variants.length) p.variants.forEach(v=>addVariantRow(v));
   }else{
     document.getElementById('modalTitle').textContent='Thêm sản phẩm';
     ['id','name','short','color','battery','condition','badge','warranty','price','old','desc','imgurl','storage'].forEach(k=>set(k,''));
     set('brand','apple');set('status','instock');
-    document.getElementById('imgPreview').innerHTML='<div class="ph"></div>';
+    renderGallery();
+    document.getElementById('variantRows').innerHTML='';
   }
   m.classList.add('open');
 }
 function closeProductModal(){document.getElementById('prodOverlay').classList.remove('open');}
 document.getElementById('f_file').addEventListener('change',function(e){
-  const file=e.target.files[0];if(!file)return;
-  const r=new FileReader();
-  r.onload=function(ev){pendingImg=ev.target.result;document.getElementById('imgPreview').innerHTML='<img src="'+pendingImg+'">';};
-  r.readAsDataURL(file);
+  const files = Array.from(e.target.files);
+  if(!files.length) return;
+  files.forEach(file => {
+    const r = new FileReader();
+    r.onload = function(ev) {
+      pendingImgs.push(ev.target.result);
+      renderGallery();
+    };
+    r.readAsDataURL(file);
+  });
+  e.target.value = '';
 });
-document.getElementById('f_imgurl').addEventListener('input',function(e){
-  const u=e.target.value.trim();
-  if(u){pendingImg=u;document.getElementById('imgPreview').innerHTML='<img src="'+u+'" onerror="this.parentNode.innerHTML=\'<div class=ph></div>\'">';}
+document.getElementById('f_imgurl').addEventListener('keydown',function(e){
+  if(e.key !== 'Enter') return;
+  const u = e.target.value.trim();
+  if(u){ pendingImgs.push(u); renderGallery(); e.target.value=''; }
 });
+function renderGallery(){
+  const g = document.getElementById('imgGallery');
+  g.innerHTML = pendingImgs.map((src,i)=>`
+    <div class="img-thumb${i===0?' main-img':''}">
+      <img src="${src}" onerror="this.src=''">
+      <button class="del-img" onclick="removeImg(${i})">×</button>
+    </div>`).join('');
+}
+function removeImg(i){ pendingImgs.splice(i,1); renderGallery(); }
+function addVariantRow(v){
+  const container = document.getElementById('variantRows');
+  const row = document.createElement('div');
+  row.className = 'variant-row';
+  row.innerHTML = `
+    <input type="text" placeholder="VD: 256GB" value="${v?.storage||''}">
+    <input type="text" placeholder="VD: Titan Đen" value="${v?.color||''}">
+    <input type="text" placeholder="VD: 32.900.000" value="${v?.price||''}">
+    <button class="del-var" onclick="this.closest('.variant-row').remove()">×</button>`;
+  container.appendChild(row);
+}
+function getVariants(){
+  return Array.from(document.querySelectorAll('#variantRows .variant-row')).map(row=>{
+    const inputs = row.querySelectorAll('input');
+    return {storage:inputs[0].value.trim(),color:inputs[1].value.trim(),price:inputs[2].value.trim()};
+  }).filter(v=>v.storage||v.color||v.price);
+}
 async function saveProduct(){
   const g=k=>document.getElementById('f_'+k).value.trim();
   if(!g('name')){toast('Vui lòng nhập tên sản phẩm');return;}
   if(!g('price')){toast('Vui lòng nhập giá bán');return;}
-  const imgVal = document.getElementById('f_imgurl').value.trim();
-  const finalImg = imgVal ? imgVal : pendingImg;
+  const finalImg = pendingImgs[0] || '';
   const data={
     name:g('name'),short:g('short')||g('name'),brand:g('brand'),storage:g('storage'),color:g('color'),
     battery:g('battery'),condition:g('condition'),badge:g('badge'),warranty:g('warranty'),
-    price:g('price'),old:g('old'),status:g('status'),desc:g('desc'),img:finalImg
+    price:g('price'),old:g('old'),status:g('status'),desc:g('desc'),img:finalImg,images:pendingImgs,
+    variants:getVariants()
   };
   if(_sb){
     try{
