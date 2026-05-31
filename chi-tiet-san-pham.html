@@ -58,14 +58,16 @@ nav{position:sticky;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.
 /* buttons */
 .btn-primary{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:14px;font-weight:600;padding:14px 28px;border-radius:30px;border:none;cursor:pointer;transition:var(--transition);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
 .btn-primary:hover{background:var(--gray-800);transform:translateY(-2px)}
-.btn-gold{background:var(--accent);color:var(--black)}
-.btn-gold:hover{background:var(--accent-light)}
+.btn-gold{background:var(--accent);color:var(--black);font-weight:700;letter-spacing:0.3px}
+.btn-gold:hover{background:var(--accent-light);transform:translateY(-1px)}
 .btn-outline{background:transparent;color:var(--black);font-family:var(--font-body);font-size:14px;font-weight:500;padding:13px 28px;border-radius:30px;border:1px solid var(--gray-200);cursor:pointer;transition:var(--transition);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
 .btn-outline:hover{border-color:var(--black)}
-.btn-zalo{padding:12px 16px;background:#e8f4ff;color:#0052cc;font-family:var(--font-body);font-size:13px;font-weight:600;border:1.5px solid #b3d8ff;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
-.btn-zalo:hover{background:#d0eaff}
-.btn-mess{padding:12px 16px;background:#f0eaff;color:#5200cc;font-family:var(--font-body);font-size:13px;font-weight:600;border:1.5px solid #c8b3ff;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
-.btn-mess:hover{background:#e4d8ff}
+.btn-zalo{padding:12px 16px;background:var(--white);color:var(--black);font-family:var(--font-body);font-size:13px;font-weight:600;border:1px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-zalo:hover{background:var(--gray-100);border-color:var(--gray-400)}
+.btn-zalo .zalo-icon{width:20px;height:20px;border-radius:50%;background:#0068ff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;line-height:1}
+.btn-mess{padding:12px 16px;background:var(--white);color:var(--black);font-family:var(--font-body);font-size:13px;font-weight:600;border:1px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-mess:hover{background:var(--gray-100);border-color:var(--gray-400)}
+.btn-mess .mess-icon{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#0099ff,#a033ff);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
 /* generic phone mockup image block */
 .phone-mock{background:linear-gradient(135deg,var(--gray-100),var(--gray-200));border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
@@ -120,15 +122,18 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 .pd-stars{display:flex;gap:3px}
 .star{width:14px;height:14px;background:var(--accent);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
 /* Price box */
-.pd-price-box{background:linear-gradient(135deg,#1a6fd4 0%,#1250a0 100%);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.pd-price-box{background:var(--gray-100);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:22px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .pd-price-box-left{}
-.pd-price{font-family:var(--font-display);font-size:34px;font-weight:700;color:#fff;line-height:1}
-.pd-price .cur{font-family:var(--font-body);font-size:18px;font-weight:500;color:rgba(255,255,255,0.8)}
-.pd-strike{font-size:15px;color:rgba(255,255,255,0.55);text-decoration:line-through;margin-top:4px}
-.pd-save-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:11px;font-weight:700;color:#fff;padding:3px 9px;margin-top:6px;letter-spacing:0.5px}
+.pd-price{font-family:var(--font-display);font-size:34px;font-weight:700;color:var(--black);line-height:1}
+.pd-price .cur{font-family:var(--font-body);font-size:18px;font-weight:500;color:var(--gray-600)}
+.pd-strike{font-size:14px;color:var(--gray-400);text-decoration:line-through;margin-top:5px}
+.pd-save-badge{display:inline-flex;align-items:center;gap:5px;background:#faeeda;border-radius:6px;font-size:11px;font-weight:700;color:#633806;padding:3px 9px;margin-top:7px;letter-spacing:0.3px}
 .pd-price-box-right{text-align:right}
-.pd-stock-label{font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:4px}
-.pd-stock-badge{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:11px;font-weight:600;padding:3px 10px;border-radius:30px}
+.pd-stock-label{font-size:10px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--gray-600);margin-bottom:6px}
+.pd-stock-badge{display:inline-flex;align-items:center;gap:5px;background:#e7f5ee;color:#1a6b3a;font-size:11px;font-weight:600;padding:4px 12px;border-radius:30px}
+.pd-stock-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#2e9e63;flex-shrink:0}
+.pd-stock-badge.out{background:#fbeae8;color:#8b1a1a}
+.pd-stock-badge.out::before{background:#c0392b}
 
 /* Options */
 .pd-opt-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray-600);margin-bottom:10px;display:flex;align-items:center;gap:8px}
@@ -148,8 +153,9 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 .color-dot.active{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,0.25)}
 .color-dot[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0a0a0a;color:#fff;font-size:11px;font-weight:500;white-space:nowrap;padding:4px 8px;border-radius:6px;pointer-events:none;font-family:var(--font-body)}
 .pd-promo{border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:20px;margin-bottom:24px;position:relative;overflow:hidden}
-.pd-promo::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-light))}
-.pd-promo h4{font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;color:var(--accent)}
+.pd-promo::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-light))}
+.pd-promo::after{display:none}
+.pd-promo h4{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;color:var(--accent)}
 .promo-item{display:flex;gap:10px;font-size:13px;color:var(--gray-800);margin-bottom:10px;line-height:1.5}
 .promo-item:last-child{margin-bottom:0}
 .promo-item .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:7px}
@@ -396,7 +402,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       </div>
       <div class="pd-price-box-right">
         <div class="pd-stock-label">Tình trạng</div>
-        <div class="pd-stock-badge">${p.status==='outofstock'?'⚠ Hết hàng':'✓ Còn hàng'}</div>
+        <div class="pd-stock-badge${p.status==='outofstock'?' out':''}">${p.status==='outofstock'?'Hết hàng':'Còn hàng'}</div>
       </div>
     </div>`;
   }
@@ -475,9 +481,11 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
         <a href="gio-hang" class="btn-primary btn-gold pd-buy" style="text-align:center;font-size:16px;padding:16px">Mua ngay</a>
         <div class="row">
           <a href="https://zalo.me/0379443613" target="_blank" class="btn-zalo">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.7 4.19 1.87 5.83L2.5 21.5l3.83-1.33C7.83 21.33 9.85 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg> Chat Zalo
+            <div class="zalo-icon">Z</div> Chat Zalo
           </a>
-          <a href="https://m.me/hphone.store" target="_blank" class="btn-mess">Messenger</a>
+          <a href="https://m.me/hphone.store" target="_blank" class="btn-mess">
+            <div class="mess-icon"><svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.7 4.19 1.87 5.83L2.5 21.5l3.83-1.33C7.83 21.33 9.85 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg></div> Messenger
+          </a>
         </div>
       </div>
       <ul class="pd-policy">
