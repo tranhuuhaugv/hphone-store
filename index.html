@@ -752,42 +752,40 @@ document.querySelector('.modal-close').addEventListener('click', function() {
     return;
   }
 
-  // Nhóm sản phẩm theo series
+  // Nhóm sản phẩm theo series (tất cả biến thể cùng số vào 1 nhóm)
   function getSeries(name) {
     const n = (name||'').toLowerCase();
-    if(n.includes('17 pro max')) return 'iPhone 17 Pro Max Series';
-    if(n.includes('17 pro')) return 'iPhone 17 Pro Series';
-    if(n.includes('17 plus')) return 'iPhone 17 Plus Series';
-    if(n.includes('17')) return 'iPhone 17 Series';
-    if(n.includes('16 pro max')) return 'iPhone 16 Pro Max Series';
-    if(n.includes('16 pro')) return 'iPhone 16 Pro Series';
-    if(n.includes('16 plus')) return 'iPhone 16 Plus Series';
-    if(n.includes('16')) return 'iPhone 16 Series';
-    if(n.includes('15 pro max')) return 'iPhone 15 Pro Max Series';
-    if(n.includes('15 pro')) return 'iPhone 15 Pro Series';
-    if(n.includes('15 plus')) return 'iPhone 15 Plus Series';
-    if(n.includes('15')) return 'iPhone 15 Series';
-    if(n.includes('14 pro max')) return 'iPhone 14 Pro Max Series';
-    if(n.includes('14 pro')) return 'iPhone 14 Pro Series';
-    if(n.includes('14 plus')) return 'iPhone 14 Plus Series';
-    if(n.includes('14')) return 'iPhone 14 Series';
-    if(n.includes('13 pro max')) return 'iPhone 13 Pro Max Series';
-    if(n.includes('13 pro')) return 'iPhone 13 Pro Series';
-    if(n.includes('13 mini')) return 'iPhone 13 Mini Series';
-    if(n.includes('13')) return 'iPhone 13 Series';
-    if(n.includes('12 pro max')) return 'iPhone 12 Pro Max Series';
-    if(n.includes('12 pro')) return 'iPhone 12 Pro Series';
-    if(n.includes('12 mini')) return 'iPhone 12 Mini Series';
-    if(n.includes('12')) return 'iPhone 12 Series';
-    if(n.includes('11 pro max')) return 'iPhone 11 Pro Max Series';
-    if(n.includes('11 pro')) return 'iPhone 11 Pro Series';
-    if(n.includes('11')) return 'iPhone 11 Series';
-    if(n.includes('xs max')) return 'iPhone XS Max Series';
-    if(n.includes('xs')) return 'iPhone XS Series';
-    if(n.includes('xr')) return 'iPhone XR Series';
-    if(n.includes('x')) return 'iPhone X Series';
-    if(n.includes('se')) return 'iPhone SE Series';
+    if(n.includes('iphone 17')) return 'iPhone 17 Series';
+    if(n.includes('iphone 16')) return 'iPhone 16 Series';
+    if(n.includes('iphone 15')) return 'iPhone 15 Series';
+    if(n.includes('iphone 14')) return 'iPhone 14 Series';
+    if(n.includes('iphone 13')) return 'iPhone 13 Series';
+    if(n.includes('iphone 12')) return 'iPhone 12 Series';
+    if(n.includes('iphone 11')) return 'iPhone 11 Series';
+    if(n.includes('iphone xs')) return 'iPhone XS Series';
+    if(n.includes('iphone xr')) return 'iPhone XR Series';
+    if(n.includes('iphone x')) return 'iPhone X Series';
+    if(n.includes('iphone se')) return 'iPhone SE Series';
     return 'Khác';
+  }
+
+  // Thứ tự series từ mới đến cũ
+  const seriesOrder = [
+    'iPhone 17 Series','iPhone 16 Series','iPhone 15 Series',
+    'iPhone 14 Series','iPhone 13 Series','iPhone 12 Series',
+    'iPhone 11 Series','iPhone XS Series','iPhone XR Series',
+    'iPhone X Series','iPhone SE Series','Khác'
+  ];
+
+  // Thứ tự ưu tiên trong series
+  function modelPriority(name) {
+    const n = (name||'').toLowerCase();
+    if(n.includes('pro max')) return 0;
+    if(n.includes('pro')) return 1;
+    if(n.includes('plus')) return 2;
+    if(n.includes('max')) return 3;
+    if(n.includes('mini')) return 5;
+    return 4;
   }
 
   // Group theo series
@@ -797,6 +795,9 @@ document.querySelector('.modal-close').addEventListener('click', function() {
     if(!seriesMap[s]) seriesMap[s] = [];
     seriesMap[s].push(p);
   });
+
+  // Sort trong từng series
+  Object.values(seriesMap).forEach(arr => arr.sort((a,b) => modelPriority(a.name) - modelPriority(b.name)));
 
   function cardHTML(p) {
     const imgHTML = p.img
@@ -827,12 +828,16 @@ document.querySelector('.modal-close').addEventListener('click', function() {
     </div>`;
   }
 
-  grid.innerHTML = Object.entries(seriesMap).map(([series, products]) => `
+  grid.innerHTML = seriesOrder
+    .filter(s => seriesMap[s])
+    .map(series => {
+      const products = seriesMap[series];
+      return `
     <div class="series-block">
       <div class="series-title">${series}</div>
       <div class="series-grid">${products.map(cardHTML).join('')}</div>
     </div>
-  `).join('');
+  `}).join('');
 })();
 
 function tcAddToCart(p) {
