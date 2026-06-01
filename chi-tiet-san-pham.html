@@ -711,18 +711,7 @@ window.addToCart = function(){
   const badge_el = document.querySelector('.cart-badge');
   if(badge_el){ badge_el.textContent = total; badge_el.style.display='flex'; }
 
-  // Hiệu ứng nút rồi chuyển trang
-  const btn = document.querySelector('.pd-buy');
-  if(btn){
-    const orig = btn.textContent;
-    btn.textContent = '✓ Đã thêm vào giỏ!';
-    btn.style.background = '#2e9e63';
-    setTimeout(function(){
-      window.location.href = 'gio-hang';
-    }, 600);
-  } else {
-    window.location.href = 'gio-hang';
-  }
+  window.location.href = 'gio-hang';
 };
 </script>
 </body>

@@ -380,7 +380,7 @@ function renderCart(){
     const thumbHtml = p.img
       ? `<img src="${p.img}" style="width:96px;height:96px;object-fit:cover;border-radius:var(--radius-md);flex-shrink:0">`
       : `<div class="phone-mock${isSamsung?' samsung':''} thumb"><div class="inner"></div></div>`;
-    const meta = [p.storage, p.battery?'Pin '+p.battery:'', p.condition].filter(Boolean).join(' · ');
+    const meta = [p.storage, p.color, p.battery?'Pin '+p.battery:'', p.condition].filter(Boolean).join(' · ');
     return `<div class="cart-item" data-price="${price}" data-idx="${idx}">
       ${thumbHtml}
       <div class="ci-info">
