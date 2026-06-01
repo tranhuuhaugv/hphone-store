@@ -701,29 +701,71 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     t.addEventListener('click', function(){ switchMainImg(i); });
   });
 
-  // Related products
-  const {data:related} = await sb.from('products').select('*').neq('id', p.id).eq('status','instock').order('id',{ascending:false}).limit(4);
-  if(related && related.length){
+  // Related products — ưu tiên cùng brand + gần giá, fallback cùng brand, fallback random
+  (async function(){
+    const curPrice = parseInt(String(p.price).replace(/[^\d]/g,'')) || 0;
+    const priceLow  = Math.round(curPrice * 0.7);
+    const priceHigh = Math.round(curPrice * 1.3);
+
+    // Pool: cùng brand, còn hàng, khác sản phẩm hiện tại
+    const {data:pool} = await sb.from('products')
+      .select('*')
+      .neq('id', p.id)
+      .eq('status','instock')
+      .eq('brand', p.brand)
+      .order('id',{ascending:false})
+      .limit(20);
+
+    let related = [];
+
+    if(pool && pool.length){
+      // Tier 1: cùng brand + giá trong khoảng ±30%
+      const tier1 = pool.filter(function(r){
+        const rp = parseInt(String(r.price).replace(/[^\d]/g,'')) || 0;
+        return rp >= priceLow && rp <= priceHigh;
+      });
+      // Tier 2: cùng brand còn lại
+      const tier1ids = tier1.map(function(r){ return r.id; });
+      const tier2 = pool.filter(function(r){ return !tier1ids.includes(r.id); });
+      related = tier1.concat(tier2).slice(0, 4);
+    }
+
+    // Fallback: chưa đủ 4 → lấy thêm bất kỳ brand
+    if(related.length < 4){
+      const existIds = related.map(function(r){ return r.id; });
+      const {data:extra} = await sb.from('products')
+        .select('*')
+        .neq('id', p.id)
+        .eq('status','instock')
+        .order('id',{ascending:false})
+        .limit(10);
+      if(extra){
+        const fill = extra.filter(function(r){ return !existIds.includes(r.id); });
+        related = related.concat(fill).slice(0, 4);
+      }
+    }
+
+    if(!related.length) return;
     document.getElementById('relatedWrap').style.display='block';
-    document.getElementById('relGrid').innerHTML = related.map(r => {
+    document.getElementById('relGrid').innerHTML = related.map(function(r){
       const rLikeNew = (r.badge||'').toLowerCase().includes('like new');
       const rBadge = rLikeNew ? 'gold' : 'dark';
       const rImg = r.img
-        ? `<div class="phone-mock img" style="position:relative"><img src="${r.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:var(--radius-lg)"><span class="badge ${rBadge}" style="position:absolute;top:14px;left:14px">${r.badge||r.condition||''}</span></div>`
-        : `<div class="phone-mock${r.brand==='samsung'?' samsung':''} img"><span class="badge ${rBadge}" style="position:absolute;top:14px;left:14px">${r.badge||r.condition||''}</span><div class="inner"><span>${r.short||r.name}</span></div></div>`;
-      return `<a href="chi-tiet-san-pham?id=${r.id}" class="mini-card">
-        ${rImg}
-        <div class="body">
-          <div class="name">${r.name}</div>
-          <div class="tags">
-            ${r.storage?`<span class="tag">${r.storage}</span>`:''}
-            ${r.battery?`<span class="tag">Pin ${r.battery}</span>`:''}
-          </div>
-          <div class="price">${r.price}<span class="cur">₫</span></div>
-        </div>
-      </a>`;
+        ? '<div class="phone-mock img" style="position:relative;background:var(--gray-100)"><img src="'+r.img+'" style="width:100%;height:100%;object-fit:contain;position:absolute;inset:0;border-radius:var(--radius-lg)"><span class="badge '+rBadge+'" style="position:absolute;top:14px;left:14px">'+(r.badge||r.condition||'')+'</span></div>'
+        : '<div class="phone-mock'+(r.brand==='samsung'?' samsung':'')+' img"><span class="badge '+rBadge+'" style="position:absolute;top:14px;left:14px">'+(r.badge||r.condition||'')+'</span><div class="inner"><span>'+(r.short||r.name)+'</span></div></div>';
+      return '<a href="chi-tiet-san-pham?id='+r.id+'" class="mini-card">'
+        +rImg
+        +'<div class="body">'
+        +'<div class="name">'+r.name+'</div>'
+        +'<div class="tags">'
+        +(r.storage?'<span class="tag">'+r.storage+'</span>':'')
+        +(r.battery?'<span class="tag">Pin '+r.battery+'</span>':'')
+        +'</div>'
+        +'<div class="price">'+r.price+'<span class="cur">₫</span></div>'
+        +'</div>'
+        +'</a>';
     }).join('');
-  }
+  })();
 })();
 </script>
 
