@@ -253,7 +253,7 @@ window.HPHONE_SUPABASE = {
       <button>Áp dụng</button>
     </div>
     <div class="sum-row"><span>Tạm tính (2 sản phẩm)</span><span id="subtotal">57.800.000₫</span></div>
-    <div class="sum-row discount"><span>Giảm giá</span><span>−3.000.000₫</span></div>
+    <div class="sum-row discount" id="discountRow" style="display:none"><span>Giảm giá</span><span id="discountAmt"></span></div>
     <div class="sum-row"><span>Phí vận chuyển</span><span>Miễn phí</span></div>
     <div class="sum-divider"></div>
     <div class="sum-total">
@@ -408,7 +408,12 @@ function recalc(){
     sub += parsePrice(it.dataset.price) * q;
     count += q;
   });
-  const discount = sub > 0 ? 0 : 0; // tắt giảm giá cứng
+  const discount = 0;
+  // Ẩn/hiện dòng giảm giá tùy discount
+  const dRow = document.getElementById('discountRow');
+  if(dRow){ dRow.style.display = discount > 0 ? '' : 'none'; }
+  const dAmt = document.getElementById('discountAmt');
+  if(dAmt && discount > 0){ dAmt.textContent = '−'+fmt(discount)+'₫'; }
   document.getElementById('subtotal').textContent = fmt(sub)+'₫';
   const countEl = document.querySelector('.sum-row span');
   if(countEl) countEl.textContent = 'Tạm tính ('+count+' sản phẩm)';
