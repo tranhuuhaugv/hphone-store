@@ -377,10 +377,10 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   document.title = p.name + ' – HPHONE';
   document.getElementById('breadcrumbCurrent').textContent = p.name;
 
-  // Gallery
+  // Gallery — khai báo allImgs TRƯỚC khi dùng
+  const allImgs = (Array.isArray(p.images) && p.images.length) ? p.images : (p.img ? [p.img] : []);
   const isLikeNew = (p.badge||'').toLowerCase().includes('like new') || (p.condition||'').toLowerCase().includes('like new');
   const badgeCls = isLikeNew ? 'gold' : 'dark';
-  // Dùng allImgs[0] (đã chuẩn hóa bên trên) thay vì p.img trực tiếp
   const firstImg = allImgs[0] || '';
   const mainImgInner = firstImg
     ? `<img src="${firstImg}" alt="${p.name}" loading="eager">`
@@ -491,9 +491,6 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       +'<div class="opt-grid" id="variantColorGrid">'+dots+'</div>'
       +'</div>';
   }
-
-  // Build danh sách ảnh từ images[] hoặc fallback về img
-  const allImgs = (Array.isArray(p.images) && p.images.length) ? p.images : (p.img ? [p.img] : []);
 
   const thumbsHtml = allImgs.length > 0
     ? allImgs.map((src,i)=>`
