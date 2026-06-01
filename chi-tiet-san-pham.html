@@ -576,7 +576,13 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       document.getElementById('variantColorGrid').innerHTML = varColors.map(c=>{
         const hex = guessColorHex(c);
         const isActive = c===selectedColor;
-        (function(){var activeStyle=isActive?' style="border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,0.25)"':'';return '<div class="color-dot'+(isActive?' active':'')+'"'+'title="'+c+'" data-c="'+encodeURIComponent(c)+'"'+' onclick="selectVariant(\'\',decodeURIComponent(this.dataset.c))"'+activeStyle+'><div class="dot-inner" style="background:'+hex+'"></div></div>';})();
+        const activeStyle = isActive ? ' style="border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,0.25)"' : '';
+        return '<div class="color-dot'+(isActive?' active':'')+'"'
+          +' title="'+c+'" data-c="'+encodeURIComponent(c)+'"'
+          +' onclick="selectVariant(\'\'\',decodeURIComponent(this.dataset.c))"'
+          +activeStyle+'>'
+          +'<div class="dot-inner" style="background:'+hex+'"></div>'
+          +'</div>';
       }).join('');
       document.getElementById('selectedColorLabel').textContent = selectedColor;
       updatePrice();
