@@ -44,9 +44,10 @@ nav{position:fixed;top:38px;left:0;right:0;z-index:100;background:rgba(10,10,10,
 .nav-search input{background:none;border:none;outline:none;color:var(--white);font-size:13px;font-family:var(--font-body);width:140px}
 .nav-search input::placeholder{color:rgba(255,255,255,0.4)}
 .nav-search svg{width:15px;height:15px;stroke:rgba(255,255,255,0.5);flex-shrink:0}
-.nav-icon-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--white)}
+.nav-icon-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--white);position:relative}
 .nav-icon-btn:hover{background:rgba(255,255,255,0.15)}
 .nav-icon-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8}
+.cart-badge{position:absolute;top:-4px;right:-4px;background:var(--accent);color:var(--black);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center}
 .zalo-btn{background:linear-gradient(135deg,#0068ff,#0052cc);border:none;padding:7px 14px;border-radius:30px;font-size:12px;font-weight:500;color:var(--white);cursor:pointer;white-space:nowrap;transition:var(--transition);text-decoration:none;display:flex;align-items:center;gap:6px}
 .zalo-btn:hover{opacity:0.85;transform:translateY(-1px)}
 
@@ -131,14 +132,12 @@ nav{position:fixed;top:38px;left:0;right:0;z-index:100;background:rgba(10,10,10,
 .spec-tag.highlight{background:rgba(200,169,110,0.12);color:#8a6a30}
 .product-price{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--black);margin-bottom:14px}
 .product-price .currency{font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--gray-600);margin-left:2px}
-.product-actions{display:flex;gap:8px}
 .product-name a{color:inherit;text-decoration:none}
 .product-name a:hover{color:var(--accent)}
-.btn-add-cart{flex:1;padding:10px 14px;background:transparent;color:var(--black);font-family:var(--font-body);font-size:13px;font-weight:600;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:6px}
-.btn-add-cart:hover{border-color:var(--black);background:var(--gray-100)}
-.btn-add-cart svg{flex-shrink:0}
-.btn-buy-now{flex:1;padding:10px 14px;background:var(--accent);color:var(--black);font-family:var(--font-body);font-size:13px;font-weight:600;border:none;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px}
-.btn-buy-now:hover{background:var(--accent-light)}
+.btn-cart-icon{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.92);backdrop-filter:blur(6px);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0.85);transition:var(--transition);z-index:2;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.product-card:hover .btn-cart-icon{opacity:1;transform:scale(1)}
+.btn-cart-icon:hover{background:#fff;box-shadow:0 4px 14px rgba(0,0,0,0.2);transform:scale(1.1)!important}
+.btn-cart-icon svg{width:15px;height:15px;stroke:var(--black);fill:none;stroke-width:2}
 .products-more{display:flex;justify-content:center;margin-top:40px}
 
 /* ── TRUST ── */
@@ -330,6 +329,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       </div>
       <a href="gio-hang" class="nav-icon-btn" aria-label="Giỏ hàng">
         <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-badge" id="cartBadge"></span>
       </a>
     </div>
   </div>
@@ -805,7 +805,12 @@ document.querySelector('.modal-close').addEventListener('click', function() {
       : `<div class="product-img-inner"><span class="product-model-label">${p.short||p.name}</span></div>`;
     const pData = JSON.stringify(p).replace(/"/g,'&quot;');
     return `<div class="product-card" onclick="location.href='chi-tiet-san-pham?id=${p.id}'">
-      <div class="product-img" style="position:relative">${imgHTML}</div>
+      <div class="product-img" style="position:relative">
+        ${imgHTML}
+        <button class="btn-cart-icon" onclick="event.stopPropagation();tcAddToCart(${pData})" title="Thêm vào giỏ">
+          <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        </button>
+      </div>
       <div class="product-body">
         <div class="product-name"><a href="chi-tiet-san-pham?id=${p.id}" onclick="event.stopPropagation()">${p.name}</a></div>
         <div class="product-specs">
@@ -815,13 +820,6 @@ document.querySelector('.modal-close').addEventListener('click', function() {
           ${p.warranty ? `<span class="spec-tag">BH ${p.warranty}</span>` : ''}
         </div>
         <div class="product-price">${fmtPrice(p.price)}<span class="currency">₫</span></div>
-        <div class="product-actions">
-          <button class="btn-add-cart" onclick="event.stopPropagation();tcAddToCart(${pData})">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            Thêm vào giỏ
-          </button>
-          <button class="btn-buy-now" onclick="event.stopPropagation();tcBuyNow(${pData})">Mua ngay</button>
-        </div>
       </div>
     </div>`;
   }
@@ -838,14 +836,23 @@ document.querySelector('.modal-close').addEventListener('click', function() {
   `}).join('');
 })();
 
+function updateCartBadge(){
+  const cart=JSON.parse(localStorage.getItem('hphone_cart')||'[]');
+  const total=cart.reduce((s,x)=>s+(x.qty||1),0);
+  const badge=document.getElementById('cartBadge');
+  if(!badge)return;
+  if(total>0){badge.textContent=total;badge.style.display='flex';}
+  else{badge.style.display='none';}
+}
+updateCartBadge();
+
 function tcAddToCart(p) {
   let cart = JSON.parse(localStorage.getItem('hphone_cart') || '[]');
   const idx = cart.findIndex(x => x.id === p.id);
   if(idx > -1) { cart[idx].qty = (cart[idx].qty || 1) + 1; }
   else { cart.push({...p, qty: 1}); }
   localStorage.setItem('hphone_cart', JSON.stringify(cart));
-  const badge = document.querySelector('.cart-badge');
-  if(badge) badge.textContent = cart.reduce((s,x)=>s+(x.qty||1),0);
+  updateCartBadge();
   const toast = document.createElement('div');
   toast.textContent = '✓ Đã thêm vào giỏ hàng';
   toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0a0a0a;color:#fff;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.2)';
