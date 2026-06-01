@@ -62,12 +62,12 @@ nav{position:sticky;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.
 .btn-gold:hover{background:var(--accent-light);transform:translateY(-1px)}
 .btn-outline{background:transparent;color:var(--black);font-family:var(--font-body);font-size:14px;font-weight:600;padding:13px 20px;border-radius:30px;border:1.5px solid var(--gray-200);cursor:pointer;transition:var(--transition);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
 .btn-outline:hover{border-color:var(--black);background:var(--gray-100)}
-.btn-zalo{padding:13px 16px;background:#0068ff;color:#fff;font-family:var(--font-body);font-size:13px;font-weight:600;border:none;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
-.btn-zalo:hover{background:#0052cc;transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,104,255,0.35)}
-.btn-zalo .zalo-icon{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;line-height:1}
-.btn-mess{padding:13px 16px;background:linear-gradient(135deg,#0099ff,#a033ff);color:#fff;font-family:var(--font-body);font-size:13px;font-weight:600;border:none;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
-.btn-mess:hover{opacity:0.88;transform:translateY(-1px);box-shadow:0 6px 16px rgba(100,50,200,0.3)}
-.btn-mess .mess-icon{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.btn-zalo{padding:13px 16px;background:var(--white);color:var(--black);font-family:var(--font-body);font-size:13px;font-weight:600;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-zalo:hover{background:var(--gray-100);border-color:var(--gray-400)}
+.btn-zalo .zalo-icon{width:22px;height:22px;border-radius:50%;background:#0068ff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;line-height:1}
+.btn-mess{padding:13px 16px;background:var(--white);color:var(--black);font-family:var(--font-body);font-size:13px;font-weight:600;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-mess:hover{background:var(--gray-100);border-color:var(--gray-400)}
+.btn-mess .mess-icon{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#0099ff,#a033ff);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
 /* generic phone mockup image block */
 .phone-mock{background:linear-gradient(135deg,var(--gray-100),var(--gray-200));border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
@@ -545,7 +545,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       <div class="pd-cta">
         <div class="row">
           <button onclick="buyNow()" class="btn-primary btn-gold pd-buy" style="text-align:center;font-size:16px;padding:16px;flex:1.4">Mua ngay 🛒</button>
-          <button onclick="addToCartOnly()" class="btn-outline pd-buy" style="font-size:14px;padding:16px;flex:1" title="Thêm vào giỏ hàng">
+          <button onclick="addToCartOnly()" class="btn-outline pd-buy" style="font-size:14px;padding:16px;flex:1;background:var(--black);color:var(--white);border-color:var(--black)" title="Thêm vào giỏ hàng">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
             Thêm vào giỏ
           </button>
