@@ -60,14 +60,14 @@ nav{position:sticky;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.
 .btn-primary:hover{background:var(--gray-800);transform:translateY(-2px)}
 .btn-gold{background:var(--accent);color:var(--black);font-weight:700;letter-spacing:0.3px}
 .btn-gold:hover{background:var(--accent-light);transform:translateY(-1px)}
-.btn-outline{background:transparent;color:var(--black);font-family:var(--font-body);font-size:14px;font-weight:500;padding:13px 28px;border-radius:30px;border:1px solid var(--gray-200);cursor:pointer;transition:var(--transition);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
-.btn-outline:hover{border-color:var(--black)}
-.btn-zalo{padding:12px 16px;background:var(--white);color:var(--black);font-family:var(--font-body);font-size:13px;font-weight:600;border:1px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
-.btn-zalo:hover{background:var(--gray-100);border-color:var(--gray-400)}
-.btn-zalo .zalo-icon{width:20px;height:20px;border-radius:50%;background:#0068ff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;line-height:1}
-.btn-mess{padding:12px 16px;background:var(--white);color:var(--black);font-family:var(--font-body);font-size:13px;font-weight:600;border:1px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
-.btn-mess:hover{background:var(--gray-100);border-color:var(--gray-400)}
-.btn-mess .mess-icon{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#0099ff,#a033ff);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.btn-outline{background:transparent;color:var(--black);font-family:var(--font-body);font-size:14px;font-weight:600;padding:13px 20px;border-radius:30px;border:1.5px solid var(--gray-200);cursor:pointer;transition:var(--transition);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.btn-outline:hover{border-color:var(--black);background:var(--gray-100)}
+.btn-zalo{padding:13px 16px;background:#0068ff;color:#fff;font-family:var(--font-body);font-size:13px;font-weight:600;border:none;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-zalo:hover{background:#0052cc;transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,104,255,0.35)}
+.btn-zalo .zalo-icon{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;line-height:1}
+.btn-mess{padding:13px 16px;background:linear-gradient(135deg,#0099ff,#a033ff);color:#fff;font-family:var(--font-body);font-size:13px;font-weight:600;border:none;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-mess:hover{opacity:0.88;transform:translateY(-1px);box-shadow:0 6px 16px rgba(100,50,200,0.3)}
+.btn-mess .mess-icon{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
 /* generic phone mockup image block */
 .phone-mock{background:linear-gradient(135deg,var(--gray-100),var(--gray-200));border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
@@ -183,7 +183,7 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 .promo-item .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:7px}
 .pd-cta{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
 .pd-cta .row{display:flex;gap:10px}
-.pd-cta .row > *{flex:1}
+.pd-cta .row > *{flex:1;min-width:0}
 .pd-buy{font-size:16px;padding:16px}
 .pd-policy{list-style:none;display:flex;flex-direction:column;gap:13px;border-top:1px solid var(--gray-200);padding-top:22px}
 .pd-policy li{display:flex;gap:11px;font-size:13.5px;color:var(--gray-800);line-height:1.5}
