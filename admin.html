@@ -149,13 +149,22 @@ body{font-family:var(--font-body);background:var(--gray-100);color:var(--black);
 
 /* variants */
 .variants-wrap{border:1px solid var(--gray-200);border-radius:var(--radius-md);overflow:hidden;margin-top:4px}
-.variant-row{display:grid;grid-template-columns:1fr 1fr 80px 36px;gap:8px;padding:10px 12px;border-bottom:1px solid var(--gray-100);align-items:center}
+.variant-row{display:grid;grid-template-columns:1fr 1fr 72px 80px 36px;gap:8px;padding:10px 12px;border-bottom:1px solid var(--gray-100);align-items:center}
 .variant-row:last-child{border-bottom:none}
 .variant-row input{border:1px solid var(--gray-200);border-radius:var(--radius-sm);padding:7px 10px;font-family:var(--font-body);font-size:13px;width:100%;outline:none}
 .variant-row input:focus{border-color:var(--black)}
 .variant-row .del-var{width:30px;height:30px;border:none;background:var(--gray-100);border-radius:var(--radius-sm);cursor:pointer;color:var(--red);font-size:16px;display:flex;align-items:center;justify-content:center}
 .variant-row .del-var:hover{background:var(--red-bg)}
-.variant-head{display:grid;grid-template-columns:1fr 1fr 80px 36px;gap:8px;padding:8px 12px;background:var(--gray-100);font-size:12px;font-weight:600;color:var(--gray-600);letter-spacing:0.5px}
+.variant-head{display:grid;grid-template-columns:1fr 1fr 72px 80px 36px;gap:8px;padding:8px 12px;background:var(--gray-100);font-size:12px;font-weight:600;color:var(--gray-600);letter-spacing:0.5px}
+.var-img-upload{position:relative;width:56px;height:56px;border-radius:var(--radius-sm);border:1.5px dashed var(--gray-200);cursor:pointer;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--gray-100);transition:var(--transition);flex-shrink:0}
+.var-img-upload:hover{border-color:var(--accent);background:rgba(200,169,110,0.06)}
+.var-img-upload img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:calc(var(--radius-sm) - 2px)}
+.var-img-upload .var-img-ico{display:flex;flex-direction:column;align-items:center;gap:3px;pointer-events:none}
+.var-img-upload .var-img-ico svg{width:18px;height:18px;stroke:var(--gray-400);fill:none;stroke-width:1.8}
+.var-img-upload .var-img-ico span{font-size:9px;color:var(--gray-400);font-weight:600;letter-spacing:0.3px}
+.var-img-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.var-img-del{position:absolute;top:2px;right:2px;width:16px;height:16px;background:rgba(10,10,10,0.75);color:#fff;border:none;border-radius:50%;font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:2;line-height:1}
+.var-img-upload:hover .var-img-del{display:flex}
 .add-var-btn{display:flex;align-items:center;gap:6px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--accent);background:none;border:none;cursor:pointer;width:100%;border-top:1px dashed var(--gray-200)}
 .add-var-btn:hover{background:rgba(200,169,110,0.06)}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:460px;max-width:92vw;background:#fff;z-index:110;transform:translateX(100%);transition:var(--transition);display:flex;flex-direction:column;box-shadow:-12px 0 40px rgba(0,0,0,0.15)}
@@ -404,10 +413,11 @@ window.HPHONE_SUPABASE = {
         <div class="field full">
           <label>Biến thể (Dung lượng / Màu sắc / Giá) <span style="font-weight:400;color:var(--gray-400)">— để trống nếu chỉ có 1 biến thể</span></label>
           <div class="variants-wrap">
-            <div class="variant-head"><span>Dung lượng</span><span>Màu sắc</span><span>Giá (₫)</span><span></span></div>
+            <div class="variant-head"><span>Dung lượng</span><span>Màu sắc</span><span>Ảnh màu</span><span>Giá (₫)</span><span></span></div>
             <div id="variantRows"></div>
             <button type="button" class="add-var-btn" onclick="addVariantRow()">＋ Thêm biến thể</button>
           </div>
+          <div class="hint" style="margin-top:6px">💡 Tải ảnh riêng cho từng màu — khi khách bấm chọn màu, ảnh tương ứng sẽ tự động hiện lên.</div>
         </div>
       </div>
     </div>
@@ -786,17 +796,50 @@ function addVariantRow(v){
   const container = document.getElementById('variantRows');
   const row = document.createElement('div');
   row.className = 'variant-row';
+  const imgSrc = v?.colorImg || '';
+  const uid = 'varimg_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
   row.innerHTML = `
     <input type="text" placeholder="VD: 256GB" value="${v?.storage||''}">
     <input type="text" placeholder="VD: Titan Đen" value="${v?.color||''}">
+    <label class="var-img-upload" title="Bấm để tải ảnh màu">
+      ${imgSrc ? `<img src="${imgSrc}" id="prev_${uid}">` : `<div class="var-img-ico"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span>Tải ảnh</span></div>`}
+      <input type="file" accept="image/*" onchange="handleVarImg(this,'${uid}')">
+      <button type="button" class="var-img-del" onclick="clearVarImg(event,'${uid}')" title="Xóa ảnh">×</button>
+    </label>
     <input type="text" placeholder="VD: 32.900.000" value="${v?.price||''}">
     <button class="del-var" onclick="this.closest('.variant-row').remove()">×</button>`;
+  if(!imgSrc){
+    // placeholder in data attr
+    row.querySelector('.var-img-upload').dataset.colorImg = '';
+  } else {
+    row.querySelector('.var-img-upload').dataset.colorImg = imgSrc;
+  }
   container.appendChild(row);
+}
+function handleVarImg(input, uid){
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const src = e.target.result;
+    const label = input.closest('.var-img-upload');
+    label.dataset.colorImg = src;
+    // Replace inner content with preview img + del btn
+    label.innerHTML = `<img src="${src}" id="prev_${uid}"><input type="file" accept="image/*" onchange="handleVarImg(this,'${uid}')"><button type="button" class="var-img-del" onclick="clearVarImg(event,'${uid}')" title="Xóa ảnh">×</button>`;
+  };
+  reader.readAsDataURL(file);
+}
+function clearVarImg(e, uid){
+  e.preventDefault(); e.stopPropagation();
+  const label = e.target.closest('.var-img-upload');
+  label.dataset.colorImg = '';
+  label.innerHTML = `<div class="var-img-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span>Tải ảnh</span></div><input type="file" accept="image/*" onchange="handleVarImg(this,'${uid}')"><button type="button" class="var-img-del" onclick="clearVarImg(event,'${uid}')" title="Xóa ảnh">×</button>`;
 }
 function getVariants(){
   return Array.from(document.querySelectorAll('#variantRows .variant-row')).map(row=>{
-    const inputs = row.querySelectorAll('input');
-    return {storage:inputs[0].value.trim(),color:inputs[1].value.trim(),price:inputs[2].value.trim()};
+    const inputs = row.querySelectorAll('input[type=text]');
+    const imgLabel = row.querySelector('.var-img-upload');
+    const colorImg = imgLabel ? (imgLabel.dataset.colorImg || '') : '';
+    return {storage:inputs[0].value.trim(),color:inputs[1].value.trim(),colorImg:colorImg,price:inputs[2].value.trim()};
   }).filter(v=>v.storage||v.color||v.price);
 }
 async function saveProduct(){

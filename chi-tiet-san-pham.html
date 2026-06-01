@@ -530,22 +530,55 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     let selectedStorage = p.variants[0]?.storage||'';
     let selectedColor = p.variants[0]?.color||'';
 
+    // Đoán màu hex từ tên màu bất kỳ (tiếng Việt + tiếng Anh)
+    function guessColorHex(name){
+      const n = (name||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      // Khớp chính xác trong modelColors trước
+      const exact = modelColors.find(c=>c.name.toLowerCase()===name.toLowerCase());
+      if(exact) return exact.hex;
+      // Bảng từ khóa → hex
+      const kmap = [
+        [['den','black','space','midnight','graphite','titan den','obsidian','onyx','shadow','dark noir'],'#1c1c1e'],
+        [['trang','white','silver','starlight','titan trang','pearl','cream','snow','ivory','kem'],'#e8e8e8'],
+        [['titan tu nhien','natural','desert','gold','vang','champagne','sand','warm'],'#c4b49a'],
+        [['xanh duong','blue','pacific','sierra','mist','sky','navy','cobalt','sapphire','ultramarine','ocean'],'#2e6ba3'],
+        [['xanh la','green','sage','alpine','mint','forest','olive','teal','emerald'],'#4caf6e'],
+        [['do','red','crimson','scarlet','ruby','product'],'#c8102e'],
+        [['hong','pink','rose','blush','flamingo','petal','blossom'],'#f7b8c2'],
+        [['tim','purple','violet','lavender','lilac','grape','plum'],'#7a5af8'],
+        [['vang','yellow','sunshine','canary','lemon'],'#f9e87e'],
+        [['cam','orange','coral','sunset','cosmic','peach'],'#e8834a'],
+        [['xam','gray','grey','slate','storm','ash','stone','cement'],'#808080'],
+        [['nau','brown','bronze','mocha','walnut','copper'],'#8b6f47'],
+      ];
+      for(const [keys,hex] of kmap){
+        if(keys.some(k=>n.includes(k))) return hex;
+      }
+      return '#c8a96e';
+    }
+
     function updateColorGrid(){
       const varColors = p.variants.filter(v=>v.storage===selectedStorage).map(v=>v.color).filter(Boolean);
       const block = document.getElementById('colorBlock');
       if(!varColors.length){ block.style.display='none'; return; }
       block.style.display='block';
       if(!varColors.includes(selectedColor)) selectedColor = varColors[0];
-      // Map tên màu → hex từ modelColors
-      const colorMap = Object.fromEntries(modelColors.map(c=>[c.name.toLowerCase(),c.hex]));
       document.getElementById('variantColorGrid').innerHTML = varColors.map(c=>{
-        const hex = colorMap[c.toLowerCase()] || '#cccccc';
-        return `<div class="color-dot${c===selectedColor?' active':''}" title="${c}" onclick="selectVariant('','${c.replace(/'/g,"\\'")}')" style="${c===selectedColor?'border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,0.25)':''}">
-          <div class="dot-inner" style="background:${hex}"></div>
-        </div>`;
+        const hex = guessColorHex(c);
+        const isActive = c===selectedColor;
+        (function(){var activeStyle=isActive?' style="border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,0.25)"':'';return '<div class="color-dot'+(isActive?' active':'')+'"'+'title="'+c+'" data-c="'+encodeURIComponent(c)+'"'+' onclick="selectVariant(\'\',decodeURIComponent(this.dataset.c))"'+activeStyle+'><div class="dot-inner" style="background:'+hex+'"></div></div>';})();
       }).join('');
       document.getElementById('selectedColorLabel').textContent = selectedColor;
       updatePrice();
+    }
+
+    function switchColorImg(src){
+      const mainEl = document.getElementById('pdMainImg');
+      if(!mainEl || !src) return;
+      const badge = mainEl.querySelector('.badge');
+      mainEl.innerHTML = (badge ? badge.outerHTML : '') +
+        '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-xl);position:absolute;inset:0">';
+      document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t){ t.classList.remove('active'); });
     }
 
     window.selectVariant = function(storage, color){
@@ -562,6 +595,11 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       if(match && match.price){
         document.getElementById('pdPrice').innerHTML = formatPrice(match.price)+'<span class="cur">₫</span>';
       }
+      // Đổi ảnh theo màu nếu variant có colorImg
+      const colorMatch = p.variants.find(v=>v.color===selectedColor && v.colorImg);
+      if(colorMatch && colorMatch.colorImg){
+        switchColorImg(colorMatch.colorImg);
+      }
     }
     updateColorGrid();
   }
@@ -576,6 +614,19 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     });
     const lbl = document.getElementById('selectedColorLabel');
     if(lbl) lbl.textContent = colorName;
+    // Đổi ảnh nếu modelColors có colorImg, hoặc variant tĩnh có ảnh
+    if(p.variants && p.variants.length){
+      const vMatch = p.variants.find(v=>v.color===colorName && v.colorImg);
+      if(vMatch && vMatch.colorImg){
+        const mainEl = document.getElementById('pdMainImg');
+        if(mainEl){
+          const badge = mainEl.querySelector('.badge');
+          mainEl.innerHTML = (badge?badge.outerHTML:'') +
+            '<img src="'+vMatch.colorImg+'" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-xl);position:absolute;inset:0">';
+          document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t){ t.classList.remove('active'); });
+        }
+      }
+    }
   };
 
   // Thumbnail click — đổi ảnh chính theo allImgs[]
