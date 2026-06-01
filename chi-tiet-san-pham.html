@@ -573,12 +573,10 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       if(!varColors.length){ block.style.display='none'; return; }
       block.style.display='block';
       if(!varColors.includes(selectedColor)) selectedColor = varColors[0];
-      document.getElementById('variantColorGrid').innerHTML = varColors.map(function(c){
+      document.getElementById('variantColorGrid').innerHTML = varColors.map(c=>{
         const hex = guessColorHex(c);
         const isActive = c===selectedColor;
-        const border = isActive ? 'border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,0.25)' : 'border-color:transparent';
-        return '<div class="color-dot'+(isActive?' active':'')+'" title="'+c+'" data-c="'+encodeURIComponent(c)+'" onclick="selectVariant('',(decodeURIComponent(this.dataset.c)))" style="'+border+'">'
-          +'<div class="dot-inner" style="background:'+hex+'"></div></div>';
+        (function(){var activeStyle=isActive?' style="border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,0.25)"':'';return '<div class="color-dot'+(isActive?' active':'')+'"'+'title="'+c+'" data-c="'+encodeURIComponent(c)+'"'+' onclick="selectVariant(\'\',decodeURIComponent(this.dataset.c))"'+activeStyle+'><div class="dot-inner" style="background:'+hex+'"></div></div>';})();
       }).join('');
       document.getElementById('selectedColorLabel').textContent = selectedColor;
       updatePrice();
