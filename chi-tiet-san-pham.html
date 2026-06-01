@@ -413,21 +413,57 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     </div>`;
   }
 
+  // Đoán màu hex từ tên màu bất kỳ (tiếng Việt + tiếng Anh)
+  function guessColorHex(name){
+    const n = (name||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    // Khớp chính xác trong modelColors trước
+    const exact = modelColors.find(c=>c.name.toLowerCase()===name.toLowerCase());
+    if(exact) return exact.hex;
+    // Bảng từ khóa → hex
+    const kmap = [
+    [['den','black','space','midnight','graphite','titan den','obsidian','onyx','shadow','dark noir'],'#1c1c1e'],
+    [['trang','white','silver','starlight','titan trang','pearl','cream','snow','ivory','kem'],'#e8e8e8'],
+    [['titan tu nhien','natural','desert','gold','vang','champagne','sand','warm'],'#c4b49a'],
+    [['xanh duong','blue','pacific','sierra','mist','sky','navy','cobalt','sapphire','ultramarine','ocean'],'#2e6ba3'],
+    [['xanh la','green','sage','alpine','mint','forest','olive','teal','emerald'],'#4caf6e'],
+    [['do','red','crimson','scarlet','ruby','product'],'#c8102e'],
+    [['hong','pink','rose','blush','flamingo','petal','blossom'],'#f7b8c2'],
+    [['tim','purple','violet','lavender','lilac','grape','plum'],'#7a5af8'],
+    [['vang','yellow','sunshine','canary','lemon'],'#f9e87e'],
+    [['cam','orange','coral','sunset','cosmic','peach'],'#e8834a'],
+    [['xam','gray','grey','slate','storm','ash','stone','cement'],'#808080'],
+    [['nau','brown','bronze','mocha','walnut','copper'],'#8b6f47'],
+    ];
+    for(const [keys,hex] of kmap){
+    if(keys.some(k=>n.includes(k))) return hex;
+    }
+    return '#c8a96e';
+  }
+
+
   function buildColorDots(colors, selectedColor){
-    if(!colors.length) return '';
-    return `
-    <div class="pd-block" id="colorBlock">
-      <div class="pd-opt-label">Màu sắc <span class="selected-val" id="selectedColorLabel">${selectedColor||colors[0]?.name||''}</span></div>
-      <div class="color-grid" id="variantColorGrid">
-        ${colors.map(c=>`
-          <div class="color-dot${(selectedColor||colors[0]?.name)===c.name?' active':''}"
-               title="${c.name}"
-               onclick="selectColor('${c.name.replace(/'/g,"\\'")}')"
-               style="border-color:${(selectedColor||colors[0]?.name)===c.name?'var(--accent)':'transparent'}">
-            <div class="dot-inner" style="background:${c.hex}"></div>
-          </div>`).join('')}
-      </div>
-    </div>`;
+    // Nếu modelColors rỗng nhưng p.color có → tạo 1 dot từ tên màu đó
+    const list = colors.length ? colors : (selectedColor ? [{name:selectedColor}] : []);
+    if(!list.length) return '';
+    const active = selectedColor || list[0]?.name || '';
+    const dots = list.map(function(c){
+      const hex = c.hex || guessColorHex(c.name);
+      const isActive = (c.name === active);
+      const borderStyle = isActive
+        ? 'border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,0.25)'
+        : 'border-color:transparent';
+      return '<div class="color-dot'+(isActive?' active':'')+'"'
+        +' title="'+c.name+'"'
+        +' data-c="'+encodeURIComponent(c.name)+'"'
+        +' onclick="selectColor(decodeURIComponent(this.dataset.c))"'
+        +' style="'+borderStyle+'">'
+        +'<div class="dot-inner" style="background:'+hex+'"></div>'
+        +'</div>';
+    }).join('');
+    return '<div class="pd-block" id="colorBlock">'
+      +'<div class="pd-opt-label">Màu sắc <span class="selected-val" id="selectedColorLabel">'+active+'</span></div>'
+      +'<div class="color-grid" id="variantColorGrid">'+dots+'</div>'
+      +'</div>';
   }
 
   // Build danh sách ảnh từ images[] hoặc fallback về img
@@ -530,32 +566,6 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     let selectedStorage = p.variants[0]?.storage||'';
     let selectedColor = p.variants[0]?.color||'';
 
-    // Đoán màu hex từ tên màu bất kỳ (tiếng Việt + tiếng Anh)
-    function guessColorHex(name){
-      const n = (name||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-      // Khớp chính xác trong modelColors trước
-      const exact = modelColors.find(c=>c.name.toLowerCase()===name.toLowerCase());
-      if(exact) return exact.hex;
-      // Bảng từ khóa → hex
-      const kmap = [
-        [['den','black','space','midnight','graphite','titan den','obsidian','onyx','shadow','dark noir'],'#1c1c1e'],
-        [['trang','white','silver','starlight','titan trang','pearl','cream','snow','ivory','kem'],'#e8e8e8'],
-        [['titan tu nhien','natural','desert','gold','vang','champagne','sand','warm'],'#c4b49a'],
-        [['xanh duong','blue','pacific','sierra','mist','sky','navy','cobalt','sapphire','ultramarine','ocean'],'#2e6ba3'],
-        [['xanh la','green','sage','alpine','mint','forest','olive','teal','emerald'],'#4caf6e'],
-        [['do','red','crimson','scarlet','ruby','product'],'#c8102e'],
-        [['hong','pink','rose','blush','flamingo','petal','blossom'],'#f7b8c2'],
-        [['tim','purple','violet','lavender','lilac','grape','plum'],'#7a5af8'],
-        [['vang','yellow','sunshine','canary','lemon'],'#f9e87e'],
-        [['cam','orange','coral','sunset','cosmic','peach'],'#e8834a'],
-        [['xam','gray','grey','slate','storm','ash','stone','cement'],'#808080'],
-        [['nau','brown','bronze','mocha','walnut','copper'],'#8b6f47'],
-      ];
-      for(const [keys,hex] of kmap){
-        if(keys.some(k=>n.includes(k))) return hex;
-      }
-      return '#c8a96e';
-    }
 
     function updateColorGrid(){
       const varColors = p.variants.filter(v=>v.storage===selectedStorage).map(v=>v.color).filter(Boolean);
