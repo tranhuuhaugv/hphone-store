@@ -111,11 +111,33 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 
 .pd-wrap{max-width:1280px;margin:0 auto;padding:28px 24px 0;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
 .pd-gallery{position:sticky;top:84px}
-.pd-main-img{aspect-ratio:1;width:100%;border-radius:var(--radius-xl);position:relative;overflow:hidden;display:block}
-.pd-main-img .badge{position:absolute;top:18px;left:18px}
-.pd-thumbs{display:flex;gap:10px;margin-top:14px}
-.pd-thumb{width:74px;height:74px;border-radius:var(--radius-md);border:2px solid transparent;cursor:pointer;transition:var(--transition);background:linear-gradient(135deg,var(--gray-100),var(--gray-200));display:flex;align-items:center;justify-content:center}
+/* Khung ảnh chính: cố định tỉ lệ 1:1, có min/max-height để ổn định trên mọi màn hình */
+.pd-main-img{
+  aspect-ratio:1/1;
+  width:100%;
+  min-height:280px;
+  max-height:560px;
+  border-radius:var(--radius-xl);
+  position:relative;
+  overflow:hidden;
+  display:block;
+  background:var(--gray-100);
+}
+.pd-main-img img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain; /* contain thay vì cover để không cắt xén ảnh điện thoại */
+  object-position:center;
+  border-radius:var(--radius-xl);
+}
+.pd-main-img .badge{position:absolute;top:18px;left:18px;z-index:2}
+.pd-thumbs{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.pd-thumb{width:74px;height:74px;border-radius:var(--radius-md);border:2px solid transparent;cursor:pointer;transition:var(--transition);background:var(--gray-100);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.pd-thumb img{width:100%;height:100%;object-fit:contain;border-radius:8px}
 .pd-thumb .mini{width:46%;aspect-ratio:0.49;background:linear-gradient(145deg,#2a2a2a,#111);border-radius:9px}
+.pd-thumb:hover{border-color:var(--gray-400)}
 .pd-thumb.active{border-color:var(--black)}
 .pd-info h1{font-family:var(--font-display);font-size:32px;font-weight:700;line-height:1.15;letter-spacing:-0.4px;margin-bottom:6px}
 .pd-rating{display:flex;align-items:center;gap:8px;margin-bottom:18px;font-size:13px;color:var(--gray-600)}
@@ -208,7 +230,15 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 .mini-card .price{font-family:var(--font-display);font-size:19px;font-weight:700}
 .mini-card .price .cur{font-family:var(--font-body);font-size:12px;color:var(--gray-600)}
 
-@media(max-width:900px){.pd-wrap{grid-template-columns:1fr;gap:32px}.pd-gallery{position:static}}
+@media(max-width:900px){
+  .pd-wrap{grid-template-columns:1fr;gap:32px}
+  .pd-gallery{position:static}
+  .pd-main-img{max-height:420px;min-height:240px}
+}
+@media(max-width:480px){
+  .pd-main-img{max-height:340px;min-height:200px;border-radius:var(--radius-lg)}
+  .pd-thumb{width:60px;height:60px}
+}
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -350,8 +380,10 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   // Gallery
   const isLikeNew = (p.badge||'').toLowerCase().includes('like new') || (p.condition||'').toLowerCase().includes('like new');
   const badgeCls = isLikeNew ? 'gold' : 'dark';
-  const mainImgInner = p.img
-    ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-xl);position:absolute;inset:0">`
+  // Dùng allImgs[0] (đã chuẩn hóa bên trên) thay vì p.img trực tiếp
+  const firstImg = allImgs[0] || '';
+  const mainImgInner = firstImg
+    ? `<img src="${firstImg}" alt="${p.name}" loading="eager">`
     : `<div class="inner"><span>${p.short||p.name}</span></div>`;
 
   // Bảng màu iPhone theo model
@@ -605,7 +637,17 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       // Đổi ảnh theo màu nếu variant có colorImg
       const colorMatch = p.variants.find(v=>v.color===selectedColor && v.colorImg);
       if(colorMatch && colorMatch.colorImg){
-        switchColorImg(colorMatch.colorImg);
+        const mainEl = document.getElementById('pdMainImg');
+        if(mainEl){
+          const img = mainEl.querySelector('img');
+          if(img){ img.src = colorMatch.colorImg; }
+          else {
+            const badge = mainEl.querySelector('.badge');
+            mainEl.innerHTML = (badge?badge.outerHTML:'') +
+              `<img src="${colorMatch.colorImg}" alt="">`;
+          }
+          document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t){ t.classList.remove('active'); });
+        }
       }
     }
     updateColorGrid();
@@ -625,9 +667,13 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       if(vMatch && vMatch.colorImg){
         const mainEl = document.getElementById('pdMainImg');
         if(mainEl){
-          const badge = mainEl.querySelector('.badge');
-          mainEl.innerHTML = (badge?badge.outerHTML:'') +
-            '<img src="'+vMatch.colorImg+'" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-xl);position:absolute;inset:0">';
+          const img = mainEl.querySelector('img');
+          if(img){ img.src = vMatch.colorImg; }
+          else {
+            const badge = mainEl.querySelector('.badge');
+            mainEl.innerHTML = (badge?badge.outerHTML:'') +
+              `<img src="${vMatch.colorImg}" alt="">`;
+          }
           document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t){ t.classList.remove('active'); });
         }
       }
@@ -641,16 +687,22 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     const mainEl = document.getElementById('pdMainImg');
     if(mainEl){
       const badge = mainEl.querySelector('.badge');
-      mainEl.innerHTML = (badge ? badge.outerHTML : '') +
-        '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-xl);position:absolute;inset:0">';
+      // Giữ badge, thay img
+      const img = mainEl.querySelector('img');
+      if(img){
+        img.src = src;
+        img.alt = (document.getElementById('pdName')||{}).textContent || '';
+      } else {
+        mainEl.innerHTML = (badge ? badge.outerHTML : '') +
+          `<img src="${src}" alt="">`;
+      }
     }
     document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t,i){ t.classList.toggle('active',i===idx); });
   };
-  document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t,i){ t.addEventListener('click', function(){
-    if(allImgs.length > 1) return;
-    document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(x){ x.classList.remove('active'); });
-    this.classList.add('active');
-  }); });
+  // Gắn sự kiện click thumbnail (allImgs.length > 1 guard cũ bị sai — đã xóa)
+  document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t,i){
+    t.addEventListener('click', function(){ switchMainImg(i); });
+  });
 
   // Related products
   const {data:related} = await sb.from('products').select('*').neq('id', p.id).eq('status','instock').order('id',{ascending:false}).limit(4);
