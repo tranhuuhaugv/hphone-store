@@ -447,22 +447,16 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     if(!list.length) return '';
     const active = selectedColor || list[0]?.name || '';
     const dots = list.map(function(c){
-      const hex = c.hex || guessColorHex(c.name);
       const isActive = (c.name === active);
-      const borderStyle = isActive
-        ? 'border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,0.25)'
-        : 'border-color:transparent';
-      return '<div class="color-dot'+(isActive?' active':'')+'"'
-        +' title="'+c.name+'"'
+      return '<button class="opt-btn'+(isActive?' active':'')+'\"'
         +' data-c="'+encodeURIComponent(c.name)+'"'
-        +' onclick="selectColor(decodeURIComponent(this.dataset.c))"'
-        +' style="'+borderStyle+'">'
-        +'<div class="dot-inner" style="background:'+hex+'"></div>'
-        +'</div>';
+        +' onclick="selectColor(decodeURIComponent(this.dataset.c))">'
+        +c.name
+        +'</button>';
     }).join('');
     return '<div class="pd-block" id="colorBlock">'
       +'<div class="pd-opt-label">Màu sắc <span class="selected-val" id="selectedColorLabel">'+active+'</span></div>'
-      +'<div class="color-grid" id="variantColorGrid">'+dots+'</div>'
+      +'<div class="opt-grid" id="variantColorGrid">'+dots+'</div>'
       +'</div>';
   }
 
@@ -505,7 +499,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       </div>
       <div class="pd-block" id="colorBlock">
         <div class="pd-opt-label">Màu sắc <span class="selected-val" id="selectedColorLabel">${p.variants[0]?.color||''}</span></div>
-        <div class="color-grid" id="variantColorGrid"></div>
+        <div class="opt-grid" id="variantColorGrid"></div>
       </div>` : `
       ${p.storage ? `
       <div class="pd-block">
@@ -574,15 +568,12 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       block.style.display='block';
       if(!varColors.includes(selectedColor)) selectedColor = varColors[0];
       document.getElementById('variantColorGrid').innerHTML = varColors.map(c=>{
-        const hex = guessColorHex(c);
         const isActive = c===selectedColor;
-        const activeStyle = isActive ? ' style="border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,169,110,0.25)"' : '';
-        return '<div class="color-dot'+(isActive?' active':'')+'"'
-          +' title="'+c+'" data-c="'+encodeURIComponent(c)+'"'
-          +' onclick="selectVariant(\'\'\',decodeURIComponent(this.dataset.c))"'
-          +activeStyle+'>'
-          +'<div class="dot-inner" style="background:'+hex+'"></div>'
-          +'</div>';
+        return '<button class="opt-btn'+(isActive?' active':'')+'\"'
+          +' data-c="'+encodeURIComponent(c)+'"'
+          +' onclick="selectVariant(\'\',decodeURIComponent(this.dataset.c))">'
+          +c
+          +'</button>';
       }).join('');
       document.getElementById('selectedColorLabel').textContent = selectedColor;
       updatePrice();
@@ -622,11 +613,9 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 
   // selectColor cho màu tĩnh (từ modelColors, không có variants)
   window.selectColor = function(colorName){
-    document.querySelectorAll('#variantColorGrid .color-dot').forEach(d=>{
-      const active = d.title===colorName;
+    document.querySelectorAll('#variantColorGrid .opt-btn').forEach(d=>{
+      const active = decodeURIComponent(d.dataset.c)===colorName;
       d.classList.toggle('active',active);
-      d.style.borderColor = active?'var(--accent)':'transparent';
-      d.style.boxShadow = active?'0 0 0 3px rgba(200,169,110,0.25)':'';
     });
     const lbl = document.getElementById('selectedColorLabel');
     if(lbl) lbl.textContent = colorName;
