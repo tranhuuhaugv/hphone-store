@@ -481,7 +481,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       <div class="pd-thumbs" id="pdThumbs">${thumbsHtml}</div>
     </div>
     <div class="pd-info">
-      <h1>${p.name}</h1>
+      <h1 id="pdName">${p.name}</h1>
       <div class="pd-rating">
         <div class="pd-stars">${'<div class="star"></div>'.repeat(5)}</div>
         <span>Đã kiểm tra kỹ · Còn bảo hành ${p.warranty||''}</span>
@@ -514,7 +514,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
         <div class="promo-item"><span class="dot"></span><div>Bảo hành <b>${p.warranty||'rõ ràng'}</b> + hỗ trợ kiểm tra IMEI trực tiếp.</div></div>
       </div>
       <div class="pd-cta">
-        <a href="gio-hang" class="btn-primary btn-gold pd-buy" style="text-align:center;font-size:16px;padding:16px">Mua ngay</a>
+        <button onclick="addToCart()" class="btn-primary btn-gold pd-buy" style="text-align:center;font-size:16px;padding:16px">Mua ngay 🛒</button>
         <div class="row">
           <a href="https://zalo.me/0379443613" target="_blank" class="btn-zalo">
             <div class="zalo-icon">Z</div> Chat Zalo
@@ -676,6 +676,54 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     }).join('');
   }
 })();
+</script>
+
+<script>
+// ===== THÊM VÀO GIỎ HÀNG =====
+function getCart(){ try{ return JSON.parse(localStorage.getItem('hphone_cart')||'[]'); }catch(e){ return []; } }
+function saveCart(c){ localStorage.setItem('hphone_cart', JSON.stringify(c)); }
+
+window.addToCart = function(){
+  // Lấy thông tin sản phẩm từ DOM
+  const name  = document.getElementById('pdName')?.textContent  || document.title.replace(' – HPHONE','');
+  const price = document.getElementById('pdPrice')?.textContent || '';
+  const img   = document.querySelector('#pdMainImg img')?.src    || '';
+  const storage = document.getElementById('selectedStorageLabel')?.textContent || '';
+  const color   = document.getElementById('selectedColorLabel')?.textContent   || '';
+  const badge = document.querySelector('#pdMainImg .badge')?.textContent || '';
+
+  const cart = getCart();
+
+  // Nếu đã có cùng sản phẩm + cùng storage + cùng màu → tăng qty
+  const existing = cart.find(function(x){
+    return x.name === name && x.storage === storage && x.color === color;
+  });
+  if(existing){
+    existing.qty = (existing.qty||1) + 1;
+  } else {
+    cart.push({ name, price, img, storage, color, badge, qty: 1 });
+  }
+
+  saveCart(cart);
+
+  // Cập nhật badge nav
+  const total = cart.reduce(function(s,x){ return s+(x.qty||1); }, 0);
+  const badge_el = document.querySelector('.cart-badge');
+  if(badge_el){ badge_el.textContent = total; badge_el.style.display='flex'; }
+
+  // Hiệu ứng nút rồi chuyển trang
+  const btn = document.querySelector('.pd-buy');
+  if(btn){
+    const orig = btn.textContent;
+    btn.textContent = '✓ Đã thêm vào giỏ!';
+    btn.style.background = '#2e9e63';
+    setTimeout(function(){
+      window.location.href = 'gio-hang';
+    }, 600);
+  } else {
+    window.location.href = 'gio-hang';
+  }
+};
 </script>
 </body>
 </html>
