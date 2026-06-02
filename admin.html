@@ -1097,6 +1097,28 @@ function initQuill(){
   const toolbar = _quill.getModule('toolbar');
   toolbar.addHandler('image', insertDescriptionImage);
 
+  // Paste ảnh trực tiếp vào editor (Ctrl+V)
+  _quill.root.addEventListener('paste', function(e){
+    const items = e.clipboardData && e.clipboardData.items;
+    if(!items) return;
+    for(let i = 0; i < items.length; i++){
+      if(items[i].type.startsWith('image/')){
+        e.preventDefault();
+        const file = items[i].getAsFile();
+        if(!file) continue;
+        const reader = new FileReader();
+        reader.onload = function(ev){
+          const range = _quill.getSelection(true);
+          const index = range ? range.index : _quill.getLength();
+          _quill.insertEmbed(index, 'image', ev.target.result, 'user');
+          _quill.setSelection(index + 1, 0, 'silent');
+        };
+        reader.readAsDataURL(file);
+        break; // chỉ xử lý ảnh đầu tiên nếu paste nhiều
+      }
+    }
+  });
+
   // Style Quill để khớp với theme admin
   const style = document.createElement('style');
   style.textContent = `
