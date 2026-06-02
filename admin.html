@@ -1088,11 +1088,14 @@ function initQuill(){
         [{ header: [2, 3, false] }],
         ['bold', 'italic', 'underline'],
         [{ list: 'ordered' }, { list: 'bullet' }],
-        ['link'],
+        ['link', 'image'],
         ['clean']
       ]
     }
   });
+
+  const toolbar = _quill.getModule('toolbar');
+  toolbar.addHandler('image', insertDescriptionImage);
 
   // Style Quill để khớp với theme admin
   const style = document.createElement('style');
@@ -1105,12 +1108,119 @@ function initQuill(){
     .ql-editor h3 { font-size: 15px; font-weight: 600; margin: 10px 0 4px; }
     .ql-editor p { margin-bottom: 8px; color: #2a2a2a; }
     .ql-editor ul, .ql-editor ol { padding-left: 20px; margin-bottom: 8px; }
+    .ql-editor img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 10px 0; }
     .ql-editor a { color: #c8a96e; }
     .ql-snow .ql-toolbar button:hover, .ql-snow .ql-toolbar button.ql-active { color: #c8a96e; }
     .ql-snow .ql-toolbar button:hover .ql-stroke, .ql-snow .ql-toolbar button.ql-active .ql-stroke { stroke: #c8a96e; }
     .ql-snow .ql-toolbar button:hover .ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-fill { fill: #c8a96e; }
   `;
   document.head.appendChild(style);
+}
+
+function insertDescriptionImage(){
+  // Tạo dialog chọn phương thức chèn ảnh
+  const existing = document.getElementById('_quillImgDialog');
+  if(existing) existing.remove();
+
+  const dialog = document.createElement('div');
+  dialog.id = '_quillImgDialog';
+  dialog.style.cssText = `
+    position:fixed;inset:0;background:rgba(10,10,10,0.55);backdrop-filter:blur(4px);
+    z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;
+  `;
+  dialog.innerHTML = `
+    <div style="background:#fff;border-radius:20px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.18)">
+      <div style="padding:22px 24px 16px;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700">Chèn ảnh vào mô tả</span>
+        <button id="_quillImgClose" style="width:30px;height:30px;border-radius:50%;background:#f5f5f5;border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">✕</button>
+      </div>
+      <div style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:14px">
+        <!-- Tab Upload -->
+        <div style="border:1.5px dashed #e8e8e8;border-radius:12px;padding:18px;text-align:center;cursor:pointer;transition:.2s;background:#fafafa"
+          id="_quillDropZone"
+          onmouseenter="this.style.borderColor='#c8a96e';this.style.background='rgba(200,169,110,0.05)'"
+          onmouseleave="this.style.borderColor='#e8e8e8';this.style.background='#fafafa'">
+          <svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:#c8a96e;fill:none;stroke-width:1.8;margin:0 auto 8px;display:block"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div style="font-weight:600;font-size:14px;margin-bottom:4px">Tải ảnh lên từ máy tính</div>
+          <div style="font-size:12px;color:#a0a0a0">JPG, PNG, WEBP — tối đa 5MB</div>
+          <input type="file" id="_quillImgFile" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;pointer-events:none">
+        </div>
+        <!-- Divider -->
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="flex:1;height:1px;background:#e8e8e8"></div>
+          <span style="font-size:12px;color:#a0a0a0;white-space:nowrap">hoặc dán URL ảnh</span>
+          <div style="flex:1;height:1px;background:#e8e8e8"></div>
+        </div>
+        <!-- URL Input -->
+        <div style="display:flex;gap:8px">
+          <input id="_quillImgUrl" type="text" placeholder="https://example.com/anh.jpg"
+            style="flex:1;padding:11px 13px;border:1.5px solid #e8e8e8;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:.2s"
+            onfocus="this.style.borderColor='#c8a96e'" onblur="this.style.borderColor='#e8e8e8'">
+          <button id="_quillImgUrlBtn"
+            style="padding:11px 16px;background:#0a0a0a;color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap;transition:.2s"
+            onmouseenter="this.style.background='#2a2a2a'" onmouseleave="this.style.background='#0a0a0a'">Chèn</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(dialog);
+
+  function insertImg(src){
+    const range = _quill.getSelection(true);
+    const index = range ? range.index : _quill.getLength();
+    _quill.insertEmbed(index, 'image', src, 'user');
+    _quill.setSelection(index + 1, 0, 'silent');
+    dialog.remove();
+  }
+
+  // Đóng dialog
+  document.getElementById('_quillImgClose').onclick = () => dialog.remove();
+  dialog.addEventListener('click', e => { if(e.target === dialog) dialog.remove(); });
+
+  // Upload file
+  const dropZone = document.getElementById('_quillDropZone');
+  const fileInput = document.getElementById('_quillImgFile');
+  fileInput.style.pointerEvents = 'all';
+  dropZone.style.position = 'relative';
+  dropZone.style.overflow = 'hidden';
+  dropZone.appendChild(fileInput);
+
+  dropZone.onclick = () => fileInput.click();
+  fileInput.onchange = function(){
+    const file = fileInput.files && fileInput.files[0];
+    if(!file) return;
+    if(!file.type.startsWith('image/')){ toast('Vui lòng chọn file ảnh'); return; }
+    if(file.size > 5 * 1024 * 1024){ toast('Ảnh quá lớn, tối đa 5MB'); return; }
+    const reader = new FileReader();
+    reader.onload = e => insertImg(e.target.result);
+    reader.onerror = () => toast('Không đọc được file ảnh');
+    reader.readAsDataURL(file);
+  };
+
+  // Drag & drop vào dropzone
+  dropZone.ondragover = e => { e.preventDefault(); dropZone.style.borderColor='#c8a96e'; };
+  dropZone.ondragleave = () => { dropZone.style.borderColor='#e8e8e8'; };
+  dropZone.ondrop = e => {
+    e.preventDefault(); dropZone.style.borderColor='#e8e8e8';
+    const file = e.dataTransfer.files[0];
+    if(!file || !file.type.startsWith('image/')){ toast('Vui lòng chọn file ảnh'); return; }
+    const reader = new FileReader();
+    reader.onload = ev => insertImg(ev.target.result);
+    reader.readAsDataURL(file);
+  };
+
+  // URL input
+  document.getElementById('_quillImgUrlBtn').onclick = () => {
+    const url = document.getElementById('_quillImgUrl').value.trim();
+    if(!url){ toast('Vui lòng nhập URL ảnh'); return; }
+    insertImg(url);
+  };
+  document.getElementById('_quillImgUrl').addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
+      const url = e.target.value.trim();
+      if(url) insertImg(url);
+    }
+  });
 }
 
 // Override openProductModal để set Quill content
