@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liên hệ – HPHONE</title>
+<meta name="description" content="Liên hệ HPHONE: hotline, Zalo, địa chỉ cửa hàng, giờ làm việc và bản đồ. Để lại thông tin, đội ngũ tư vấn sẽ liên hệ lại trong vòng 15 phút.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0a0a0a;--white:#fafafa;--gray-100:#f5f5f5;--gray-200:#e8e8e8;
+  --gray-400:#a0a0a0;--gray-600:#606060;--gray-800:#2a2a2a;
+  --accent:#c8a96e;--accent-light:#e8d5a8;
+  --font-display:'Inter',sans-serif;--font-body:'Inter',sans-serif;
+  --radius-sm:8px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;
+  --transition:0.3s cubic-bezier(0.4,0,0.2,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--white);color:var(--black);font-size:15px;line-height:1.6;overflow-x:hidden}
+a{color:inherit}
+
+/* announce + nav */
+.announce-bar{background:var(--accent);text-align:center;padding:9px 24px;font-size:12px;font-weight:600;letter-spacing:0.5px;color:var(--black);position:relative;z-index:101}
+nav{position:sticky;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.07)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:20px;height:64px}
+.logo{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--white);letter-spacing:2px;text-decoration:none;flex-shrink:0}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:2px;flex:1;justify-content:center}
+.nav-links a{font-size:13px;font-weight:400;color:rgba(255,255,255,0.65);text-decoration:none;padding:6px 12px;border-radius:var(--radius-sm);transition:var(--transition);white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--white);background:rgba(255,255,255,0.08)}
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:30px;padding:7px 14px;transition:var(--transition)}
+.nav-search:hover{background:rgba(255,255,255,0.12)}
+.nav-search input{background:none;border:none;outline:none;color:var(--white);font-size:13px;font-family:var(--font-body);width:140px}
+.nav-search input::placeholder{color:rgba(255,255,255,0.4)}
+.nav-search svg{width:15px;height:15px;stroke:rgba(255,255,255,0.5);flex-shrink:0;fill:none;stroke-width:2}
+.nav-icon-btn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--white);position:relative}
+.nav-icon-btn:hover{background:rgba(255,255,255,0.15)}
+.nav-icon-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8}
+.nav-icon-btn .cart-badge{position:absolute;top:-4px;right:-4px;background:var(--accent);color:var(--black);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+/* breadcrumb */
+.breadcrumb{max-width:1280px;margin:0 auto;padding:20px 24px 0;font-size:13px;color:var(--gray-600);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.breadcrumb a{text-decoration:none;color:var(--gray-600);transition:var(--transition)}
+.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb span.sep{color:var(--gray-400)}
+.breadcrumb span.current{color:var(--black);font-weight:600}
+
+/* page header */
+.page-head{max-width:1280px;margin:0 auto;padding:36px 24px 8px}
+.page-head .section-label{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.page-head h1{font-family:var(--font-display);font-size:clamp(30px,4vw,46px);font-weight:700;line-height:1.1;letter-spacing:-0.4px}
+.page-head p.sub{color:var(--gray-600);font-size:16px;margin-top:12px;max-width:560px}
+
+/* buttons */
+.btn-primary{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:14px;font-weight:600;padding:14px 28px;border-radius:30px;border:none;cursor:pointer;transition:var(--transition);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.btn-primary:hover{background:var(--gray-800);transform:translateY(-2px)}
+.btn-gold{background:var(--accent);color:var(--black)}
+.btn-gold:hover{background:var(--accent-light)}
+
+/* footer */
+footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,255,255,0.06);margin-top:80px}
+.footer-inner{max-width:1280px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-logo{font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--white);letter-spacing:2px;margin-bottom:14px}
+.footer-logo span{color:var(--accent)}
+.footer-desc{font-size:13px;color:rgba(255,255,255,0.35);line-height:1.7;max-width:300px;margin-bottom:20px}
+.footer-social{display:flex;gap:10px}
+.social-link{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:var(--transition)}
+.social-link:hover{background:rgba(200,169,110,0.15);border-color:rgba(200,169,110,0.3)}
+.social-link svg{width:16px;height:16px;fill:rgba(255,255,255,0.6)}
+.footer-col-title{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:18px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;transition:var(--transition)}
+.footer-links a:hover{color:var(--white)}
+.footer-contact-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.footer-contact-item svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:1.8;flex-shrink:0;margin-top:2px}
+.footer-contact-item span{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.06);padding-top:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.25)}
+.footer-policy{display:flex;gap:20px}
+.footer-policy a{font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none;transition:var(--transition)}
+.footer-policy a:hover{color:rgba(255,255,255,0.6)}
+
+@media(max-width:1024px){.footer-top{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.nav-links,.nav-search{display:none}.footer-top{grid-template-columns:1fr}}
+
+
+/* ── CONTACT PAGE ── */
+.lh-main{max-width:1280px;margin:40px auto 0;padding:0 24px;display:grid;grid-template-columns:1fr 420px;gap:40px;align-items:start}
+
+/* left: info */
+.lh-info{display:flex;flex-direction:column;gap:16px}
+.lh-quick{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.lh-qcard{display:flex;align-items:center;gap:14px;background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius-lg);padding:20px;text-decoration:none;color:var(--black);transition:var(--transition)}
+.lh-qcard:hover{border-color:var(--black);transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,0.06)}
+.lh-qcard .qi{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lh-qcard .qi svg{width:22px;height:22px;fill:none;stroke-width:2}
+.lh-qcard.phone .qi{background:#fff3dd}
+.lh-qcard.phone .qi svg{stroke:var(--accent)}
+.lh-qcard.zalo .qi{background:#e8f4ff}
+.lh-qcard.zalo .qi svg{stroke:#0068ff}
+.lh-qcard.mess .qi{background:#f0eaff}
+.lh-qcard.mess .qi svg{stroke:#7b2ff7}
+.lh-qcard.mail .qi{background:#f5f5f5}
+.lh-qcard.mail .qi svg{stroke:var(--gray-800)}
+.lh-qcard .qt small{display:block;font-size:11.5px;color:var(--gray-600);margin-bottom:2px}
+.lh-qcard .qt b{font-size:15px;font-weight:700}
+
+/* store info card */
+.lh-store{background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius-xl);padding:28px 30px}
+.lh-store .st-head{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.lh-store .st-head h2{font-family:var(--font-display);font-size:20px;font-weight:700}
+.lh-store .st-head .dot{width:8px;height:8px;border-radius:50%;background:#1f9d3a;box-shadow:0 0 0 3px rgba(31,157,58,0.18)}
+.lh-store .st-head small{font-size:12px;color:#1f9d3a;font-weight:600}
+.st-row{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--gray-100)}
+.st-row:last-child{border-bottom:none;padding-bottom:0}
+.st-row .ri{width:38px;height:38px;border-radius:50%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.st-row .ri svg{width:17px;height:17px;stroke:var(--accent);fill:none;stroke-width:1.9}
+.st-row .rt small{display:block;font-size:11.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--gray-400);margin-bottom:3px}
+.st-row .rt span{font-size:14.5px;color:var(--black);font-weight:500;line-height:1.5}
+.st-row .rt a{color:var(--black);text-decoration:none}
+.st-row .rt a:hover{color:var(--accent)}
+
+/* map */
+.lh-map{border-radius:var(--radius-xl);overflow:hidden;border:1.5px solid var(--gray-200);height:300px}
+.lh-map iframe{width:100%;height:100%;border:0;display:block}
+
+/* right: form */
+.lh-form-card{background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius-xl);overflow:hidden;position:sticky;top:84px}
+.lh-form-head{padding:28px 30px 22px;border-bottom:1.5px solid var(--gray-100)}
+.lh-form-head .label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.lh-form-head h2{font-family:var(--font-display);font-size:22px;font-weight:700;margin-bottom:4px}
+.lh-form-head p{font-size:13.5px;color:var(--gray-600)}
+.lh-form-body{padding:26px 30px 30px;display:flex;flex-direction:column;gap:16px}
+.lf-field{display:flex;flex-direction:column;gap:7px}
+.lf-field label{font-size:12px;font-weight:600;color:var(--gray-800)}
+.lf-field .req{color:#e53e3e}
+.lf-field input,.lf-field textarea{width:100%;padding:12px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-family:var(--font-body);font-size:14px;outline:none;transition:var(--transition);background:#fff;color:var(--black)}
+.lf-field input:focus,.lf-field textarea:focus{border-color:var(--black);box-shadow:0 0 0 3px rgba(10,10,10,0.06)}
+.lf-field textarea{resize:vertical;line-height:1.6;min-height:96px}
+.lf-err{font-size:13px;color:#c0392b;background:#fbeae8;border-radius:var(--radius-sm);padding:10px 14px;display:none}
+.lf-err.show{display:block}
+.lf-ok{font-size:13px;color:#1f7a32;background:#eaf7ec;border-radius:var(--radius-sm);padding:10px 14px;display:none}
+.lf-ok.show{display:block}
+
+/* toast */
+.lh-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--black);color:#fff;padding:14px 22px;border-radius:30px;font-size:14px;font-weight:500;z-index:300;opacity:0;pointer-events:none;transition:0.3s cubic-bezier(0.4,0,0.2,1);display:flex;align-items:center;gap:9px;white-space:nowrap}
+.lh-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.lh-toast svg{stroke:var(--accent)}
+
+/* floating chat buttons */
+.float-chat{position:fixed;right:18px;bottom:22px;display:flex;flex-direction:column;gap:12px;z-index:200}
+.fc-btn{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 8px 22px rgba(0,0,0,0.18);transition:var(--transition);position:relative}
+.fc-btn:hover{transform:scale(1.08)}
+.fc-btn svg{width:24px;height:24px}
+.fc-btn.zalo{background:#0068ff}
+.fc-btn.mess{background:linear-gradient(135deg,#00b2ff,#006aff)}
+.fc-btn.phone{background:var(--accent)}
+.fc-btn .ring{position:absolute;inset:0;border-radius:50%;border:2px solid currentColor;opacity:.5;animation:fcpulse 1.8s ease-out infinite}
+.fc-btn.zalo .ring{color:#0068ff}.fc-btn.phone .ring{color:var(--accent)}
+@keyframes fcpulse{0%{transform:scale(1);opacity:.5}100%{transform:scale(1.6);opacity:0}}
+
+@media(max-width:960px){.lh-main{grid-template-columns:1fr;gap:28px}.lh-form-card{position:static}}
+@media(max-width:560px){.lh-quick{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="announce-bar">📞 Hỗ trợ 8:00 – 21:00 mỗi ngày — Phản hồi Zalo trong 5 phút</div>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">H<span>PHONE</span></a>
+    <div class="nav-links">
+      <a href="danh-sach-san-pham">iPhone</a>
+      <a href="danh-sach-san-pham">Phụ kiện</a>
+      <a href="thu-cu-doi-moi">Thu cũ đổi mới</a>
+      <a href="bao-hanh">Bảo hành</a>
+      <a href="lien-he" class="active">Liên hệ</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Tìm sản phẩm...">
+      </div>
+      <a href="gio-hang" class="nav-icon-btn" aria-label="Giỏ hàng">
+        <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="index.html">Trang chủ</a><span class="sep">/</span><span class="current">Liên hệ</span>
+</div>
+
+<div class="page-head">
+  <div class="section-label">Liên hệ</div>
+  <h1>Kết nối với <em style="font-style:normal;color:var(--accent)">HPHONE</em></h1>
+  <p class="sub">Để lại thông tin, đội ngũ tư vấn sẽ liên hệ lại trong vòng 15 phút (giờ làm việc). Hoặc nhắn Zalo / gọi hotline để được hỗ trợ ngay.</p>
+</div>
+
+<div class="lh-main">
+
+  <!-- LEFT: INFO -->
+  <div class="lh-info">
+
+    <!-- quick contact -->
+    <div class="lh-quick">
+      <a href="tel:0379443613" class="lh-qcard phone">
+        <div class="qi"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.83 5.83l.83-.83a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.17 16z"/></svg></div>
+        <div class="qt"><small>Hotline</small><b>0379.443.613</b></div>
+      </a>
+      <a href="https://zalo.me/0379443613" target="_blank" class="lh-qcard zalo">
+        <div class="qi"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="qt"><small>Chat Zalo</small><b>Phản hồi 5 phút</b></div>
+      </a>
+      <a href="https://www.facebook.com/hphone.iphonedanang" target="_blank" class="lh-qcard mess">
+        <div class="qi"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg></div>
+        <div class="qt"><small>Messenger</small><b>Nhắn Facebook</b></div>
+      </a>
+      <a href="mailto:hello@hphone.store" class="lh-qcard mail">
+        <div class="qi"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,7 12,13 2,7"/></svg></div>
+        <div class="qt"><small>Email</small><b>hello@hphone.store</b></div>
+      </a>
+    </div>
+
+    <!-- store card -->
+    <div class="lh-store">
+      <div class="st-head">
+        <span class="dot"></span>
+        <h2>Cửa hàng HPHONE</h2>
+        <small>Đang mở cửa</small>
+      </div>
+      <div class="st-row">
+        <div class="ri"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div class="rt"><small>Địa chỉ</small><span>249 Hà Huy Tập, Thanh Khê, TP. Đà Nẵng</span></div>
+      </div>
+      <div class="st-row">
+        <div class="ri"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.83 5.83l.83-.83a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.17 16z"/></svg></div>
+        <div class="rt"><small>Điện thoại</small><span><a href="tel:0379443613">0379.443.613</a></span></div>
+      </div>
+      <div class="st-row">
+        <div class="ri"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,7 12,13 2,7"/></svg></div>
+        <div class="rt"><small>Email</small><span><a href="mailto:hello@hphone.store">hello@hphone.store</a></span></div>
+      </div>
+      <div class="st-row">
+        <div class="ri"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="rt"><small>Giờ làm việc</small><span>08:00 – 21:00 — Tất cả các ngày trong tuần (kể cả T7, CN &amp; lễ)</span></div>
+      </div>
+    </div>
+
+    <!-- map -->
+    <div class="lh-map">
+      <iframe
+        src="https://www.google.com/maps?q=249+H%C3%A0+Huy+T%E1%BA%ADp,+Thanh+Kh%C3%AA,+%C4%90%C3%A0+N%E1%BA%B5ng&output=embed"
+        loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Bản đồ HPHONE"></iframe>
+    </div>
+  </div>
+
+  <!-- RIGHT: FORM -->
+  <div class="lh-form-card">
+    <div class="lh-form-head">
+      <div class="label">Gửi tin nhắn</div>
+      <h2>Để lại lời nhắn</h2>
+      <p>Điền thông tin bên dưới, HPHONE sẽ liên hệ lại sớm nhất.</p>
+    </div>
+    <div class="lh-form-body">
+      <div class="lf-field">
+        <label>Họ và tên <span class="req">*</span></label>
+        <input type="text" id="lf_name" placeholder="VD: Nguyễn Văn A">
+      </div>
+      <div class="lf-field">
+        <label>Số điện thoại <span class="req">*</span></label>
+        <input type="tel" id="lf_phone" placeholder="VD: 0909 xxx xxx">
+      </div>
+      <div class="lf-field">
+        <label>Email <span style="font-weight:400;color:var(--gray-400)">(không bắt buộc)</span></label>
+        <input type="email" id="lf_email" placeholder="VD: ban@email.com">
+      </div>
+      <div class="lf-field">
+        <label>Nội dung cần hỗ trợ <span class="req">*</span></label>
+        <textarea id="lf_msg" placeholder="VD: Mình muốn hỏi về iPhone 14 Pro 256GB còn hàng không..."></textarea>
+      </div>
+
+      <div class="lf-err" id="lfErr"></div>
+      <div class="lf-ok" id="lfOk"></div>
+
+      <button class="btn-primary btn-gold" id="lfBtn" onclick="submitContact()" style="border:none;cursor:pointer;font-size:15px;padding:15px 28px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Gửi tin nhắn
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="lh-toast" id="lhToast">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span>Đã gửi tin nhắn thành công!</span>
+</div>
+
+<!-- FLOATING CHAT -->
+<div class="float-chat">
+  <a href="https://zalo.me/0379443613" target="_blank" class="fc-btn zalo" aria-label="Chat Zalo">
+    <span class="ring"></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </a>
+  <a href="https://www.facebook.com/hphone.iphonedanang" target="_blank" class="fc-btn mess" aria-label="Messenger">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>
+  </a>
+  <a href="tel:0379443613" class="fc-btn phone" aria-label="Gọi hotline">
+    <span class="ring"></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.83 5.83l.83-.83a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.17 16z"/></svg>
+  </a>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">H<span>PHONE</span></div>
+        <p class="footer-desc">Chuyên iPhone qua sử dụng chất lượng cao. Máy được tuyển chọn kỹ, giá minh bạch, bảo hành rõ ràng.</p>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/hphone.iphonedanang" target="_blank" class="social-link" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" class="social-link" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34l-.01-8.83a8.18 8.18 0 0 0 4.78 1.52V4.56a4.85 4.85 0 0 1-1-.13z"/></svg></a>
+          <a href="#" class="social-link" aria-label="Zalo"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.7 4.19 1.87 5.83L2.5 21.5l3.83-1.33C7.83 21.33 9.85 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Sản phẩm</div>
+        <ul class="footer-links">
+          <li><a href="danh-sach-san-pham">iPhone cũ</a></li>
+          <li><a href="danh-sach-san-pham">iPhone Like New</a></li>
+          <li><a href="danh-sach-san-pham">Samsung Flagship</a></li>
+          <li><a href="danh-sach-san-pham">Phụ kiện</a></li>
+          <li><a href="thu-cu-doi-moi">Thu cũ đổi mới</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Chính sách</div>
+        <ul class="footer-links">
+          <li><a href="bao-hanh">Chính sách bảo hành</a></li>
+          <li><a href="bao-hanh">Chính sách đổi trả</a></li>
+          <li><a href="#">Chính sách vận chuyển</a></li>
+          <li><a href="#">Bảo mật thông tin</a></li>
+          <li><a href="#">Điều khoản sử dụng</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Liên hệ</div>
+        <div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.83 5.83l.83-.83a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.17 16z"/></svg><span>0379.443.613 (Hotline)</span></div>
+        <div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>249 Hà Huy Tập, Thanh Khê,<br>TP. Đà Nẵng</span></div>
+        <div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span>hello@hphone.store</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 HPHONE. Tất cả quyền được bảo lưu. Website: hphone.store</div>
+      <div class="footer-policy"><a href="#">Chính sách bảo mật</a><a href="#">Điều khoản</a><a href="#">Sitemap</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const _SB_URL="https://pkmigreebudnbfkujplu.supabase.co";
+const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrbWlncmVlYnVkbmJma3VqcGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTAyMjYsImV4cCI6MjA5NTYyNjIyNn0.Bb9Y6-FKshYfmxUrEU8GJfJKnnrbJ--vMtXzAwCHFns";
+
+// Cart badge
+(function(){
+  try{
+    const cart=JSON.parse(localStorage.getItem('hphone_cart')||'[]');
+    const n=cart.reduce((s,i)=>s+(i.qty||1),0);
+    const b=document.getElementById('cartBadge');
+    if(b) b.textContent=n;
+  }catch(e){}
+})();
+
+function showToast(){
+  const t=document.getElementById('lhToast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+async function submitContact(){
+  const name  = document.getElementById('lf_name').value.trim();
+  const phone = document.getElementById('lf_phone').value.trim();
+  const email = document.getElementById('lf_email').value.trim();
+  const msg   = document.getElementById('lf_msg').value.trim();
+  const err   = document.getElementById('lfErr');
+  const ok    = document.getElementById('lfOk');
+  const btn   = document.getElementById('lfBtn');
+
+  ok.classList.remove('show');
+  // Validation
+  if(!name){  err.textContent='Vui lòng nhập họ tên.';        err.classList.add('show'); return; }
+  if(!phone){ err.textContent='Vui lòng nhập số điện thoại.'; err.classList.add('show'); return; }
+  if(!/^[0-9+\s().-]{8,15}$/.test(phone)){ err.textContent='Số điện thoại chưa hợp lệ.'; err.classList.add('show'); return; }
+  if(!msg){   err.textContent='Vui lòng nhập nội dung cần hỗ trợ.'; err.classList.add('show'); return; }
+  err.classList.remove('show');
+
+  btn.disabled=true;
+  const oldHtml=btn.innerHTML;
+  btn.innerHTML='Đang gửi...';
+
+  try{
+    if(!window.supabase) throw new Error('Không tải được thư viện kết nối. Vui lòng tải lại trang (F5).');
+    if(!window._sbClient) window._sbClient=window.supabase.createClient(_SB_URL,_SB_KEY);
+    const sb=window._sbClient;
+
+    const payload={ name, phone, email: email||null, message: msg, status:'new' };
+    const { error } = await sb.from('contact_messages').insert([payload]);
+
+    if(error){
+      console.error('[HPHONE] contact error:',error);
+      if(error.code==='42501' || error.message?.includes('policy')){
+        throw new Error('Lỗi quyền truy cập (RLS). Vui lòng báo admin bật INSERT policy cho bảng contact_messages.');
+      } else if(error.code==='42P01' || error.message?.includes('does not exist')){
+        throw new Error('Chưa có bảng contact_messages trên Supabase. Vui lòng tạo bảng hoặc liên hệ qua Zalo/Hotline.');
+      } else {
+        throw new Error(error.message||'Lỗi không xác định từ server.');
+      }
+    }
+
+    // success
+    showToast();
+    ok.textContent='✓ Cảm ơn bạn! HPHONE sẽ liên hệ lại trong vòng 15 phút (giờ làm việc).';
+    ok.classList.add('show');
+    ['lf_name','lf_phone','lf_email','lf_msg'].forEach(id=>document.getElementById(id).value='');
+  }catch(e){
+    err.textContent=e.message||'Có lỗi xảy ra, vui lòng thử lại hoặc liên hệ qua Zalo/Hotline.';
+    err.classList.add('show');
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML=oldHtml;
+  }
+}
+</script>
+</body>
+</html>
