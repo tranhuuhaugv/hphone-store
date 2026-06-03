@@ -240,10 +240,9 @@ window.HPHONE_SUPABASE = {
     <div class="lg-logo">H<span>PHONE</span></div>
     <div class="lg-tag">Trang quản trị</div>
     <div class="lg-err" id="lgErr"></div>
-    <div class="lg-field"><label>Email</label><input type="email" id="lgEmail" placeholder="admin@hphone.store"></div>
-    <div class="lg-field"><label>Mật khẩu</label><input type="password" id="lgPass" placeholder="••••••••"></div>
+    <div class="lg-field"><label>Mật khẩu</label><input type="password" id="lgPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="lg-btn" id="lgBtn" onclick="doLogin()">Đăng nhập</button>
-    <div class="lg-note">Tài khoản được tạo trong Supabase (Authentication → Users). Nếu chưa thiết lập, trang sẽ chạy ở chế độ demo.</div>
+    <div class="lg-note">Nhập mật khẩu quản trị để truy cập. Liên hệ admin nếu quên mật khẩu.</div>
   </div>
 </div>
 
@@ -645,27 +644,46 @@ function setBadge(mode){
 }
 
 /* auth */
-function showLogin(){ document.getElementById('loginGate').style.display='flex'; document.getElementById('logoutBtn').style.display='none'; }
+/* ── AUTH: Simple client-side password, không dùng Supabase Auth ── */
+const ADMIN_PASS = 'Haudance11@'; // ← đổi mật khẩu tại đây
+const PASS_KEY   = 'hphone_admin_ok';
+
+function isLoggedIn(){ try{ return sessionStorage.getItem(PASS_KEY)==='1'; }catch(e){ return false; } }
+function showLogin(){
+  document.getElementById('loginGate').style.display='flex';
+  document.getElementById('logoutBtn').style.display='none';
+}
 async function showApp(){
   document.getElementById('loginGate').style.display='none';
   document.getElementById('logoutBtn').style.display='inline-flex';
-  try{ await loadLive(); await loadTradeIns(); }catch(e){ products=[];orders=[];tradeIns=[]; }
+  // Luôn load data bằng anon key (không cần auth session)
+  if(_sb){
+    try{ await loadLive(); await loadTradeIns(); }catch(e){ products=[];orders=[];tradeIns=[]; }
+  } else {
+    try{ loadDemo(); }catch(e){ products=seedProducts.slice(); orders=seedOrders.slice(); }
+    await loadTradeIns();
+  }
   renderAll();
 }
 async function doLogin(){
-  const email=document.getElementById('lgEmail').value.trim();
   const pass=document.getElementById('lgPass').value;
   const err=document.getElementById('lgErr'); const btn=document.getElementById('lgBtn');
-  if(!email||!pass){ err.textContent='Vui lòng nhập email và mật khẩu.'; err.style.display='block'; return; }
-  btn.disabled=true; btn.textContent='Đang đăng nhập...';
-  try{
-    const {error}=await _sb.auth.signInWithPassword({email:email,password:pass});
-    if(error) throw error;
-    err.style.display='none'; await showApp();
-  }catch(ex){ err.textContent='Đăng nhập thất bại: '+(ex.message||'sai thông tin'); err.style.display='block'; }
-  finally{ btn.disabled=false; btn.textContent='Đăng nhập'; }
+  if(!pass){ err.textContent='Vui lòng nhập mật khẩu.'; err.style.display='block'; return; }
+  btn.disabled=true; btn.textContent='Đang xác nhận...';
+  if(pass === ADMIN_PASS){
+    try{ sessionStorage.setItem(PASS_KEY,'1'); }catch(e){}
+    err.style.display='none';
+    await showApp();
+  } else {
+    err.textContent='Mật khẩu không đúng. Vui lòng thử lại.';
+    err.style.display='block';
+  }
+  btn.disabled=false; btn.textContent='Đăng nhập';
 }
-async function doLogout(){ try{ await _sb.auth.signOut(); }catch(e){} showLogin(); }
+async function doLogout(){
+  try{ sessionStorage.removeItem(PASS_KEY); }catch(e){}
+  showLogin();
+}
 
 /* ───────── HELPERS ───────── */
 function num(p){ return parseInt(String(p).replace(/[^\d]/g,''))||0; }
@@ -1116,24 +1134,13 @@ document.getElementById('delOverlay').addEventListener('click',e=>{if(e.target.i
 
 /* init — demo (no backend) or live (Supabase + login) */
 async function boot(){
-  // FIX: KHÔNG gọi loadTradeIns() ở đây vì:
-  // - Demo mode: chưa biết mode, dữ liệu sẽ sai
-  // - Live mode: chưa có session, Supabase sẽ chặn (RLS)
-  if(!_sb){                       // CHẾ ĐỘ DEMO
-    setBadge('demo');
-    try{ loadDemo(); }catch(e){ products=seedProducts.slice(); orders=seedOrders.slice(); }
-    await loadTradeIns();         // FIX: load SAU khi biết là demo mode
-    renderAll();
-    return;
+  if(_sb){ setBadge('live'); } else { setBadge('demo'); }
+  // Kiểm tra đã đăng nhập chưa (session storage)
+  if(isLoggedIn()){
+    await showApp();
+  } else {
+    showLogin();
   }
-  setBadge('live');               // CHẾ ĐỘ LIVE (Supabase)
-  try{
-    const {data}=await _sb.auth.getSession();
-    if(data && data.session){
-      await showApp();            // showApp() đã gọi loadTradeIns() bên trong
-    }
-    else{ showLogin(); }
-  }catch(e){ console.error('[HPHONE] boot error:', e); showLogin(); }
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
 else boot();
