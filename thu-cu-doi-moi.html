@@ -597,7 +597,7 @@ async function submitTradeForm(){
   const cond=document.querySelector('input[name="tf_cond"]:checked')?.value||'';
   const repair=document.querySelector('input[name="tf_repair"]:checked')?.value||'Chưa sửa / Zin hoàn toàn';
   const upgrade=document.getElementById('tf_upgrade').value.trim();
-  const note=document.getElementById('tf_note').value.trim();
+  const noteRaw=document.getElementById('tf_note').value.trim();
   const err=document.getElementById('tfErr');
   const btn=document.getElementById('tfSubmitBtn');
 
@@ -611,24 +611,25 @@ async function submitTradeForm(){
   btn.disabled=true;
   btn.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 0.8s linear infinite"><circle cx="12" cy="12" r="10"/></svg> Đang gửi...';
 
+  // Gộp màu sắc vào note để tương thích bảng cũ
+  const noteExtra = [color?'Màu: '+color:'', noteRaw].filter(Boolean).join(' — ');
+
   try{
     const sb=window.supabase.createClient(_SB_URL,_SB_KEY);
     const {error}=await sb.from('tradein_orders').insert([{
-      customer_name:name,
-      customer_phone:phone,
-      customer_address:addr||null,
-      old_device:model,
-      old_storage:storage,
-      old_color:color||null,
-      old_condition:cond,
-      old_battery:battery,
-      repair_status:repair,
-      upgrade_device:upgrade||null,
-      note:note||null,
-      status:'pending',
-      created_at:new Date().toISOString()
+      customer_name: name,
+      customer_phone: phone,
+      customer_address: addr||null,
+      old_device: model,
+      old_storage: storage,
+      old_condition: cond,
+      old_battery: battery,
+      repair_status: repair,
+      upgrade_device: upgrade||null,
+      note: noteExtra||null,
+      status: 'pending'
     }]);
-    if(error)throw error;
+    if(error) throw error;
     const t=document.getElementById('tiToast');t.classList.add('show');
     setTimeout(()=>t.classList.remove('show'),3500);
     ['tf_name','tf_phone','tf_addr','tf_color','tf_upgrade','tf_note'].forEach(id=>document.getElementById(id).value='');
