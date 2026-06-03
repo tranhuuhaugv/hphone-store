@@ -188,7 +188,7 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
       </div>
       <a href="gio-hang.html" class="nav-icon-btn" aria-label="Giỏ hàng">
         <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        <span class="cart-badge" id="cartBadge">0</span>
+        <span class="cart-badge" id="cartBadge" style="display:none"></span>
       </a>
     </div>
   </div>
@@ -376,7 +376,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     const cart=JSON.parse(localStorage.getItem('hphone_cart')||'[]');
     const n=cart.reduce((s,i)=>s+(i.qty||1),0);
     const b=document.getElementById('cartBadge');
-    if(b) b.textContent=n;
+    if(b){ if(n>0){b.textContent=n;b.style.display='flex';}else{b.style.display='none';} }
   }catch(e){}
 })();
 
