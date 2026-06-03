@@ -983,11 +983,10 @@ function mapTradeIn(r){
     phone:r.customer_phone,
     addr:r.customer_address||'(chưa điền)',
     device:r.old_device+' · '+r.old_storage,
-    color:r.old_color||'',
-    condition:r.old_condition,
-    battery:r.old_battery,
+    condition:r.old_condition||'',
+    battery:r.old_battery||'',
     upgrade:r.upgrade_device||'',
-    repair:r.repair_status,
+    repair:r.repair_status||'',
     note:r.note||'',
     status:r.status||'pending',
     date:fmtDate(r.created_at)
@@ -1061,10 +1060,9 @@ function openTradeDrawer(id){
   document.getElementById('td_bat').textContent=t.battery;
   document.getElementById('td_repair').textContent=t.repair||'(không ghi)';
 
-  // Màu sắc
+  // Màu sắc (gộp trong note rồi, ẩn dòng này)
   const colorWrap=document.getElementById('td_colorWrap');
-  if(t.color){document.getElementById('td_color').textContent=t.color;colorWrap.style.display='flex';}
-  else{colorWrap.style.display='none';}
+  if(colorWrap) colorWrap.style.display='none';
 
   // Máy muốn lên đời
   const upgradeWrap=document.getElementById('td_upgradeWrap');
