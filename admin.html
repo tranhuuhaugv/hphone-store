@@ -372,7 +372,7 @@ window.HPHONE_SUPABASE = {
           <div class="sub" id="tradeSummary"></div>
         </div>
         <table class="tbl">
-          <thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Máy thu</th><th>Giá ước tính</th><th>Sửa chữa</th><th>Trạng thái</th><th>Ngày gửi</th></tr></thead>
+          <thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Máy thu</th><th>Sửa chữa</th><th>Trạng thái</th><th>Ngày gửi</th></tr></thead>
           <tbody id="tradeTable"></tbody>
         </table>
       </div>
@@ -502,9 +502,9 @@ window.HPHONE_SUPABASE = {
     <div class="dsec">
       <h4>Thông tin máy thu</h4>
       <div class="dinfo-row"><span class="k">Máy</span><span class="v" id="td_device"></span></div>
-      <div class="dinfo-row"><span class="k">Tình trạng</span><span class="v" id="td_cond"></span></div>
+      <div class="dinfo-row" id="td_colorWrap"><span class="k">Màu sắc</span><span class="v" id="td_color"></span></div>
+      <div class="dinfo-row"><span class="k">Ngoại hình</span><span class="v" id="td_cond"></span></div>
       <div class="dinfo-row"><span class="k">Pin</span><span class="v" id="td_bat"></span></div>
-      <div class="dtotal"><span class="lbl">Giá ước tính</span><span class="amt" id="td_price" style="color:var(--accent)"></span></div>
     </div>
     <div class="dsec" id="td_upgradeWrap">
       <h4>Máy muốn lên đời</h4>
@@ -983,9 +983,9 @@ function mapTradeIn(r){
     phone:r.customer_phone,
     addr:r.customer_address||'(chưa điền)',
     device:r.old_device+' · '+r.old_storage,
+    color:r.old_color||'',
     condition:r.old_condition,
     battery:r.old_battery,
-    estimatedPrice:fmt(r.estimated_price)+'₫',
     upgrade:r.upgrade_device||'',
     repair:r.repair_status,
     note:r.note||'',
@@ -1036,8 +1036,7 @@ function renderTradeIns(){
     return '<tr style="cursor:pointer" onclick="openTradeDrawer(\''+t.id+'\')">'
       +'<td><b>'+t.id+'</b></td>'
       +'<td>'+t.customer+'<div class="pm" style="font-size:12px;color:var(--gray-600)">'+t.phone+'</div></td>'
-      +'<td><b>'+t.device+'</b><div class="pm" style="font-size:12px;color:var(--gray-600)">'+t.condition+' · Pin '+t.battery+'</div></td>'
-      +'<td class="price-cell" style="color:var(--accent)">'+t.estimatedPrice+'</td>'
+      +'<td><b>'+t.device+'</b><div class="pm" style="font-size:12px;color:var(--gray-600)">'+(t.color?t.color+' · ':'')+t.condition+' · Pin '+t.battery+'</div></td>'
       +'<td style="font-size:13px">'+t.repair+'</td>'
       +'<td><span class="tag '+s.cls+'">'+s.label+'</span></td>'
       +'<td style="color:var(--gray-600)">'+t.date+'</td>'
@@ -1060,10 +1059,14 @@ function openTradeDrawer(id){
   document.getElementById('td_device').textContent=t.device;
   document.getElementById('td_cond').textContent=t.condition;
   document.getElementById('td_bat').textContent=t.battery;
-  document.getElementById('td_price').textContent=t.estimatedPrice;
   document.getElementById('td_repair').textContent=t.repair||'(không ghi)';
 
-  // Hiển thị máy muốn lên đời
+  // Màu sắc
+  const colorWrap=document.getElementById('td_colorWrap');
+  if(t.color){document.getElementById('td_color').textContent=t.color;colorWrap.style.display='flex';}
+  else{colorWrap.style.display='none';}
+
+  // Máy muốn lên đời
   const upgradeWrap=document.getElementById('td_upgradeWrap');
   if(t.upgrade){
     document.getElementById('td_upgrade').textContent=t.upgrade;
