@@ -363,10 +363,10 @@ window.HPHONE_SUPABASE = {
         <div class="panel-head">
           <div class="pills" id="tradeFilter">
             <span class="pill on" data-f="all">Tất cả</span>
-            <span class="pill" data-f="new">Mới</span>
+            <span class="pill" data-f="pending">Chờ xử lý</span>
             <span class="pill" data-f="contacted">Đã liên hệ</span>
             <span class="pill" data-f="inspecting">Đang kiểm tra</span>
-            <span class="pill" data-f="done">Hoàn tất</span>
+            <span class="pill" data-f="completed">Hoàn tất</span>
             <span class="pill" data-f="cancelled">Đã hủy</span>
           </div>
           <div class="sub" id="tradeSummary"></div>
@@ -506,6 +506,10 @@ window.HPHONE_SUPABASE = {
       <div class="dinfo-row"><span class="k">Pin</span><span class="v" id="td_bat"></span></div>
       <div class="dtotal"><span class="lbl">Giá ước tính</span><span class="amt" id="td_price" style="color:var(--accent)"></span></div>
     </div>
+    <div class="dsec" id="td_upgradeWrap">
+      <h4>Máy muốn lên đời</h4>
+      <div class="dinfo-row"><span class="k">Máy mới</span><span class="v" id="td_upgrade"></span></div>
+    </div>
     <div class="dsec">
       <h4>Tình trạng sửa chữa</h4>
       <div class="dinfo-row"><span class="k">Sửa chữa</span><span class="v" id="td_repair"></span></div>
@@ -518,10 +522,10 @@ window.HPHONE_SUPABASE = {
   <div class="drawer-foot">
     <h4 style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray-600);margin-bottom:10px">Cập nhật trạng thái</h4>
     <select class="status-select" id="td_status">
-      <option value="new">Mới</option>
+      <option value="pending">Chờ xử lý</option>
       <option value="contacted">Đã liên hệ</option>
       <option value="inspecting">Đang kiểm tra</option>
-      <option value="done">Hoàn tất</option>
+      <option value="completed">Hoàn tất</option>
       <option value="cancelled">Đã hủy</option>
     </select>
     <button class="btn btn-gold" style="width:100%" onclick="saveTradeStatus()">Lưu thay đổi</button>
@@ -645,7 +649,7 @@ function showLogin(){ document.getElementById('loginGate').style.display='flex';
 async function showApp(){
   document.getElementById('loginGate').style.display='none';
   document.getElementById('logoutBtn').style.display='inline-flex';
-  try{ await loadLive(); }catch(e){ products=[];orders=[]; }
+  try{ await loadLive(); await loadTradeIns(); }catch(e){ products=[];orders=[];tradeIns=[]; }
   renderAll();
 }
 async function doLogin(){
@@ -694,7 +698,7 @@ function renderDashboard(){
   const revenue = orders.filter(o=>o.status==='done').reduce((s,o)=>s+orderTotal(o),0);
   const newCount = orders.filter(o=>o.status==='new').length;
   const lowStock = products.filter(p=>p.status==='outofstock').length;
-  const newTrade = (tradeIns||[]).filter(t=>t.status==='new').length;
+  const newTrade = (tradeIns||[]).filter(t=>t.status==='pending').length;
   const cards=[
     {ic:'<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>',val:products.length,lbl:'Sản phẩm đang bán'},
     {ic:'<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',val:newCount,lbl:'Đơn hàng mới'},
@@ -963,33 +967,62 @@ document.getElementById('globalSearch').addEventListener('input',function(e){
 
 /* ───────── TRADE-IN ───────── */
 const TI_STATUS={
-  new:{label:'Mới',cls:'blue'},
+  pending:{label:'Chờ xử lý',cls:'blue'},
   contacted:{label:'Đã liên hệ',cls:'orange'},
   inspecting:{label:'Đang kiểm tra',cls:'orange'},
-  done:{label:'Hoàn tất',cls:'green'},
+  completed:{label:'Hoàn tất',cls:'green'},
   cancelled:{label:'Đã hủy',cls:'red'}
 };
 let tradeIns=[], tradeFilter='all';
-function loadTradeIns(){
-  try{
-    const ls=window.localStorage;
-    const r=ls.getItem('hphone_tradein');
-    tradeIns=r?JSON.parse(r):[];
-  }catch(e){ tradeIns=[]; }
-  // seed demo data if empty
-  if(!tradeIns.length){
-    tradeIns=[
-      {id:'TI-DEMO1',type:'tradein',customer:'Nguyễn Văn Bình',phone:'0905 111 222',addr:'15 Trần Hưng Đạo, TP. Huế',device:'iPhone 14 Pro · 256GB',condition:'Đẹp 95%',battery:'85 – 90%',estimatedPrice:'14.900.000₫',repair:'Đã thay màn hình',note:'Màn zin hãng, pin zin.',status:'new',date:'29/05/2026'},
-      {id:'TI-DEMO2',type:'tradein',customer:'Lê Thị Mai',phone:'0912 333 444',addr:'78 Nguyễn Trãi, TP. Huế',device:'iPhone 13 · 128GB',condition:'Đẹp 99%',battery:'Trên 90%',estimatedPrice:'10.500.000₫',repair:'Chưa sửa / Zin hoàn toàn',note:'',status:'contacted',date:'28/05/2026'}
-    ];
+
+function mapTradeIn(r){
+  return {
+    id:'TI-'+(1000+r.id),
+    dbid:r.id,
+    customer:r.customer_name,
+    phone:r.customer_phone,
+    addr:r.customer_address||'(chưa điền)',
+    device:r.old_device+' · '+r.old_storage,
+    condition:r.old_condition,
+    battery:r.old_battery,
+    estimatedPrice:fmt(r.estimated_price)+'₫',
+    upgrade:r.upgrade_device||'',
+    repair:r.repair_status,
+    note:r.note||'',
+    status:r.status||'pending',
+    date:fmtDate(r.created_at)
+  };
+}
+
+async function loadTradeIns(){
+  if(_sb){
+    try{
+      const {data,error}=await _sb.from('tradein_orders').select('*').order('id',{ascending:false});
+      tradeIns = (!error&&data)?data.map(mapTradeIn):[];
+    }catch(e){ tradeIns=[]; }
+  }else{
+    // Demo mode - load from localStorage
+    try{
+      const ls=window.localStorage;
+      const r=ls.getItem('hphone_tradein');
+      tradeIns=r?JSON.parse(r):[];
+    }catch(e){ tradeIns=[]; }
+    // seed demo data if empty
+    if(!tradeIns.length){
+      tradeIns=[
+        {id:'TI-DEMO1',customer:'Nguyễn Văn Bình',phone:'0905 111 222',addr:'15 Trần Hưng Đạo, TP. Huế',device:'iPhone 14 Pro · 256GB',condition:'Đẹp 95%',battery:'85 – 90%',estimatedPrice:'14.900.000₫',upgrade:'iPhone 15 Pro',repair:'Đã thay màn hình',note:'Màn zin hãng, pin zin.',status:'pending',date:'29/05/2026'},
+        {id:'TI-DEMO2',customer:'Lê Thị Mai',phone:'0912 333 444',addr:'78 Nguyễn Trãi, TP. Huế',device:'iPhone 13 · 128GB',condition:'Đẹp 99%',battery:'Trên 90%',estimatedPrice:'10.500.000₫',upgrade:'',repair:'Chưa sửa / Zin hoàn toàn',note:'',status:'contacted',date:'28/05/2026'}
+      ];
+    }
   }
 }
 function saveTradeIns(){
+  if(_sb) return; // live mode persists to Supabase
   try{ window.localStorage.setItem('hphone_tradein',JSON.stringify(tradeIns)); }catch(e){}
 }
 function renderTradeIns(){
-  const newCount=tradeIns.filter(t=>t.status==='new').length;
-  document.getElementById('navTradeCount').textContent=newCount;
+  const pendingCount=tradeIns.filter(t=>t.status==='pending').length;
+  document.getElementById('navTradeCount').textContent=pendingCount;
   let list=tradeIns.filter(t=>{
     if(tradeFilter!=='all'&&t.status!==tradeFilter)return false;
     if(search&&!(t.id.toLowerCase().includes(search)||t.customer.toLowerCase().includes(search)||t.device.toLowerCase().includes(search)))return false;
@@ -999,7 +1032,7 @@ function renderTradeIns(){
   const tb=document.getElementById('tradeTable');
   if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty">Không có đơn thu máy nào.</div></td></tr>';return;}
   tb.innerHTML=list.map(t=>{
-    const s=TI_STATUS[t.status]||TI_STATUS.new;
+    const s=TI_STATUS[t.status]||TI_STATUS.pending;
     return '<tr style="cursor:pointer" onclick="openTradeDrawer(\''+t.id+'\')">'
       +'<td><b>'+t.id+'</b></td>'
       +'<td>'+t.customer+'<div class="pm" style="font-size:12px;color:var(--gray-600)">'+t.phone+'</div></td>'
@@ -1029,10 +1062,20 @@ function openTradeDrawer(id){
   document.getElementById('td_bat').textContent=t.battery;
   document.getElementById('td_price').textContent=t.estimatedPrice;
   document.getElementById('td_repair').textContent=t.repair||'(không ghi)';
+
+  // Hiển thị máy muốn lên đời
+  const upgradeWrap=document.getElementById('td_upgradeWrap');
+  if(t.upgrade){
+    document.getElementById('td_upgrade').textContent=t.upgrade;
+    upgradeWrap.style.display='block';
+  }else{
+    upgradeWrap.style.display='none';
+  }
+
   const nw=document.getElementById('td_noteWrap');
   if(t.note){document.getElementById('td_note').textContent=t.note;nw.style.display='block';}
   else{nw.style.display='none';}
-  document.getElementById('td_status').value=t.status||'new';
+  document.getElementById('td_status').value=t.status||'pending';
   document.getElementById('tradeDrawer').classList.add('open');
   document.getElementById('tradeMask').classList.add('open');
 }
@@ -1040,10 +1083,20 @@ function closeTradeDrawer(){
   document.getElementById('tradeDrawer').classList.remove('open');
   document.getElementById('tradeMask').classList.remove('open');
 }
-function saveTradeStatus(){
+async function saveTradeStatus(){
   const t=tradeIns.find(x=>x.id===tradeDrawerId);if(!t)return;
-  t.status=document.getElementById('td_status').value;
-  saveTradeIns();renderTradeIns();renderDashboard();closeTradeDrawer();
+  const newStatus=document.getElementById('td_status').value;
+  if(_sb){
+    try{
+      const {error}=await _sb.from('tradein_orders').update({status:newStatus}).eq('id',t.dbid);
+      if(error) throw error;
+      t.status=newStatus;
+    }catch(ex){ toast('Lỗi cập nhật: '+(ex.message||'kết nối')); return; }
+  }else{
+    t.status=newStatus;
+    saveTradeIns();
+  }
+  renderTradeIns();renderDashboard();closeTradeDrawer();
   toast('Đã cập nhật trạng thái đơn '+t.id);
 }
 
@@ -1053,7 +1106,7 @@ document.getElementById('delOverlay').addEventListener('click',e=>{if(e.target.i
 
 /* init — demo (no backend) or live (Supabase + login) */
 async function boot(){
-  loadTradeIns();
+  await loadTradeIns();
   if(!_sb){                       // CHẾ ĐỘ DEMO
     setBadge('demo');
     try{ loadDemo(); }catch(e){ products=seedProducts.slice(); orders=seedOrders.slice(); }

@@ -109,38 +109,82 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 @media(max-width:768px){.nav-links,.nav-search{display:none}.footer-top{grid-template-columns:1fr}}
 
 
-.ti-hero{max-width:1280px;margin:0 auto;padding:8px 24px 0}
-.ti-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:40px auto 0;max-width:1280px;padding:0 24px}
-.ti-step{background:var(--gray-100);border-radius:var(--radius-lg);padding:26px 22px;position:relative}
-.ti-step .num{width:38px;height:38px;border-radius:50%;background:var(--black);color:var(--white);font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
-.ti-step h3{font-size:16px;font-weight:700;margin-bottom:8px}
-.ti-step p{font-size:13.5px;color:var(--gray-600);line-height:1.6}
+/* ── NEW MAIN LAYOUT ── */
+.ti-main{max-width:1280px;margin:40px auto 0;padding:0 24px;display:grid;grid-template-columns:1fr 380px;gap:40px;align-items:start}
 
-.ti-tool{max-width:1280px;margin:64px auto 0;padding:0 24px;display:grid;grid-template-columns:1fr 420px;gap:48px;align-items:start}
-.ti-form h2{font-family:var(--font-display);font-size:30px;font-weight:700;margin-bottom:8px}
-.ti-form .sub{color:var(--gray-600);margin-bottom:28px}
-.ti-field{margin-bottom:22px}
-.ti-field label{display:block;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-600);margin-bottom:11px}
-.opt-grid{display:flex;flex-wrap:wrap;gap:9px}
-.ti-opt{padding:10px 18px;border-radius:var(--radius-sm);border:1.5px solid var(--gray-200);background:var(--white);font-size:13px;font-weight:500;cursor:pointer;transition:var(--transition)}
-.ti-opt:hover{border-color:var(--black)}
-.ti-opt.active{background:var(--black);color:var(--white);border-color:var(--black)}
+/* ── LEFT: FORM CARD ── */
+.ti-form-card{background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius-xl);overflow:hidden}
+.ti-form-card-head{padding:28px 32px 24px;border-bottom:1.5px solid var(--gray-100)}
+.ti-form-card-head .label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.ti-form-card-head h2{font-family:var(--font-display);font-size:24px;font-weight:700;margin-bottom:4px}
+.ti-form-card-head p{font-size:13.5px;color:var(--gray-600)}
+.ti-form-body{padding:28px 32px 32px;display:flex;flex-direction:column;gap:24px}
 
-/* quote card */
-.ti-quote{position:sticky;top:84px;background:var(--black);border-radius:var(--radius-xl);padding:32px;color:var(--white);overflow:hidden;position:relative}
-.ti-quote::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 70% 20%,rgba(200,169,110,0.15),transparent 70%)}
-.ti-quote > *{position:relative;z-index:1}
-.ti-quote .ql{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent-light);margin-bottom:8px}
-.ti-quote .qmodel{font-family:var(--font-display);font-size:22px;font-weight:700;margin-bottom:24px}
-.ti-quote .qval-lbl{font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:4px}
-.ti-quote .qval{font-family:var(--font-display);font-size:40px;font-weight:700;color:var(--accent);line-height:1.1}
-.ti-quote .qnote{font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px;line-height:1.5}
-.ti-quote .qdiv{height:1px;background:rgba(255,255,255,0.1);margin:24px 0}
-.ti-quote .qup-lbl{font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:6px}
-.ti-quote .qup{font-size:15px;color:var(--white);line-height:1.6}
-.ti-quote .qup b{color:var(--accent-light)}
-.ti-quote .qcta{margin-top:24px;display:flex;flex-direction:column;gap:10px}
-.ti-quote .qcta a{width:100%}
+/* section divider */
+.tf-section-head{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.tf-section-icon{width:32px;height:32px;border-radius:50%;background:var(--black);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tf-section-icon svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2}
+.tf-section-label{font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--black)}
+.tf-divider{height:1px;background:var(--gray-100);margin:4px 0 0}
+
+/* fields */
+.tf-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tf-field{display:flex;flex-direction:column;gap:7px}
+.tf-field label{font-size:12px;font-weight:600;color:var(--gray-800)}
+.tf-field .req{color:#e53e3e}
+.tf-field input,.tf-field select,.tf-field textarea{width:100%;padding:12px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-family:var(--font-body);font-size:14px;outline:none;transition:var(--transition);background:#fff;color:var(--black)}
+.tf-field input:focus,.tf-field select:focus,.tf-field textarea:focus{border-color:var(--black);box-shadow:0 0 0 3px rgba(10,10,10,0.06)}
+.tf-field textarea{resize:vertical;line-height:1.6}
+.tf-field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23606060' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+
+/* radio options */
+.tf-radio-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.tf-radio-opt{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer;transition:var(--transition)}
+.tf-radio-opt:hover{border-color:var(--gray-800)}
+.tf-radio-opt input[type=radio]{accent-color:var(--accent);width:16px;height:16px;flex-shrink:0;cursor:pointer}
+.tf-radio-opt .ro-text{display:flex;flex-direction:column;gap:1px}
+.tf-radio-opt .ro-text b{font-size:13px;font-weight:600}
+.tf-radio-opt .ro-text small{font-size:11.5px;color:var(--gray-600)}
+.tf-radio-opt:has(input:checked){border-color:var(--black);background:var(--gray-100)}
+
+/* upgrade highlight box */
+.tf-upgrade-box{background:linear-gradient(135deg,#fffbf3,#fff8ec);border:1.5px solid var(--accent-light);border-radius:var(--radius-md);padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.tf-upgrade-box .ub-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
+.tf-upgrade-box input{width:100%;padding:11px 14px;border:1.5px solid var(--accent-light);border-radius:var(--radius-sm);font-family:var(--font-body);font-size:14px;outline:none;transition:var(--transition);background:#fff;color:var(--black)}
+.tf-upgrade-box input:focus{border-color:var(--accent)}
+.tf-upgrade-box .ub-hint{font-size:12px;color:var(--gray-600)}
+
+/* error + submit */
+.tf-err{font-size:13px;color:#c0392b;background:#fbeae8;border-radius:var(--radius-sm);padding:10px 14px;display:none}
+.tf-err.show{display:block}
+.tf-submit-row{display:flex;gap:10px;padding-top:4px}
+
+/* ── RIGHT: PROCESS CARD ── */
+.ti-process{position:sticky;top:84px;display:flex;flex-direction:column;gap:16px}
+.ti-process-card{background:var(--black);border-radius:var(--radius-xl);padding:28px;color:var(--white);overflow:hidden;position:relative}
+.ti-process-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 80% 10%,rgba(200,169,110,0.18),transparent 70%)}
+.ti-process-card > *{position:relative;z-index:1}
+.ti-process-card .pc-label{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent-light);margin-bottom:8px}
+.ti-process-card h3{font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:20px;line-height:1.2}
+.proc-step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
+.proc-step:last-child{border-bottom:none;padding-bottom:0}
+.proc-step .ps-num{width:30px;height:30px;border-radius:50%;background:rgba(200,169,110,0.18);border:1px solid rgba(200,169,110,0.35);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.proc-step .ps-body h4{font-size:14px;font-weight:600;color:#fff;margin-bottom:3px}
+.proc-step .ps-body p{font-size:12.5px;color:rgba(255,255,255,0.5);line-height:1.6}
+
+/* contact card */
+.ti-contact-card{background:var(--gray-100);border-radius:var(--radius-xl);padding:24px;display:flex;flex-direction:column;gap:12px}
+.ti-contact-card .cc-title{font-size:13px;font-weight:700;color:var(--black);margin-bottom:4px}
+.cc-item{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--black);font-size:13px;font-weight:500;padding:10px 14px;background:#fff;border-radius:var(--radius-md);border:1px solid var(--gray-200);transition:var(--transition)}
+.cc-item:hover{border-color:var(--black);transform:translateY(-1px)}
+.cc-item svg{width:16px;height:16px;flex-shrink:0}
+.cc-item .cc-info{display:flex;flex-direction:column;gap:1px}
+.cc-item .cc-info small{font-size:11px;color:var(--gray-600);font-weight:400}
+
+/* toast */
+.ti-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--black);color:#fff;padding:14px 22px;border-radius:30px;font-size:14px;font-weight:500;z-index:300;opacity:0;pointer-events:none;transition:0.3s cubic-bezier(0.4,0,0.2,1);display:flex;align-items:center;gap:9px;white-space:nowrap}
+.ti-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.ti-toast svg{stroke:var(--accent)}
 
 /* price table */
 .ti-table-sec{max-width:1280px;margin:72px auto 0;padding:0 24px}
@@ -161,51 +205,12 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 .faq-q:hover{background:var(--gray-100)}
 .faq-q .ic{font-size:22px;color:var(--accent);transition:var(--transition)}
 .faq-item.open .faq-q .ic{transform:rotate(45deg)}
-.faq-a{max-height:0;overflow:hidden;transition:max-height 0.3s ease;color:var(--gray-700);color:var(--gray-600);font-size:14px;line-height:1.7}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.3s ease;color:var(--gray-600);font-size:14px;line-height:1.7}
 .faq-a div{padding:0 20px 18px}
 .faq-item.open .faq-a{max-height:240px}
-@media(max-width:900px){.ti-tool{grid-template-columns:1fr;gap:32px}.ti-quote{position:static}.ti-steps{grid-template-columns:1fr}}
 
-/* ── TRADE-IN FORM MODAL ── */
-.ti-overlay{position:fixed;inset:0;background:rgba(10,10,10,0.65);backdrop-filter:blur(6px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:0.3s cubic-bezier(0.4,0,0.2,1)}
-.ti-overlay.open{opacity:1;pointer-events:all}
-.ti-modal{background:var(--white);border-radius:var(--radius-xl);width:100%;max-width:600px;max-height:90vh;overflow-y:auto;transform:translateY(20px);transition:0.3s cubic-bezier(0.4,0,0.2,1)}
-.ti-overlay.open .ti-modal{transform:translateY(0)}
-.ti-modal-head{padding:26px 28px 20px;border-bottom:1px solid var(--gray-200);display:flex;align-items:flex-start;justify-content:space-between;gap:16px;position:sticky;top:0;background:var(--white);z-index:1}
-.ti-modal-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
-.ti-modal-title{font-family:var(--font-display);font-size:22px;font-weight:700}
-.ti-modal-close{width:36px;height:36px;border-radius:50%;background:var(--gray-100);border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--transition)}
-.ti-modal-close:hover{background:var(--gray-200)}
-.ti-modal-body{padding:24px 28px 28px;display:flex;flex-direction:column;gap:22px}
-.ti-summary-bar{background:var(--black);color:var(--white);border-radius:var(--radius-md);padding:14px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.ti-summary-bar svg{stroke:var(--accent);flex-shrink:0}
-.ti-summary-bar span{font-size:13px;font-weight:500;flex:1}
-.ti-est-price{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--accent);white-space:nowrap}
-.tf-section{display:flex;flex-direction:column;gap:14px}
-.tf-section-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gray-600);padding-bottom:4px;border-bottom:1px solid var(--gray-100)}
-.tf-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.tf-field{display:flex;flex-direction:column;gap:7px}
-.tf-field label{font-size:12px;font-weight:600;color:var(--gray-800)}
-.tf-field .req{color:#e53e3e}
-.tf-field input,.tf-field select,.tf-field textarea{width:100%;padding:11px 13px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-family:var(--font-body);font-size:14px;outline:none;transition:var(--transition);background:#fff;color:var(--black)}
-.tf-field input:focus,.tf-field select:focus,.tf-field textarea:focus{border-color:var(--accent)}
-.tf-field textarea{resize:vertical;line-height:1.6}
-.tf-repair-opts{display:flex;flex-direction:column;gap:9px}
-.tf-radio-opt{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);cursor:pointer;transition:var(--transition)}
-.tf-radio-opt:hover{border-color:var(--gray-800)}
-.tf-radio-opt input[type=radio]{margin-top:3px;accent-color:var(--accent);width:16px;height:16px;flex-shrink:0;cursor:pointer}
-.tf-radio-opt span{display:flex;flex-direction:column;gap:2px}
-.tf-radio-opt b{font-size:14px;font-weight:600}
-.tf-radio-opt small{font-size:12px;color:var(--gray-600)}
-.tf-radio-opt:has(input:checked){border-color:var(--accent);background:rgba(200,169,110,0.06)}
-.tf-err{font-size:13px;color:#c0392b;background:#fbeae8;border-radius:var(--radius-sm);padding:10px 14px;display:none}
-.tf-err.show{display:block}
-.tf-actions{display:flex;gap:10px;padding-top:4px}
-/* success toast */
-.ti-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--black);color:#fff;padding:14px 22px;border-radius:30px;font-size:14px;font-weight:500;z-index:300;opacity:0;pointer-events:none;transition:0.3s cubic-bezier(0.4,0,0.2,1);display:flex;align-items:center;gap:9px;white-space:nowrap}
-.ti-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.ti-toast svg{stroke:var(--accent)}
-@media(max-width:560px){.tf-grid{grid-template-columns:1fr}.tf-actions{flex-direction:column}}
+@media(max-width:960px){.ti-main{grid-template-columns:1fr;gap:28px}.ti-process{position:static}}
+@media(max-width:600px){.tf-grid{grid-template-columns:1fr}.tf-radio-grid{grid-template-columns:1fr}.tf-submit-row{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -236,104 +241,34 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 <div class="breadcrumb">
   <a href="index.html">Trang chủ</a><span class="sep">/</span><span class="current">Thu cũ đổi mới</span>
 </div>
-<div class="page-head ti-hero">
+<div class="page-head" style="max-width:1280px;margin:0 auto;padding:28px 24px 8px">
   <div class="section-label">Thu cũ đổi mới</div>
   <h1>Lên đời iPhone, <em style="font-style:normal;color:var(--accent)">trợ giá đến 2 triệu</em></h1>
-  <p class="sub">Định giá máy cũ nhanh trong 5 phút. Mang máy đến cửa hàng hoặc gửi ảnh qua Zalo để nhận báo giá minh bạch.</p>
+  <p class="sub">Điền thông tin máy cũ của bạn bên dưới — đội ngũ HPHONE sẽ liên hệ xác nhận và báo giá trong vòng 5 phút.</p>
 </div>
 
-<!-- STEPS -->
-<div class="ti-steps">
-  <div class="ti-step"><div class="num">1</div><h3>Gửi thông tin máy cũ</h3><p>Chọn dòng máy, dung lượng và tình trạng — hoặc chụp ảnh máy + IMEI gửi qua Zalo.</p></div>
-  <div class="ti-step"><div class="num">2</div><h3>Nhận báo giá trong 5 phút</h3><p>Đội ngũ HPHONE kiểm tra và báo giá thu minh bạch, không ép giá.</p></div>
-  <div class="ti-step"><div class="num">3</div><h3>Đổi máy mới, bù phần chênh</h3><p>Chỉ cần trả phần chênh lệch, không phải bán máy cũ ở nơi khác.</p></div>
-</div>
+<!-- MAIN LAYOUT: form left + process right -->
+<div class="ti-main">
 
-<!-- TOOL -->
-<div class="ti-tool">
-  <div class="ti-form">
-    <h2>Định giá máy cũ của bạn</h2>
-    <div class="sub">Chọn lần lượt để nhận giá thu ước tính. Giá cuối cùng xác nhận sau khi kiểm tra máy thực tế.</div>
-
-    <div class="ti-field">
-      <label>Dòng máy bạn đang có</label>
-      <div class="opt-grid" id="modelGrid">
-        <button class="ti-opt active" data-base="8500000" data-name="iPhone 12">iPhone 12</button>
-        <button class="ti-opt" data-base="10500000" data-name="iPhone 13">iPhone 13</button>
-        <button class="ti-opt" data-base="13500000" data-name="iPhone 14">iPhone 14</button>
-        <button class="ti-opt" data-base="15500000" data-name="iPhone 14 Pro">iPhone 14 Pro</button>
-        <button class="ti-opt" data-base="18000000" data-name="iPhone 15">iPhone 15</button>
-        <button class="ti-opt" data-base="24000000" data-name="iPhone 15 Pro Max">iPhone 15 Pro Max</button>
-      </div>
+  <!-- LEFT: FORM -->
+  <div class="ti-form-card">
+    <div class="ti-form-card-head">
+      <div class="label">Đăng ký thu máy</div>
+      <h2>Thông tin máy cần thu</h2>
+      <p>Điền đầy đủ thông tin để nhận báo giá chính xác nhất.</p>
     </div>
+    <div class="ti-form-body">
 
-    <div class="ti-field">
-      <label>Dung lượng</label>
-      <div class="opt-grid" id="storageGrid">
-        <button class="ti-opt active" data-mult="1" data-name="128GB">128GB</button>
-        <button class="ti-opt" data-mult="1.08" data-name="256GB">256GB</button>
-        <button class="ti-opt" data-mult="1.15" data-name="512GB">512GB</button>
-      </div>
-    </div>
-
-    <div class="ti-field">
-      <label>Tình trạng máy</label>
-      <div class="opt-grid" id="condGrid">
-        <button class="ti-opt active" data-mult="1" data-name="Đẹp 99%">Đẹp 99% – như mới</button>
-        <button class="ti-opt" data-mult="0.92" data-name="Đẹp 95%">Đẹp 95% – vài vết xước nhẹ</button>
-        <button class="ti-opt" data-mult="0.8" data-name="Trầy xước">Trầy xước nhiều</button>
-      </div>
-    </div>
-
-    <div class="ti-field">
-      <label>Pin còn lại</label>
-      <div class="opt-grid" id="batteryGrid">
-        <button class="ti-opt active" data-mult="1" data-name="Trên 90%">Trên 90%</button>
-        <button class="ti-opt" data-mult="0.96" data-name="80 – 90%">80 – 90%</button>
-        <button class="ti-opt" data-mult="0.9" data-name="Dưới 80%">Dưới 80%</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- QUOTE -->
-  <div class="ti-quote">
-    <div class="ql">Máy bạn hiện có</div>
-    <div class="qmodel" id="qModel">iPhone 12 · 128GB</div>
-    <div class="qval-lbl">Giá thu ước tính</div>
-    <div class="qval" id="qVal">8.500.000₫</div>
-    <div class="qnote" id="qDetail">Tình trạng: Đẹp 99% · Pin trên 90%</div>
-    <div class="qdiv"></div>
-    <div class="qcta">
-      <button class="btn-primary btn-gold" onclick="openTradeForm()" style="border:none;cursor:pointer;width:100%">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        Gửi đơn thu máy ngay →
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- TRADE-IN FORM MODAL -->
-<div class="ti-overlay" id="tiOverlay" onclick="if(event.target===this)closeTradeForm()">
-  <div class="ti-modal">
-    <div class="ti-modal-head">
+      <!-- 1. Thông tin khách hàng -->
       <div>
-        <div class="ti-modal-label">Gửi đơn thu máy</div>
-        <h3 class="ti-modal-title">Điền thông tin để nhận báo giá</h3>
-      </div>
-      <button class="ti-modal-close" onclick="closeTradeForm()">✕</button>
-    </div>
-    <div class="ti-modal-body">
-      <!-- Tóm tắt máy -->
-      <div class="ti-summary-bar" id="tiSummaryBar">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-        <span id="tiSummaryText">iPhone 12 · 128GB · Đẹp 99% · Pin Trên 90%</span>
-        <span class="ti-est-price" id="tiEstPrice">~ 8.500.000₫</span>
-      </div>
-
-      <!-- Thông tin khách -->
-      <div class="tf-section">
-        <div class="tf-section-title">Thông tin liên hệ</div>
-        <div class="tf-grid">
+        <div class="tf-section-head">
+          <div class="tf-section-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <span class="tf-section-label">Thông tin khách hàng</span>
+        </div>
+        <div class="tf-divider" style="margin-bottom:16px"></div>
+        <div class="tf-grid" style="margin-bottom:14px">
           <div class="tf-field">
             <label>Họ và tên <span class="req">*</span></label>
             <input type="text" id="tf_name" placeholder="VD: Nguyễn Văn A">
@@ -344,65 +279,222 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
           </div>
         </div>
         <div class="tf-field">
-          <label>Địa chỉ nhận máy hoặc địa chỉ mang đến</label>
+          <label>Địa chỉ (để giao/nhận máy hoặc mang đến cửa hàng)</label>
           <input type="text" id="tf_addr" placeholder="Số nhà, đường, phường/xã, thành phố...">
         </div>
       </div>
 
-      <!-- Lịch sử sửa chữa -->
-      <div class="tf-section">
-        <div class="tf-section-title">Tình trạng sửa chữa</div>
+      <!-- 2. Thông tin máy cần thu -->
+      <div>
+        <div class="tf-section-head">
+          <div class="tf-section-icon">
+            <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+          <span class="tf-section-label">Thông tin máy cần thu</span>
+        </div>
+        <div class="tf-divider" style="margin-bottom:16px"></div>
+        <div class="tf-grid" style="margin-bottom:14px">
+          <div class="tf-field">
+            <label>Dòng máy <span class="req">*</span></label>
+            <select id="tf_model">
+              <option value="">-- Chọn dòng máy --</option>
+              <option value="iPhone 12">iPhone 12</option>
+              <option value="iPhone 12 Pro">iPhone 12 Pro</option>
+              <option value="iPhone 13">iPhone 13</option>
+              <option value="iPhone 13 Pro">iPhone 13 Pro</option>
+              <option value="iPhone 14">iPhone 14</option>
+              <option value="iPhone 14 Pro">iPhone 14 Pro</option>
+              <option value="iPhone 14 Pro Max">iPhone 14 Pro Max</option>
+              <option value="iPhone 15">iPhone 15</option>
+              <option value="iPhone 15 Pro">iPhone 15 Pro</option>
+              <option value="iPhone 15 Pro Max">iPhone 15 Pro Max</option>
+              <option value="iPhone 16">iPhone 16</option>
+              <option value="iPhone 16 Pro">iPhone 16 Pro</option>
+              <option value="iPhone 16 Pro Max">iPhone 16 Pro Max</option>
+              <option value="Khác">Dòng khác</option>
+            </select>
+          </div>
+          <div class="tf-field">
+            <label>Dung lượng <span class="req">*</span></label>
+            <select id="tf_storage">
+              <option value="">-- Chọn dung lượng --</option>
+              <option value="64GB">64GB</option>
+              <option value="128GB">128GB</option>
+              <option value="256GB">256GB</option>
+              <option value="512GB">512GB</option>
+              <option value="1TB">1TB</option>
+            </select>
+          </div>
+        </div>
+        <div class="tf-grid" style="margin-bottom:14px">
+          <div class="tf-field">
+            <label>Màu sắc</label>
+            <input type="text" id="tf_color" placeholder="VD: Black Titanium, Natural...">
+          </div>
+          <div class="tf-field">
+            <label>Pin còn lại (%) <span class="req">*</span></label>
+            <select id="tf_battery">
+              <option value="">-- Chọn mức pin --</option>
+              <option value="Trên 90%">Trên 90%</option>
+              <option value="80 – 90%">80 – 90%</option>
+              <option value="Dưới 80%">Dưới 80%</option>
+            </select>
+          </div>
+        </div>
+        <div class="tf-field" style="margin-bottom:14px">
+          <label>Tình trạng ngoại hình <span class="req">*</span></label>
+          <div class="tf-radio-grid">
+            <label class="tf-radio-opt">
+              <input type="radio" name="tf_cond" value="Đẹp 99% – như mới" checked>
+              <div class="ro-text"><b>Đẹp 99% – như mới</b><small>Không tì vết, như mới</small></div>
+            </label>
+            <label class="tf-radio-opt">
+              <input type="radio" name="tf_cond" value="Đẹp 95% – vài vết xước nhẹ">
+              <div class="ro-text"><b>Đẹp 95%</b><small>Vài vết xước nhẹ</small></div>
+            </label>
+            <label class="tf-radio-opt">
+              <input type="radio" name="tf_cond" value="Trầy xước nhiều">
+              <div class="ro-text"><b>Trầy xước nhiều</b><small>Có vết va đập, xước rõ</small></div>
+            </label>
+            <label class="tf-radio-opt">
+              <input type="radio" name="tf_cond" value="Vỡ / nứt màn hoặc khung">
+              <div class="ro-text"><b>Vỡ / nứt</b><small>Màn hoặc khung bị vỡ</small></div>
+            </label>
+          </div>
+        </div>
         <div class="tf-field">
-          <label>Máy đã từng sửa chữa / thay linh kiện chưa? <span class="req">*</span></label>
-          <div class="tf-repair-opts">
+          <label>Tình trạng sửa chữa <span class="req">*</span></label>
+          <div class="tf-radio-grid">
             <label class="tf-radio-opt">
               <input type="radio" name="tf_repair" value="Chưa sửa / Zin hoàn toàn" checked>
-              <span>
-                <b>Chưa sửa — Zin hoàn toàn</b>
-                <small>Máy nguyên bản, chưa thay linh kiện nào</small>
-              </span>
+              <div class="ro-text"><b>Zin hoàn toàn</b><small>Chưa thay linh kiện nào</small></div>
             </label>
             <label class="tf-radio-opt">
               <input type="radio" name="tf_repair" value="Đã thay màn hình">
-              <span>
-                <b>Đã thay màn hình</b>
-                <small>Màn hình đã được thay thế</small>
-              </span>
+              <div class="ro-text"><b>Đã thay màn hình</b><small>Màn hình đã được thay</small></div>
             </label>
             <label class="tf-radio-opt">
               <input type="radio" name="tf_repair" value="Đã thay pin">
-              <span>
-                <b>Đã thay pin</b>
-                <small>Pin đã được thay thế</small>
-              </span>
+              <div class="ro-text"><b>Đã thay pin</b><small>Pin đã được thay thế</small></div>
             </label>
             <label class="tf-radio-opt">
               <input type="radio" name="tf_repair" value="Đã thay nhiều linh kiện">
-              <span>
-                <b>Đã thay nhiều linh kiện</b>
-                <small>Màn + pin hoặc các bộ phận khác</small>
-              </span>
+              <div class="ro-text"><b>Nhiều linh kiện</b><small>Màn + pin hoặc khác</small></div>
             </label>
           </div>
         </div>
       </div>
 
-      <!-- Ghi chú -->
-      <div class="tf-section">
+      <!-- 3. Sản phẩm muốn lên đời -->
+      <div>
+        <div class="tf-section-head">
+          <div class="tf-section-icon" style="background:var(--accent)">
+            <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          </div>
+          <span class="tf-section-label">Sản phẩm muốn lên đời <span style="font-weight:400;color:var(--gray-400)">(nếu có)</span></span>
+        </div>
+        <div class="tf-divider" style="margin-bottom:16px"></div>
+        <div class="tf-upgrade-box">
+          <div class="ub-label">✦ Đổi máy mới</div>
+          <input type="text" id="tf_upgrade" placeholder="VD: iPhone 16 Pro Max 256GB Natural Titanium">
+          <div class="ub-hint">Nhập tên máy bạn muốn đổi sang — HPHONE sẽ tính toán và tư vấn phần chênh lệch cần bù thêm.</div>
+        </div>
+      </div>
+
+      <!-- 4. Ghi chú -->
+      <div>
+        <div class="tf-section-head">
+          <div class="tf-section-icon">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <span class="tf-section-label">Ghi chú thêm</span>
+        </div>
+        <div class="tf-divider" style="margin-bottom:16px"></div>
         <div class="tf-field">
-          <label>Ghi chú thêm</label>
-          <textarea id="tf_note" rows="3" placeholder="VD: Máy đã thay màn, pin zin, có hộp... hoặc yêu cầu đặc biệt."></textarea>
+          <textarea id="tf_note" rows="3" placeholder="VD: Máy còn hộp, sạc zin, muốn đổi máy trong tuần này..."></textarea>
         </div>
       </div>
 
       <div class="tf-err" id="tfErr"></div>
 
-      <div class="tf-actions">
-        <button class="btn-outline" onclick="closeTradeForm()" style="flex:1">Hủy</button>
-        <button class="btn-primary btn-gold" onclick="submitTradeForm()" style="flex:2" id="tfSubmitBtn">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      <div class="tf-submit-row">
+        <button class="btn-primary btn-gold" onclick="submitTradeForm()" style="flex:1;border:none;cursor:pointer;font-size:15px;padding:16px 28px" id="tfSubmitBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           Gửi đơn thu máy
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: PROCESS + CONTACT -->
+  <div class="ti-process">
+    <!-- Quy trình -->
+    <div class="ti-process-card">
+      <div class="pc-label">Quy trình thu máy</div>
+      <h3>3 bước đơn giản, minh bạch</h3>
+      <div class="proc-step">
+        <div class="ps-num">1</div>
+        <div class="ps-body">
+          <h4>Điền form & gửi đơn</h4>
+          <p>Điền đầy đủ thông tin máy cũ vào form bên cạnh. Không cần gửi ảnh ngay.</p>
+        </div>
+      </div>
+      <div class="proc-step">
+        <div class="ps-num">2</div>
+        <div class="ps-body">
+          <h4>Nhận báo giá trong 5 phút</h4>
+          <p>Đội ngũ HPHONE gọi lại hoặc nhắn Zalo để xác nhận tình trạng máy và báo giá thu chính xác.</p>
+        </div>
+      </div>
+      <div class="proc-step">
+        <div class="ps-num">3</div>
+        <div class="ps-body">
+          <h4>Mang máy – Nhận tiền hoặc đổi mới</h4>
+          <p>Mang máy đến cửa hàng hoặc đặt lịch giao nhận tại nhà. Thanh toán minh bạch ngay tại chỗ.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liên hệ nhanh -->
+    <div class="ti-contact-card">
+      <div class="cc-title">Cần tư vấn nhanh hơn?</div>
+      <a href="https://zalo.me/0909xxxxxx" target="_blank" class="cc-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0068ff" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <div class="cc-info">
+          <span>Nhắn Zalo ngay</span>
+          <small>Phản hồi trong 5 phút</small>
+        </div>
+      </a>
+      <a href="tel:0909xxxxxx" class="cc-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8 8.09a16 16 0 0 0 5.83 5.83l.83-.83a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.17 16z"/></svg>
+        <div class="cc-info">
+          <span>0909.xxx.xxx</span>
+          <small>Hotline hỗ trợ thu cũ</small>
+        </div>
+      </a>
+      <div style="font-size:12px;color:var(--gray-600);line-height:1.6;padding-top:4px">
+        🕐 Giờ làm việc: 8:00 – 21:00 (T2 – CN)
+      </div>
+    </div>
+
+    <!-- Cam kết -->
+    <div style="background:var(--gray-100);border-radius:var(--radius-lg);padding:20px 22px;display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-600);margin-bottom:4px">Cam kết của HPHONE</div>
+      <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--gray-800)">
+        <span style="color:var(--accent);font-size:15px;line-height:1">✓</span>
+        <span>Báo giá minh bạch, nói rõ lý do nếu trừ giá</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--gray-800)">
+        <span style="color:var(--accent);font-size:15px;line-height:1">✓</span>
+        <span>Không ép giá — bạn có quyền từ chối bất kỳ lúc nào</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--gray-800)">
+        <span style="color:var(--accent);font-size:15px;line-height:1">✓</span>
+        <span>Thanh toán tiền mặt hoặc chuyển khoản ngay tại chỗ</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--gray-800)">
+        <span style="color:var(--accent);font-size:15px;line-height:1">✓</span>
+        <span>Kiểm tra IMEI miễn phí trước khi thu mua</span>
       </div>
     </div>
   </div>
@@ -485,84 +577,76 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
     </div>
   </div>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-function fmt(n){return Math.round(n/1000)*1000;}
-function vnd(n){return n.toLocaleString('vi-VN')+'₫';}
-const state={base:8500000,model:'iPhone 12',storMult:1,storName:'128GB',condMult:1,condName:'Đẹp 99%',batMult:1,batName:'Trên 90%'};
-function bind(gridId,apply){
-  document.querySelectorAll('#'+gridId+' .ti-opt').forEach(function(b){
-    b.addEventListener('click',function(){
-      document.querySelectorAll('#'+gridId+' .ti-opt').forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');apply(b);update();
-    });
-  });
-}
-bind('modelGrid',b=>{state.base=parseInt(b.dataset.base);state.model=b.dataset.name;});
-bind('storageGrid',b=>{state.storMult=parseFloat(b.dataset.mult);state.storName=b.dataset.name;});
-bind('condGrid',b=>{state.condMult=parseFloat(b.dataset.mult);state.condName=b.dataset.name;});
-bind('batteryGrid',b=>{state.batMult=parseFloat(b.dataset.mult);state.batName=b.dataset.name;});
-function update(){
-  const v=fmt(state.base*state.storMult*state.condMult*state.batMult);
-  document.getElementById('qModel').textContent=state.model+' · '+state.storName;
-  document.getElementById('qVal').textContent=vnd(v);
-  document.getElementById('qDetail').textContent='Tình trạng: '+state.condName+' · Pin '+state.batName.toLowerCase();
-}
+const _SB_URL="https://pkmigreebudnbfkujplu.supabase.co";
+const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrbWlncmVlYnVkbmJma3VqcGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTAyMjYsImV4cCI6MjA5NTYyNjIyNn0.Bb9Y6-FKshYfmxUrEU8GJfJKnnrbJ--vMtXzAwCHFns";
+
 document.querySelectorAll('.faq-item').forEach(function(it){
   it.querySelector('.faq-q').addEventListener('click',()=>it.classList.toggle('open'));
 });
-update();
 
-/* ── TRADE-IN FORM ── */
-function openTradeForm(){
-  const v=fmt(state.base*state.storMult*state.condMult*state.batMult);
-  document.getElementById('tiSummaryText').textContent=state.model+' · '+state.storName+' · '+state.condName+' · Pin '+state.batName;
-  document.getElementById('tiEstPrice').textContent='~'+vnd(v);
-  document.getElementById('tiOverlay').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closeTradeForm(){
-  document.getElementById('tiOverlay').classList.remove('open');
-  document.body.style.overflow='';
-  document.getElementById('tfErr').classList.remove('show');
-}
-function submitTradeForm(){
+async function submitTradeForm(){
   const name=document.getElementById('tf_name').value.trim();
   const phone=document.getElementById('tf_phone').value.trim();
   const addr=document.getElementById('tf_addr').value.trim();
+  const model=document.getElementById('tf_model').value;
+  const storage=document.getElementById('tf_storage').value;
+  const color=document.getElementById('tf_color').value.trim();
+  const battery=document.getElementById('tf_battery').value;
+  const cond=document.querySelector('input[name="tf_cond"]:checked')?.value||'';
   const repair=document.querySelector('input[name="tf_repair"]:checked')?.value||'Chưa sửa / Zin hoàn toàn';
+  const upgrade=document.getElementById('tf_upgrade').value.trim();
   const note=document.getElementById('tf_note').value.trim();
   const err=document.getElementById('tfErr');
+  const btn=document.getElementById('tfSubmitBtn');
+
   if(!name){err.textContent='Vui lòng nhập họ tên.';err.classList.add('show');return;}
   if(!phone){err.textContent='Vui lòng nhập số điện thoại.';err.classList.add('show');return;}
+  if(!model){err.textContent='Vui lòng chọn dòng máy.';err.classList.add('show');return;}
+  if(!storage){err.textContent='Vui lòng chọn dung lượng.';err.classList.add('show');return;}
+  if(!battery){err.textContent='Vui lòng chọn mức pin.';err.classList.add('show');return;}
+
   err.classList.remove('show');
-  const v=fmt(state.base*state.storMult*state.condMult*state.batMult);
-  const now=new Date();
-  const d=('0'+now.getDate()).slice(-2)+'/'+('0'+(now.getMonth()+1)).slice(-2)+'/'+now.getFullYear();
-  const order={
-    id:'TI-'+Date.now(),
-    type:'tradein',
-    customer:name,phone,addr:addr||'(chưa điền)',
-    device:state.model+' · '+state.storName,
-    condition:state.condName,
-    battery:state.batName,
-    repair,
-    estimatedPrice:vnd(v),
-    note:note||'',
-    status:'new',
-    date:d
-  };
+  btn.disabled=true;
+  btn.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 0.8s linear infinite"><circle cx="12" cy="12" r="10"/></svg> Đang gửi...';
+
   try{
-    const ls=window.localStorage;
-    let ti=[];try{const r=ls.getItem('hphone_tradein');if(r)ti=JSON.parse(r);}catch(e){}
-    ti.unshift(order);
-    ls.setItem('hphone_tradein',JSON.stringify(ti));
-  }catch(e){}
-  closeTradeForm();
-  const t=document.getElementById('tiToast');t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3200);
-  ['tf_name','tf_phone','tf_addr','tf_note'].forEach(id=>document.getElementById(id).value='');
-  document.querySelector('input[name="tf_repair"][value="Chưa sửa / Zin hoàn toàn"]').checked=true;
+    const sb=window.supabase.createClient(_SB_URL,_SB_KEY);
+    const {error}=await sb.from('tradein_orders').insert([{
+      customer_name:name,
+      customer_phone:phone,
+      customer_address:addr||null,
+      old_device:model,
+      old_storage:storage,
+      old_color:color||null,
+      old_condition:cond,
+      old_battery:battery,
+      repair_status:repair,
+      upgrade_device:upgrade||null,
+      note:note||null,
+      status:'pending',
+      created_at:new Date().toISOString()
+    }]);
+    if(error)throw error;
+    const t=document.getElementById('tiToast');t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),3500);
+    ['tf_name','tf_phone','tf_addr','tf_color','tf_upgrade','tf_note'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('tf_model').value='';
+    document.getElementById('tf_storage').value='';
+    document.getElementById('tf_battery').value='';
+    document.querySelector('input[name="tf_cond"][value="Đẹp 99% – như mới"]').checked=true;
+    document.querySelector('input[name="tf_repair"][value="Chưa sửa / Zin hoàn toàn"]').checked=true;
+  }catch(e){
+    console.error(e);
+    err.textContent='Có lỗi xảy ra, vui lòng thử lại hoặc liên hệ qua Zalo/Hotline.';
+    err.classList.add('show');
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gửi đơn thu máy';
+  }
 }
 </script>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 </body>
 </html>
