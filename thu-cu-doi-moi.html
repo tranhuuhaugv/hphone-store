@@ -296,23 +296,7 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
         <div class="tf-grid" style="margin-bottom:14px">
           <div class="tf-field">
             <label>Dòng máy <span class="req">*</span></label>
-            <select id="tf_model">
-              <option value="">-- Chọn dòng máy --</option>
-              <option value="iPhone 12">iPhone 12</option>
-              <option value="iPhone 12 Pro">iPhone 12 Pro</option>
-              <option value="iPhone 13">iPhone 13</option>
-              <option value="iPhone 13 Pro">iPhone 13 Pro</option>
-              <option value="iPhone 14">iPhone 14</option>
-              <option value="iPhone 14 Pro">iPhone 14 Pro</option>
-              <option value="iPhone 14 Pro Max">iPhone 14 Pro Max</option>
-              <option value="iPhone 15">iPhone 15</option>
-              <option value="iPhone 15 Pro">iPhone 15 Pro</option>
-              <option value="iPhone 15 Pro Max">iPhone 15 Pro Max</option>
-              <option value="iPhone 16">iPhone 16</option>
-              <option value="iPhone 16 Pro">iPhone 16 Pro</option>
-              <option value="iPhone 16 Pro Max">iPhone 16 Pro Max</option>
-              <option value="Khác">Dòng khác</option>
-            </select>
+            <input type="text" id="tf_model" placeholder="VD: iPhone 14 Pro, Samsung S24...">
           </div>
           <div class="tf-field">
             <label>Dung lượng <span class="req">*</span></label>
@@ -625,6 +609,7 @@ async function submitTradeForm(){
       old_condition: cond,
       old_battery: battery,
       repair_status: repair,
+      estimated_price: 0,
       upgrade_device: upgrade||null,
       note: noteExtra||null,
       status: 'pending'
@@ -632,8 +617,7 @@ async function submitTradeForm(){
     if(error) throw error;
     const t=document.getElementById('tiToast');t.classList.add('show');
     setTimeout(()=>t.classList.remove('show'),3500);
-    ['tf_name','tf_phone','tf_addr','tf_color','tf_upgrade','tf_note'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('tf_model').value='';
+    ['tf_name','tf_phone','tf_addr','tf_model','tf_color','tf_upgrade','tf_note'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('tf_storage').value='';
     document.getElementById('tf_battery').value='';
     document.querySelector('input[name="tf_cond"][value="Đẹp 99% – như mới"]').checked=true;
