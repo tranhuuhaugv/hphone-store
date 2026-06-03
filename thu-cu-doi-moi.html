@@ -556,7 +556,7 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
       </div>
     </div>
     <div class="footer-bottom">
-      <div class="footer-copy">© 2025 HPHONE. Tất cả quyền được bảo lưu. Website: hphone.store</div>
+      <div class="footer-copy">© 2026 HPHONE. Tất cả quyền được bảo lưu. Website: hphone.store</div>
       <div class="footer-policy"><a href="#">Chính sách bảo mật</a><a href="#">Điều khoản</a><a href="#">Sitemap</a></div>
     </div>
   </div>
@@ -571,64 +571,99 @@ document.querySelectorAll('.faq-item').forEach(function(it){
 });
 
 async function submitTradeForm(){
-  const name=document.getElementById('tf_name').value.trim();
-  const phone=document.getElementById('tf_phone').value.trim();
-  const addr=document.getElementById('tf_addr').value.trim();
-  const model=document.getElementById('tf_model').value;
-  const storage=document.getElementById('tf_storage').value;
-  const color=document.getElementById('tf_color').value.trim();
-  const battery=document.getElementById('tf_battery').value;
-  const cond=document.querySelector('input[name="tf_cond"]:checked')?.value||'';
-  const repair=document.querySelector('input[name="tf_repair"]:checked')?.value||'Chưa sửa / Zin hoàn toàn';
-  const upgrade=document.getElementById('tf_upgrade').value.trim();
-  const noteRaw=document.getElementById('tf_note').value.trim();
-  const err=document.getElementById('tfErr');
-  const btn=document.getElementById('tfSubmitBtn');
+  const name    = document.getElementById('tf_name').value.trim();
+  const phone   = document.getElementById('tf_phone').value.trim();
+  const addr    = document.getElementById('tf_addr').value.trim();
+  const model   = document.getElementById('tf_model').value.trim();   // FIX: thêm .trim()
+  const storage = document.getElementById('tf_storage').value;
+  const color   = document.getElementById('tf_color').value.trim();
+  const battery = document.getElementById('tf_battery').value;
+  const cond    = document.querySelector('input[name="tf_cond"]:checked')?.value || '';
+  const repair  = document.querySelector('input[name="tf_repair"]:checked')?.value || 'Chưa sửa / Zin hoàn toàn';
+  const upgrade = document.getElementById('tf_upgrade').value.trim();
+  const noteRaw = document.getElementById('tf_note').value.trim();
+  const err = document.getElementById('tfErr');
+  const btn = document.getElementById('tfSubmitBtn');
 
-  if(!name){err.textContent='Vui lòng nhập họ tên.';err.classList.add('show');return;}
-  if(!phone){err.textContent='Vui lòng nhập số điện thoại.';err.classList.add('show');return;}
-  if(!model){err.textContent='Vui lòng chọn dòng máy.';err.classList.add('show');return;}
-  if(!storage){err.textContent='Vui lòng chọn dung lượng.';err.classList.add('show');return;}
-  if(!battery){err.textContent='Vui lòng chọn mức pin.';err.classList.add('show');return;}
+  // --- Validation ---
+  if(!name)   { err.textContent='Vui lòng nhập họ tên.';           err.classList.add('show'); return; }
+  if(!phone)  { err.textContent='Vui lòng nhập số điện thoại.';    err.classList.add('show'); return; }
+  if(!model)  { err.textContent='Vui lòng nhập dòng máy cần thu.'; err.classList.add('show'); return; }
+  if(!storage){ err.textContent='Vui lòng chọn dung lượng.';       err.classList.add('show'); return; }
+  if(!battery){ err.textContent='Vui lòng chọn mức pin.';          err.classList.add('show'); return; }
 
   err.classList.remove('show');
-  btn.disabled=true;
-  btn.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 0.8s linear infinite"><circle cx="12" cy="12" r="10"/></svg> Đang gửi...';
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 0.8s linear infinite"><circle cx="12" cy="12" r="10"/></svg> Đang gửi...';
 
   // Gộp màu sắc vào note để tương thích bảng cũ
-  const noteExtra = [color?'Màu: '+color:'', noteRaw].filter(Boolean).join(' — ');
+  const noteExtra = [color ? 'Màu: ' + color : '', noteRaw].filter(Boolean).join(' — ');
 
   try{
-    const sb=window.supabase.createClient(_SB_URL,_SB_KEY);
-    const {error}=await sb.from('tradein_orders').insert([{
-      customer_name: name,
-      customer_phone: phone,
-      customer_address: addr||null,
-      old_device: model,
-      old_storage: storage,
-      old_condition: cond,
-      old_battery: battery,
-      repair_status: repair,
-      estimated_price: 0,
-      upgrade_device: upgrade||null,
-      note: noteExtra||null,
-      status: 'pending'
-    }]);
-    if(error) throw error;
-    const t=document.getElementById('tiToast');t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'),3500);
-    ['tf_name','tf_phone','tf_addr','tf_model','tf_color','tf_upgrade','tf_note'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('tf_storage').value='';
-    document.getElementById('tf_battery').value='';
-    document.querySelector('input[name="tf_cond"][value="Đẹp 99% – như mới"]').checked=true;
-    document.querySelector('input[name="tf_repair"][value="Chưa sửa / Zin hoàn toàn"]').checked=true;
-  }catch(e){
-    console.error(e);
-    err.textContent='Có lỗi xảy ra, vui lòng thử lại hoặc liên hệ qua Zalo/Hotline.';
+    // FIX: Kiểm tra Supabase SDK đã load chưa
+    if(!window.supabase){
+      throw new Error('Không tải được thư viện kết nối. Vui lòng tải lại trang (F5).');
+    }
+
+    // FIX: Tạo client một lần, không tạo lại mỗi lần submit
+    if(!window._sbClient){
+      window._sbClient = window.supabase.createClient(_SB_URL, _SB_KEY);
+    }
+    const sb = window._sbClient;
+
+    const payload = {
+      customer_name:    name,
+      customer_phone:   phone,
+      customer_address: addr    || null,
+      old_device:       model,
+      old_storage:      storage,
+      old_condition:    cond,
+      old_battery:      battery,
+      repair_status:    repair,
+      estimated_price:  0,
+      upgrade_device:   upgrade || null,
+      note:             noteExtra || null,
+      status:           'pending'
+    };
+
+    console.log('[HPHONE] Đang gửi đơn thu máy:', payload); // debug
+
+    const { data, error } = await sb.from('tradein_orders').insert([payload]).select();
+
+    if(error){
+      console.error('[HPHONE] Supabase error:', error);
+      // FIX: Hiện lỗi cụ thể để dễ debug
+      if(error.code === '42501' || error.message?.includes('policy')){
+        throw new Error('Lỗi quyền truy cập (RLS). Vui lòng báo admin bật INSERT policy cho bảng tradein_orders.');
+      } else if(error.code === 'PGRST301'){
+        throw new Error('Lỗi xác thực với server. Kiểm tra lại API key.');
+      } else {
+        throw new Error(error.message || 'Lỗi không xác định từ server.');
+      }
+    }
+
+    console.log('[HPHONE] Gửi thành công:', data);
+
+    // Hiện toast thành công
+    const t = document.getElementById('tiToast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+
+    // Reset form
+    ['tf_name','tf_phone','tf_addr','tf_model','tf_color','tf_upgrade','tf_note']
+      .forEach(id => document.getElementById(id).value = '');
+    document.getElementById('tf_storage').value = '';
+    document.getElementById('tf_battery').value = '';
+    document.querySelector('input[name="tf_cond"][value="Đẹp 99% – như mới"]').checked = true;
+    document.querySelector('input[name="tf_repair"][value="Chưa sửa / Zin hoàn toàn"]').checked = true;
+
+  } catch(e) {
+    console.error('[HPHONE] submitTradeForm error:', e);
+    err.textContent = e.message || 'Có lỗi xảy ra, vui lòng thử lại hoặc liên hệ qua Zalo/Hotline.';
     err.classList.add('show');
-  }finally{
-    btn.disabled=false;
-    btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gửi đơn thu máy';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Gửi đơn thu máy';
   }
 }
 </script>

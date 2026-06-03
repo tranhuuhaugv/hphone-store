@@ -997,8 +997,17 @@ async function loadTradeIns(){
   if(_sb){
     try{
       const {data,error}=await _sb.from('tradein_orders').select('*').order('id',{ascending:false});
-      tradeIns = (!error&&data)?data.map(mapTradeIn):[];
-    }catch(e){ tradeIns=[]; }
+      if(error){
+        console.error('[HPHONE] loadTradeIns error:', error);
+        if(error.code === '42501' || (error.message && error.message.includes('policy'))){
+          console.warn('[HPHONE] Loi RLS: can bat SELECT policy cho bang tradein_orders trong Supabase Dashboard -> Authentication -> Policies');
+        }
+        tradeIns = [];
+      } else {
+        tradeIns = data ? data.map(mapTradeIn) : [];
+        console.log('[HPHONE] Da load', tradeIns.length, 'don thu may tu Supabase');
+      }
+    }catch(e){ console.error('[HPHONE] loadTradeIns exception:', e); tradeIns=[]; }
   }else{
     // Demo mode - load from localStorage
     try{
@@ -1107,19 +1116,24 @@ document.getElementById('delOverlay').addEventListener('click',e=>{if(e.target.i
 
 /* init — demo (no backend) or live (Supabase + login) */
 async function boot(){
-  await loadTradeIns();
+  // FIX: KHÔNG gọi loadTradeIns() ở đây vì:
+  // - Demo mode: chưa biết mode, dữ liệu sẽ sai
+  // - Live mode: chưa có session, Supabase sẽ chặn (RLS)
   if(!_sb){                       // CHẾ ĐỘ DEMO
     setBadge('demo');
     try{ loadDemo(); }catch(e){ products=seedProducts.slice(); orders=seedOrders.slice(); }
+    await loadTradeIns();         // FIX: load SAU khi biết là demo mode
     renderAll();
     return;
   }
   setBadge('live');               // CHẾ ĐỘ LIVE (Supabase)
   try{
     const {data}=await _sb.auth.getSession();
-    if(data && data.session){ await showApp(); }
+    if(data && data.session){
+      await showApp();            // showApp() đã gọi loadTradeIns() bên trong
+    }
     else{ showLogin(); }
-  }catch(e){ showLogin(); }
+  }catch(e){ console.error('[HPHONE] boot error:', e); showLogin(); }
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
 else boot();
