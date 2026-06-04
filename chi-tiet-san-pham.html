@@ -441,8 +441,8 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   // Nếu đang ở dạng ?slug=xxx thì replaceState sang clean URL
   // Nếu đã ở clean URL (pathname = /slug) thì không làm gì tránh loop
   const currentPath = window.location.pathname.replace(/^\//, '');
+  const canonUrl = window.location.origin + '/' + canonSlug;
   if(canonSlug && window.location.search.includes('slug=') && currentPath !== canonSlug){
-    const canonUrl = window.location.origin + '/' + canonSlug;
     history.replaceState(null,'', canonUrl);
   }
   const seoUrl = canonUrl;
@@ -976,7 +976,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       const rImg = r.img
         ? '<div class="phone-mock img" style="position:relative;background:var(--gray-100)"><img src="'+r.img+'" style="width:100%;height:100%;object-fit:contain;position:absolute;inset:0;border-radius:var(--radius-lg)"><span class="badge '+rBadge+'" style="position:absolute;top:14px;left:14px">'+(r.badge||r.condition||'')+'</span></div>'
         : '<div class="phone-mock'+(r.brand==='samsung'?' samsung':'')+' img"><span class="badge '+rBadge+'" style="position:absolute;top:14px;left:14px">'+(r.badge||r.condition||'')+'</span><div class="inner"><span>'+(r.short||r.name)+'</span></div></div>';
-      return '<a href="'/'+(r.slug||r.id)" class="mini-card">'
+      return '<a href="/'+(r.slug||r.id)" class="mini-card">'
         +rImg
         +'<div class="body">'
         +'<div class="name">'+r.name+'</div>'
