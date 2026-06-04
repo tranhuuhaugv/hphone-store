@@ -146,9 +146,13 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 .pd-dots{display:flex;justify-content:center;gap:7px;margin-top:12px;flex-wrap:wrap}
 .pd-dot{width:8px;height:8px;border-radius:50%;background:var(--gray-200);cursor:pointer;transition:var(--transition);border:none;padding:0}
 .pd-dot.active{background:var(--black);transform:scale(1.25)}
-/* thumbnails - ẩn, dùng dots thay thế */
-.pd-thumbs{display:none}
-.pd-thumb{display:none}
+/* thumbnails - 1 hàng ngang, cuộn ngang */
+.pd-thumbs{display:flex;gap:8px;margin-top:12px;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:4px}
+.pd-thumbs::-webkit-scrollbar{display:none}
+.pd-thumb{width:68px;height:68px;border-radius:var(--radius-md);border:2px solid transparent;cursor:pointer;transition:var(--transition);background:var(--gray-100);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.pd-thumb img{width:100%;height:100%;object-fit:contain;border-radius:8px}
+.pd-thumb:hover{border-color:var(--gray-400)}
+.pd-thumb.active{border-color:var(--black)}
 /* counter - ẩn */
 .pd-counter{display:none}
 .pd-info h1{font-family:var(--font-display);font-size:32px;font-weight:700;line-height:1.15;letter-spacing:-0.4px;margin-bottom:6px}
