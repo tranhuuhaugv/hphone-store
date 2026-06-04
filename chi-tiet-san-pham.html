@@ -554,6 +554,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   // currentImgs: mảng ảnh đang hiển thị (có thể đổi khi chọn biến thể)
   let currentImgs = allImgs.slice();
   let currentSlide = 0;
+  const THUMB_VISIBLE = 5; // số thumb tối đa hiển thị (dùng để tính arrow ở thời điểm build)
 
   function buildSlidesHtml(imgs){
     if(!imgs.length){
@@ -675,7 +676,6 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 
   // ── SLIDER CONTROLS ──
   let thumbOffset = 0; // số thumb đã scroll
-  const THUMB_VISIBLE = 5; // số thumb tối đa hiển thị (dùng để tính arrow ở thời điểm build)
 
   // Tính và set kích thước thumb dựa trên chiều rộng main slider
   function recalcThumbSize(){
