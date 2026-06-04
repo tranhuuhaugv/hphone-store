@@ -175,20 +175,20 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 <div class="announce-bar">🎉 Miễn phí kiểm tra IMEI — Bảo hành minh bạch — Giao hàng toàn quốc</div>
 <nav>
   <div class="nav-inner">
-    <a href="/" class="logo">H<span>PHONE</span></a>
+    <a href="index.html" class="logo">H<span>PHONE</span></a>
     <div class="nav-links">
-      <a href="/danh-sach-san-pham" class="active">iPhone</a>
-      <a href="/danh-sach-san-pham">Phụ kiện</a>
-      <a href="/thu-cu-doi-moi">Thu cũ đổi mới</a>
-      <a href="/bao-hanh">Bảo hành</a>
-      <a href="/lien-he">Liên hệ</a>
+      <a href="danh-sach-san-pham.html" class="active">iPhone</a>
+      <a href="danh-sach-san-pham.html">Phụ kiện</a>
+      <a href="thu-cu-doi-moi.html">Thu cũ đổi mới</a>
+      <a href="bao-hanh.html">Bảo hành</a>
+      <a href="lien-he.html">Liên hệ</a>
     </div>
     <div class="nav-right">
       <div class="nav-search">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input type="text" placeholder="Tìm sản phẩm...">
       </div>
-      <a href="/gio-hang" class="nav-icon-btn" aria-label="Giỏ hàng">
+      <a href="gio-hang.html" class="nav-icon-btn" aria-label="Giỏ hàng">
         <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <span class="cart-badge">2</span>
       </a>
@@ -288,18 +288,18 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       <div>
         <div class="footer-col-title">Sản phẩm</div>
         <ul class="footer-links">
-          <li><a href="/danh-sach-san-pham">iPhone cũ</a></li>
-          <li><a href="/danh-sach-san-pham">iPhone Like New</a></li>
-          <li><a href="/danh-sach-san-pham">Samsung Flagship</a></li>
-          <li><a href="/danh-sach-san-pham">Phụ kiện</a></li>
-          <li><a href="/thu-cu-doi-moi">Thu cũ đổi mới</a></li>
+          <li><a href="danh-sach-san-pham.html">iPhone cũ</a></li>
+          <li><a href="danh-sach-san-pham.html">iPhone Like New</a></li>
+          <li><a href="danh-sach-san-pham.html">Samsung Flagship</a></li>
+          <li><a href="danh-sach-san-pham.html">Phụ kiện</a></li>
+          <li><a href="thu-cu-doi-moi.html">Thu cũ đổi mới</a></li>
         </ul>
       </div>
       <div>
         <div class="footer-col-title">Chính sách</div>
         <ul class="footer-links">
-          <li><a href="/bao-hanh">Chính sách bảo hành</a></li>
-          <li><a href="/bao-hanh">Chính sách đổi trả</a></li>
+          <li><a href="bao-hanh.html">Chính sách bảo hành</a></li>
+          <li><a href="bao-hanh.html">Chính sách đổi trả</a></li>
           <li><a href="#">Chính sách vận chuyển</a></li>
           <li><a href="#">Bảo mật thông tin</a></li>
           <li><a href="#">Điều khoản sử dụng</a></li>
@@ -385,7 +385,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
           </div>
           <div class="price">${p.price}<span class="cur">₫</span>${p.old_price?`<span style="font-size:13px;font-family:var(--font-body);font-weight:400;color:var(--gray-400);text-decoration:line-through;margin-left:8px">${p.old_price}₫</span>`:''}</div>
           <div class="actions">
-            <a href="/${p.slug||p.id}" class="btn-d">Xem chi tiết</a>
+            <a href="chi-tiet-san-pham.html?slug=${p.slug||p.id}" class="btn-d">Xem chi tiết</a>
             <a href="#" class="btn-z btn-buy" onclick="event.preventDefault();buyNow(${JSON.stringify(p).replace(/"/g,'&quot;')})">
               Mua ngay
             </a>
@@ -460,7 +460,7 @@ function addToCart(p) {
 
 function buyNow(p) {
   addToCart(p);
-  window.location.href = '/gio-hang';
+  window.location.href = 'gio-hang';
 }
 </script>
 </body>
