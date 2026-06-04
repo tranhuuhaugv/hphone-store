@@ -294,20 +294,20 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 <div class="announce-bar">🎉 Miễn phí kiểm tra IMEI — Bảo hành minh bạch — Giao hàng toàn quốc</div>
 <nav>
   <div class="nav-inner">
-    <a href="index.html" class="logo">H<span>PHONE</span></a>
+    <a href="/" class="logo">H<span>PHONE</span></a>
     <div class="nav-links">
-      <a href="danh-sach-san-pham.html" class="active">iPhone</a>
-      <a href="danh-sach-san-pham.html">Phụ kiện</a>
-      <a href="thu-cu-doi-moi.html">Thu cũ đổi mới</a>
-      <a href="bao-hanh.html">Bảo hành</a>
-      <a href="lien-he.html">Liên hệ</a>
+      <a href="/danh-sach-san-pham" class="active">iPhone</a>
+      <a href="/danh-sach-san-pham">Phụ kiện</a>
+      <a href="/thu-cu-doi-moi">Thu cũ đổi mới</a>
+      <a href="/bao-hanh">Bảo hành</a>
+      <a href="/lien-he">Liên hệ</a>
     </div>
     <div class="nav-right">
       <div class="nav-search">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input type="text" placeholder="Tìm sản phẩm...">
       </div>
-      <a href="gio-hang.html" class="nav-icon-btn" aria-label="Giỏ hàng">
+      <a href="/gio-hang" class="nav-icon-btn" aria-label="Giỏ hàng">
         <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <span class="cart-badge">2</span>
       </a>
@@ -316,8 +316,8 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 </nav>
 
 <div class="breadcrumb">
-  <a href="index.html">Trang chủ</a><span class="sep">/</span>
-  <a href="danh-sach-san-pham.html">iPhone</a><span class="sep">/</span>
+  <a href="/">Trang chủ</a><span class="sep">/</span>
+  <a href="/danh-sach-san-pham">iPhone</a><span class="sep">/</span>
   <span class="current" id="breadcrumbCurrent">...</span>
 </div>
 
@@ -358,18 +358,18 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       <div>
         <div class="footer-col-title">Sản phẩm</div>
         <ul class="footer-links">
-          <li><a href="danh-sach-san-pham.html">iPhone cũ</a></li>
-          <li><a href="danh-sach-san-pham.html">iPhone Like New</a></li>
-          <li><a href="danh-sach-san-pham.html">Samsung Flagship</a></li>
-          <li><a href="danh-sach-san-pham.html">Phụ kiện</a></li>
-          <li><a href="thu-cu-doi-moi.html">Thu cũ đổi mới</a></li>
+          <li><a href="/danh-sach-san-pham">iPhone cũ</a></li>
+          <li><a href="/danh-sach-san-pham">iPhone Like New</a></li>
+          <li><a href="/danh-sach-san-pham">Samsung Flagship</a></li>
+          <li><a href="/danh-sach-san-pham">Phụ kiện</a></li>
+          <li><a href="/thu-cu-doi-moi">Thu cũ đổi mới</a></li>
         </ul>
       </div>
       <div>
         <div class="footer-col-title">Chính sách</div>
         <ul class="footer-links">
-          <li><a href="bao-hanh.html">Chính sách bảo hành</a></li>
-          <li><a href="bao-hanh.html">Chính sách đổi trả</a></li>
+          <li><a href="/bao-hanh">Chính sách bảo hành</a></li>
+          <li><a href="/bao-hanh">Chính sách đổi trả</a></li>
           <li><a href="#">Chính sách vận chuyển</a></li>
           <li><a href="#">Bảo mật thông tin</a></li>
           <li><a href="#">Điều khoản sử dụng</a></li>
@@ -404,7 +404,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   }
 
   if(!sb) return showError('Không thể kết nối dữ liệu.');
-  if(!pslug && !pid) return showError('Không tìm thấy sản phẩm. <a href="danh-sach-san-pham.html" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
+  if(!pslug && !pid) return showError('Không tìm thấy sản phẩm. <a href="/danh-sach-san-pham" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
 
   // Ưu tiên tìm theo slug (SEO), fallback về id (tương thích cũ)
   let qResult;
@@ -418,7 +418,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     qResult = await sb.from('products').select('*').eq('id', pid).maybeSingle();
   }
   const {data:p, error} = qResult;
-  if(error || !p) return showError('Sản phẩm không tồn tại hoặc đã bị xóa. <a href="danh-sach-san-pham.html" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
+  if(error || !p) return showError('Sản phẩm không tồn tại hoặc đã bị xóa. <a href="/danh-sach-san-pham" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
 
   // Chuẩn hóa mảng ảnh: ưu tiên images[], fallback về img
   if(!Array.isArray(p.images) || !p.images.length){
@@ -438,8 +438,13 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   // Chuẩn hóa URL thành dạng slug để SEO tốt hơn
   function toSlug(str){ return (str||'').toLowerCase().replace(/đ/g,'d').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-'); }
   const canonSlug = p.slug || toSlug(p.name);
-  const canonUrl  = window.location.origin + '/' + canonSlug;
-  if(canonSlug && window.location.pathname !== '/' + canonSlug){ history.replaceState(null,'',canonUrl); }
+  // Nếu đang ở dạng ?slug=xxx thì replaceState sang clean URL
+  // Nếu đã ở clean URL (pathname = /slug) thì không làm gì tránh loop
+  const currentPath = window.location.pathname.replace(/^\//, '');
+  if(canonSlug && window.location.search.includes('slug=') && currentPath !== canonSlug){
+    const canonUrl = window.location.origin + '/' + canonSlug;
+    history.replaceState(null,'', canonUrl);
+  }
   const seoUrl = canonUrl;
 
   function setMeta(id, attr, val){ const el=document.getElementById(id); if(el && val) el.setAttribute(attr, val); }
@@ -971,7 +976,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       const rImg = r.img
         ? '<div class="phone-mock img" style="position:relative;background:var(--gray-100)"><img src="'+r.img+'" style="width:100%;height:100%;object-fit:contain;position:absolute;inset:0;border-radius:var(--radius-lg)"><span class="badge '+rBadge+'" style="position:absolute;top:14px;left:14px">'+(r.badge||r.condition||'')+'</span></div>'
         : '<div class="phone-mock'+(r.brand==='samsung'?' samsung':'')+' img"><span class="badge '+rBadge+'" style="position:absolute;top:14px;left:14px">'+(r.badge||r.condition||'')+'</span><div class="inner"><span>'+(r.short||r.name)+'</span></div></div>';
-      return '<a href="chi-tiet-san-pham.html?slug='+(r.slug||r.id)+'" class="mini-card">'
+      return '<a href="'/'+(r.slug||r.id)" class="mini-card">'
         +rImg
         +'<div class="body">'
         +'<div class="name">'+r.name+'</div>'
@@ -1024,7 +1029,7 @@ function _addItemToCart(){
 // Mua ngay → thêm rồi redirect sang giỏ hàng
 window.buyNow = function(){
   _addItemToCart();
-  window.location.href = 'gio-hang';
+  window.location.href = '/gio-hang';
 };
 
 // Thêm vào giỏ → ở lại trang, hiện toast xác nhận
@@ -1036,7 +1041,7 @@ window.addToCartOnly = function(){
     toast = document.createElement('div');
     toast.id = 'cart-toast';
     toast.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#0a0a0a;color:#fff;padding:12px 22px;border-radius:30px;font-size:13px;font-weight:600;z-index:9999;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,0.25);opacity:0;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);pointer-events:none;white-space:nowrap';
-    toast.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8a96e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Đã thêm vào giỏ hàng! <a href="gio-hang.html" style="color:#c8a96e;text-decoration:none;font-weight:700;pointer-events:all">Xem giỏ →</a>';
+    toast.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8a96e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Đã thêm vào giỏ hàng! <a href="/gio-hang" style="color:#c8a96e;text-decoration:none;font-weight:700;pointer-events:all">Xem giỏ →</a>';
     document.body.appendChild(toast);
   }
   // Animate in
