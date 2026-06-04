@@ -148,18 +148,16 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 .pd-dot.active{background:var(--black);transform:scale(1.25)}
 /* dots - ẩn */
 .pd-dots{display:none}
-/* thumbnail strip với prev/next */
-.pd-thumb-strip{position:relative;margin-top:10px;display:flex;align-items:center;gap:6px}
-.pd-thumb-arrow{width:30px;flex-shrink:0;background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);z-index:2;align-self:stretch;min-height:60px}
+/* thumbnail strip — khớp đúng chiều rộng main slider */
+.pd-thumb-strip{margin-top:10px;display:grid;grid-template-columns:32px 1fr 32px;gap:6px;align-items:center;width:100%}
+.pd-thumb-arrow{width:32px;height:32px;flex-shrink:0;background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
 .pd-thumb-arrow:hover{border-color:var(--black);background:var(--gray-100)}
-.pd-thumb-arrow svg{width:14px;height:14px;stroke:var(--black);fill:none;stroke-width:2.2}
-.pd-thumb-arrow.hidden{display:none}
-/* Viewport clip: ẩn thumb bị tràn */
-.pd-thumbs-viewport{flex:1;overflow:hidden;position:relative}
+.pd-thumb-arrow svg{width:13px;height:13px;stroke:var(--black);fill:none;stroke-width:2.2}
+.pd-thumb-arrow.hidden{visibility:hidden;pointer-events:none}
+.pd-thumbs-viewport{overflow:hidden;width:100%}
 .pd-thumbs{display:flex;gap:8px;transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);will-change:transform}
-/* Thumb vuông — width tính động qua JS, aspect-ratio giữ vuông */
-.pd-thumb{flex-shrink:0;width:var(--thumb-size,72px);aspect-ratio:1/1;border-radius:var(--radius-md);border:2px solid var(--gray-200);cursor:pointer;transition:border-color var(--transition),box-shadow var(--transition);background:var(--gray-100);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.pd-thumb img{width:100%;height:100%;object-fit:contain}
+.pd-thumb{flex-shrink:0;aspect-ratio:1/1;border-radius:var(--radius-md);border:2px solid var(--gray-200);cursor:pointer;transition:border-color var(--transition),box-shadow var(--transition);background:var(--gray-100);overflow:hidden}
+.pd-thumb img{width:100%;height:100%;object-fit:contain;display:block}
 .pd-thumb:hover{border-color:var(--gray-400)}
 .pd-thumb.active{border-color:var(--black);box-shadow:0 0 0 2px var(--black)}
 /* counter - ẩn */
@@ -677,37 +675,26 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   // ── SLIDER CONTROLS ──
   let thumbOffset = 0; // số thumb đã scroll
 
-  // Tính và set kích thước thumb dựa trên chiều rộng main slider
+  // Tính width chính xác cho từng thumb: khớp viewport, hiển thị đúng 5 cái
   function recalcThumbSize(){
-    const strip = document.getElementById('pdThumbStrip');
-    const slider = document.getElementById('pdSlider');
-    if(!strip || !slider) return;
-    const DESIRED_COUNT = 5;
+    const viewport = document.getElementById('pdThumbsViewport');
+    if(!viewport) return;
     const GAP = 8;
-    // Tổng chiều rộng có thể dùng cho thumbs (trừ 2 arrow nếu hiển thị)
-    const prevBtn = document.getElementById('pdThumbPrev');
-    const nextBtn = document.getElementById('pdThumbNext');
-    const arrowW = (prevBtn && !prevBtn.classList.contains('hidden') ? 30 + 6 : 0)
-                 + (nextBtn && !nextBtn.classList.contains('hidden') ? 30 + 6 : 0);
-    const availableW = slider.offsetWidth - arrowW;
-    // Tính size: fit DESIRED_COUNT thumb với gap
-    const size = Math.floor((availableW - GAP * (DESIRED_COUNT - 1)) / DESIRED_COUNT);
-    const thumbSize = Math.max(50, Math.min(100, size));
-    strip.style.setProperty('--thumb-size', thumbSize + 'px');
-    // Cập nhật cho tất cả thumb (CSS var trên strip sẽ cascade xuống)
-    document.querySelectorAll('.pd-thumb').forEach(function(t){
-      t.style.width = thumbSize + 'px';
+    const COLS = 5;
+    const w = Math.floor((viewport.offsetWidth - GAP * (COLS - 1)) / COLS);
+    document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t){
+      t.style.width = w + 'px';
     });
   }
 
-  // Tính kích thước thumb thực tế từ viewport
+  // Lấy metrics thực tế sau khi đã set size
   function getThumbMetrics(){
     const viewport = document.getElementById('pdThumbsViewport');
     const firstThumb = document.querySelector('#pdThumbs .pd-thumb');
-    if(!viewport || !firstThumb) return { thumbW: 88, visibleCount: THUMB_VISIBLE };
-    const gap = 8;
-    const thumbW = firstThumb.offsetWidth + gap;
-    const visibleCount = Math.max(1, Math.floor((viewport.offsetWidth + gap) / thumbW));
+    if(!viewport || !firstThumb) return { thumbW: 88, visibleCount: 5 };
+    const GAP = 8;
+    const thumbW = firstThumb.offsetWidth + GAP;
+    const visibleCount = Math.max(1, Math.floor((viewport.offsetWidth + GAP) / thumbW));
     return { thumbW, visibleCount };
   }
 
