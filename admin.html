@@ -403,7 +403,17 @@ window.HPHONE_SUPABASE = {
       </div>
       <div class="form-grid">
         <div class="field full"><label>Tên sản phẩm</label><input type="text" id="f_name" placeholder="VD: iPhone 15 Pro Max" oninput="autoSlug()"></div>
-        <div class="field full"><label>URL Slug <span style="font-weight:400;color:var(--gray-400);font-size:12px">(để trống = tự tạo từ tên)</span></label><input type="text" id="f_slug" placeholder="VD: iphone-15-pro-max-256gb" style="font-family:monospace"></div>
+        <div class="field full">
+          <label style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <span>URL Slug</span>
+            <button type="button" onclick="forceAutoSlug()" style="font-family:var(--font-body);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;border:1.5px solid var(--accent);background:rgba(200,169,110,0.1);color:var(--accent);cursor:pointer;transition:.2s" onmouseenter="this.style.background='rgba(200,169,110,0.2)'" onmouseleave="this.style.background='rgba(200,169,110,0.1)'">✦ Tạo tự động từ tên</button>
+          </label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="text" id="f_slug" placeholder="VD: iphone-15-pro-max-256gb" style="font-family:monospace;flex:1" oninput="updateSlugPreview()">
+            <button type="button" onclick="copySlugUrl()" title="Copy link sản phẩm" style="flex-shrink:0;width:36px;height:36px;border-radius:9px;border:1.5px solid var(--gray-200);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s" onmouseenter="this.style.borderColor='var(--black)'" onmouseleave="this.style.borderColor='var(--gray-200)'"><svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:var(--gray-600);fill:none;stroke-width:2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+          </div>
+          <div id="slugPreview" style="margin-top:6px;font-size:12px;color:var(--gray-400);font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+        </div>
         <div class="field"><label>Nhãn rút gọn (ảnh)</label><input type="text" id="f_short" placeholder="VD: 15 Pro Max"></div>
         <div class="field"><label>Hãng</label><select id="f_brand"><option value="apple">Apple (iPhone)</option><option value="samsung">Samsung</option></select></div>
         <div class="field"><label>Dung lượng</label><input type="text" id="f_storage" placeholder="VD: 256GB"></div>
@@ -601,8 +611,44 @@ if(LIVE && window.supabase){ try{ _sb = window.supabase.createClient(_cfg.url,_c
 /* map DB <-> JS */
 function fmtDate(iso){ try{ const d=new Date(iso); return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear(); }catch(e){ return ''; } }
 function toSlug(str){ return (str||'').toLowerCase().replace(/đ/g,'d').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-'); }
-function autoSlug(){ const slugEl=document.getElementById('f_slug'); if(slugEl && !slugEl.dataset.manual){ slugEl.value=toSlug(document.getElementById('f_name').value); } }
-document.addEventListener('DOMContentLoaded',function(){ const slugEl=document.getElementById('f_slug'); if(slugEl){ slugEl.addEventListener('input',function(){ this.dataset.manual=this.value?'1':''; }); } });
+function autoSlug(){
+  const slugEl=document.getElementById('f_slug');
+  if(slugEl && !slugEl.dataset.manual){ slugEl.value=toSlug(document.getElementById('f_name').value||''); updateSlugPreview(); }
+}
+function forceAutoSlug(){
+  const slugEl=document.getElementById('f_slug');
+  if(!slugEl) return;
+  const name=document.getElementById('f_name');
+  const generated=toSlug(name?name.value:'');
+  slugEl.value=generated;
+  slugEl.dataset.manual=generated?'1':'';
+  updateSlugPreview();
+  slugEl.focus();
+  toast('Đã tạo slug tự động');
+}
+function updateSlugPreview(){
+  const slugEl=document.getElementById('f_slug');
+  const preview=document.getElementById('slugPreview');
+  if(!preview) return;
+  const val=(slugEl&&slugEl.value.trim())||'';
+  if(val){
+    const domain='hphone.store';
+    preview.innerHTML='<span style="color:#a0a0a0">🔗</span> <a href="https://'+domain+'/'+val+'" target="_blank" style="color:var(--accent);text-decoration:none">'+domain+'/'+val+'</a>';
+  } else {
+    preview.textContent='Sẽ được tạo tự động từ tên sản phẩm';
+  }
+}
+function copySlugUrl(){
+  const slugEl=document.getElementById('f_slug');
+  const slug=(slugEl&&slugEl.value.trim())||toSlug((document.getElementById('f_name')||{}).value||'');
+  if(!slug){ toast('Chưa có slug để copy'); return; }
+  const url='https://hphone.store/'+slug;
+  navigator.clipboard.writeText(url).then(()=>toast('Đã copy: '+url)).catch(()=>{ toast('Copy thất bại'); });
+}
+document.addEventListener('DOMContentLoaded',function(){
+  const slugEl=document.getElementById('f_slug');
+  if(slugEl){ slugEl.addEventListener('input',function(){ this.dataset.manual=this.value?'1':''; updateSlugPreview(); }); }
+});
 function mapProd(r){ return {id:r.id,name:r.name,slug:r.slug||toSlug(r.name),short:r.short||'',brand:r.brand||'apple',storage:r.storage||'',color:r.color||'',battery:r.battery||'',condition:r.condition||'',badge:r.badge||'',warranty:r.warranty||'',price:r.price||'',old:r.old_price||'',status:r.status||'instock',img:r.img||'',images:Array.isArray(r.images)?r.images:(r.img?[r.img]:[]),desc:r.description||'',variants:Array.isArray(r.variants)?r.variants.map(function(v){ return Object.assign({},v,{images:Array.isArray(v.images)?v.images:(v.colorImg?[v.colorImg]:[])}) }):[]}; }
 function prodPayload(p){ var slug=p.slug&&p.slug.trim()?p.slug:toSlug(p.name); return {name:p.name,slug:slug,short:p.short,brand:p.brand,storage:p.storage,color:p.color,battery:p.battery,condition:p.condition,badge:p.badge,warranty:p.warranty,price:p.price,old_price:p.old||null,status:p.status,img:p.img||null,images:(p.images&&p.images.length)?p.images:null,description:p.desc||null,variants:(p.variants&&p.variants.length)?p.variants:null}; }
 function mapOrder(r){ return {id:'HP-'+(1000+r.id),dbid:r.id,customer:r.customer,phone:r.phone,addr:r.address||'',note:r.note||'',items:Array.isArray(r.items)?r.items:[],total:r.total,status:r.status||'new',date:fmtDate(r.created_at)}; }
@@ -784,7 +830,7 @@ function openProductModal(id){
     set('id',p.id);set('name',p.name);set('short',p.short||'');set('brand',p.brand);set('storage',p.storage||'');
     set('color',p.color||'');set('battery',p.battery||'');set('condition',p.condition||'');set('badge',p.badge||'');
     set('warranty',p.warranty||'');set('price',p.price||'');set('old',p.old||'');set('status',p.status);set('desc',p.desc||'');set('imgurl','');
-    const slugEl=document.getElementById('f_slug'); if(slugEl){ slugEl.value=p.slug||toSlug(p.name); slugEl.dataset.manual='1'; }
+    const slugEl=document.getElementById('f_slug'); if(slugEl){ slugEl.value=p.slug||toSlug(p.name); slugEl.dataset.manual='1'; updateSlugPreview(); }
     // load ảnh cũ vào gallery
     if(p.images && p.images.length) pendingImgs=[...p.images];
     else if(p.img) pendingImgs=[p.img];
@@ -795,7 +841,7 @@ function openProductModal(id){
   }else{
     document.getElementById('modalTitle').textContent='Thêm sản phẩm';
     ['id','name','short','color','battery','condition','badge','warranty','price','old','desc','imgurl','storage','slug'].forEach(k=>set(k,''));
-    const slugElNew=document.getElementById('f_slug'); if(slugElNew){ delete slugElNew.dataset.manual; }
+    const slugElNew=document.getElementById('f_slug'); if(slugElNew){ delete slugElNew.dataset.manual; slugElNew.value=''; updateSlugPreview(); }
     set('brand','apple');set('status','instock');
     renderGallery();
     document.getElementById('variantRows').innerHTML='';

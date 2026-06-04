@@ -393,7 +393,9 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 <script>
 (async function(){
   const params = new URLSearchParams(window.location.search);
-  const pslug = params.get('slug');
+  const pslug = params.get('slug')
+    || (window.location.pathname !== '/' ? window.location.pathname.replace(/^\/+/, '').split('/')[0] : null)
+    || null;
   const pid   = params.get('id');
   const sb = window.supabase ? window.supabase.createClient(_SB_URL, _SB_KEY) : null;
 
@@ -436,8 +438,8 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   // Chuẩn hóa URL thành dạng slug để SEO tốt hơn
   function toSlug(str){ return (str||'').toLowerCase().replace(/đ/g,'d').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-'); }
   const canonSlug = p.slug || toSlug(p.name);
-  const canonUrl  = window.location.origin + window.location.pathname + '?slug=' + canonSlug;
-  if(!pslug && canonSlug){ history.replaceState(null,'',canonUrl); }
+  const canonUrl  = window.location.origin + '/' + canonSlug;
+  if(canonSlug && window.location.pathname !== '/' + canonSlug){ history.replaceState(null,'',canonUrl); }
   const seoUrl = canonUrl;
 
   function setMeta(id, attr, val){ const el=document.getElementById(id); if(el && val) el.setAttribute(attr, val); }
