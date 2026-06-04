@@ -402,7 +402,15 @@ window.HPHONE_SUPABASE = {
         </div>
       </div>
       <div class="form-grid">
-        <div class="field full"><label>Tên sản phẩm</label><input type="text" id="f_name" placeholder="VD: iPhone 15 Pro Max"></div>
+        <div class="field full"><label>Tên sản phẩm</label><input type="text" id="f_name" placeholder="VD: iPhone 15 Pro Max" oninput="autoSlug()"></div>
+        <div class="field full">
+          <label>Slug (URL sản phẩm) <span style="font-weight:400;color:var(--gray-400)">— dùng cho đường link đẹp</span></label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="text" id="f_slug" placeholder="VD: iphone-15-pro-max-256gb" style="flex:1" oninput="updateSlugPreview()">
+            <button type="button" onclick="genSlug()" style="flex-shrink:0;padding:11px 14px;background:var(--gray-100);border:1.5px solid var(--gray-200);border-radius:var(--radius-md);font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:var(--transition)" onmouseenter="this.style.borderColor='#0a0a0a'" onmouseleave="this.style.borderColor='var(--gray-200)'">&#10024; Tự tạo</button>
+          </div>
+          <div class="hint">URL sẽ là: <b>hphone.store/<span id="slugPreview">...</span></b></div>
+        </div>
         <div class="field"><label>Nhãn rút gọn (ảnh)</label><input type="text" id="f_short" placeholder="VD: 15 Pro Max"></div>
         <div class="field"><label>Hãng</label><select id="f_brand"><option value="apple">Apple (iPhone)</option><option value="samsung">Samsung</option></select></div>
         <div class="field"><label>Dung lượng</label><input type="text" id="f_storage" placeholder="VD: 256GB"></div>
@@ -600,7 +608,7 @@ if(LIVE && window.supabase){ try{ _sb = window.supabase.createClient(_cfg.url,_c
 /* map DB <-> JS */
 function fmtDate(iso){ try{ const d=new Date(iso); return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear(); }catch(e){ return ''; } }
 function mapProd(r){ return {id:r.id,name:r.name,short:r.short||'',brand:r.brand||'apple',storage:r.storage||'',color:r.color||'',battery:r.battery||'',condition:r.condition||'',badge:r.badge||'',warranty:r.warranty||'',price:r.price||'',old:r.old_price||'',status:r.status||'instock',img:r.img||'',images:Array.isArray(r.images)?r.images:(r.img?[r.img]:[]),desc:r.description||'',variants:Array.isArray(r.variants)?r.variants.map(function(v){ return Object.assign({},v,{images:Array.isArray(v.images)?v.images:(v.colorImg?[v.colorImg]:[])}) }):[]}; }
-function prodPayload(p){ return {name:p.name,short:p.short,brand:p.brand,storage:p.storage,color:p.color,battery:p.battery,condition:p.condition,badge:p.badge,warranty:p.warranty,price:p.price,old_price:p.old||null,status:p.status,img:p.img||null,images:(p.images&&p.images.length)?p.images:null,description:p.desc||null,variants:(p.variants&&p.variants.length)?p.variants:null}; }
+function prodPayload(p){ return {name:p.name,short:p.short,brand:p.brand,storage:p.storage,color:p.color,battery:p.battery,condition:p.condition,badge:p.badge,warranty:p.warranty,price:p.price,old_price:p.old||null,status:p.status,img:p.img||null,images:(p.images&&p.images.length)?p.images:null,description:p.desc||null,variants:(p.variants&&p.variants.length)?p.variants:null,slug:p.slug||null}; }
 function mapOrder(r){ return {id:'HP-'+(1000+r.id),dbid:r.id,customer:r.customer,phone:r.phone,addr:r.address||'',note:r.note||'',items:Array.isArray(r.items)?r.items:[],total:r.total,status:r.status||'new',date:fmtDate(r.created_at)}; }
 
 /* demo data (when Supabase not configured) */
@@ -780,6 +788,7 @@ function openProductModal(id){
     set('id',p.id);set('name',p.name);set('short',p.short||'');set('brand',p.brand);set('storage',p.storage||'');
     set('color',p.color||'');set('battery',p.battery||'');set('condition',p.condition||'');set('badge',p.badge||'');
     set('warranty',p.warranty||'');set('price',p.price||'');set('old',p.old||'');set('status',p.status);set('desc',p.desc||'');set('imgurl','');
+    set('slug',p.slug||''); updateSlugPreview();
     // load ảnh cũ vào gallery
     if(p.images && p.images.length) pendingImgs=[...p.images];
     else if(p.img) pendingImgs=[p.img];
@@ -789,7 +798,8 @@ function openProductModal(id){
     if(p.variants && p.variants.length) p.variants.forEach(v=>addVariantRow(v));
   }else{
     document.getElementById('modalTitle').textContent='Thêm sản phẩm';
-    ['id','name','short','color','battery','condition','badge','warranty','price','old','desc','imgurl','storage'].forEach(k=>set(k,''));
+    ['id','name','short','color','battery','condition','badge','warranty','price','old','desc','imgurl','storage','slug'].forEach(k=>set(k,''));
+    document.getElementById('slugPreview').textContent='...';
     set('brand','apple');set('status','instock');
     renderGallery();
     document.getElementById('variantRows').innerHTML='';
@@ -919,7 +929,7 @@ async function saveProduct(){
     name:g('name'),short:g('short')||g('name'),brand:g('brand'),storage:g('storage'),color:g('color'),
     battery:g('battery'),condition:g('condition'),badge:g('badge'),warranty:g('warranty'),
     price:g('price'),old:g('old'),status:g('status'),desc:g('desc'),img:finalImg,images:pendingImgs,
-    variants:getVariants()
+    variants:getVariants(),slug:g('slug')||null
   };
   if(_sb){
     try{
@@ -1354,6 +1364,37 @@ function insertDescriptionImage(){
       if(url) insertImg(url);
     }
   });
+}
+
+
+// ── SLUG HELPERS ──
+function toSlug(str){
+  return str.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')  // bỏ dấu
+    .replace(/đ/g,'d').replace(/Đ/g,'d')
+    .replace(/[^a-z0-9\s-]/g,'')
+    .trim().replace(/\s+/g,'-')
+    .replace(/-+/g,'-');
+}
+function genSlug(){
+  const name = document.getElementById('f_name').value.trim();
+  const storage = document.getElementById('f_storage').value.trim();
+  const parts = [name, storage].filter(Boolean).join(' ');
+  const slug = toSlug(parts);
+  document.getElementById('f_slug').value = slug;
+  updateSlugPreview();
+}
+function autoSlug(){
+  // Chỉ tự gen nếu slug đang trống (không ghi đè slug đã sửa tay)
+  const slugField = document.getElementById('f_slug');
+  if(!slugField || slugField.value.trim()) return;
+  // không tự gen liên tục, chỉ preview
+  updateSlugPreview();
+}
+function updateSlugPreview(){
+  const val = document.getElementById('f_slug')?.value.trim() || '...';
+  const preview = document.getElementById('slugPreview');
+  if(preview) preview.textContent = val || '...';
 }
 
 // Override openProductModal để set Quill content

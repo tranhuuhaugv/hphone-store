@@ -1,0 +1,13 @@
+# HPHONE – Cloudflare Pages redirects
+# Các trang cố định phải khai báo TRƯỚC wildcard
+/index.html                 /index.html                     200
+/admin.html                 /admin.html                     200
+/chi-tiet-san-pham.html     /chi-tiet-san-pham.html         200
+/danh-sach-san-pham.html    /danh-sach-san-pham.html        200
+/gio-hang.html              /gio-hang.html                  200
+/bao-hanh.html              /bao-hanh.html                  200
+/lien-he.html               /lien-he.html                   200
+/thu-cu-doi-moi.html        /thu-cu-doi-moi.html            200
+
+# Wildcard: mọi path không khớp ở trên → chi-tiet-san-pham (slug sản phẩm)
+/*                          /chi-tiet-san-pham.html         200

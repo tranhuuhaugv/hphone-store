@@ -392,18 +392,40 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 
 <script>
 (async function(){
-  const params = new URLSearchParams(window.location.search);
-  const pid = params.get('id');
   const sb = window.supabase ? window.supabase.createClient(_SB_URL, _SB_KEY) : null;
 
   function showError(msg){
-    document.getElementById('pdWrap').innerHTML = `<div style="grid-column:1/-1;padding:80px 24px;text-align:center;color:var(--gray-400)">${msg}</div>`;
+    document.getElementById('pdWrap').innerHTML = '<div style="grid-column:1/-1;padding:80px 24px;text-align:center;color:var(--gray-400)">'+msg+'</div>';
   }
 
   if(!sb) return showError('Không thể kết nối dữ liệu.');
-  if(!pid) return showError('Không tìm thấy sản phẩm. <a href="danh-sach-san-pham.html" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
 
-  const {data:p, error} = await sb.from('products').select('*').eq('id', pid).single();
+  // Ưu tiên slug từ path: hphone.store/iphone-17-pro-max
+  // Fallback về ?id= nếu truy cập theo kiểu cũ
+  const params = new URLSearchParams(window.location.search);
+  const pid = params.get('id');
+  const slug = (function(){
+    var path = window.location.pathname.replace(/\/$/, '');
+    var last = path.split('/').pop();
+    if(last && last !== 'chi-tiet-san-pham.html' && last.indexOf('.html') === -1 && last.indexOf('-') !== -1) return last;
+    return null;
+  })();
+
+  var p, error;
+  if(slug){
+    var r1 = await sb.from('products').select('*').eq('slug', slug).single();
+    p = r1.data; error = r1.error;
+    if((error || !p) && pid){
+      var r2 = await sb.from('products').select('*').eq('id', pid).single();
+      p = r2.data; error = r2.error;
+    }
+  } else if(pid){
+    var r3 = await sb.from('products').select('*').eq('id', pid).single();
+    p = r3.data; error = r3.error;
+  } else {
+    return showError('Không tìm thấy sản phẩm. <a href="danh-sach-san-pham.html" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
+  }
+
   if(error || !p) return showError('Sản phẩm không tồn tại hoặc đã bị xóa. <a href="danh-sach-san-pham.html" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
 
   // Chuẩn hóa mảng ảnh: ưu tiên images[], fallback về img
