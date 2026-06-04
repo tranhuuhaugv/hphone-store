@@ -797,7 +797,11 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     const gallery = document.querySelector('.pd-gallery');
     if(!gallery) return;
     gallery.innerHTML = galleryHtml(currentImgs);
-    goToSlide(0);
+    requestAnimationFrame(function(){
+      recalcThumbSize();
+      applyThumbOffset();
+      goToSlide(0);
+    });
   }
 
   // Tabs
