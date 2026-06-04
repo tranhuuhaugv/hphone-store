@@ -393,7 +393,8 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 <script>
 (async function(){
   const params = new URLSearchParams(window.location.search);
-  const pid = params.get('id');
+  const pslug = params.get('slug');
+  const pid   = params.get('id');
   const sb = window.supabase ? window.supabase.createClient(_SB_URL, _SB_KEY) : null;
 
   function showError(msg){
@@ -401,9 +402,20 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   }
 
   if(!sb) return showError('Không thể kết nối dữ liệu.');
-  if(!pid) return showError('Không tìm thấy sản phẩm. <a href="danh-sach-san-pham.html" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
+  if(!pslug && !pid) return showError('Không tìm thấy sản phẩm. <a href="danh-sach-san-pham.html" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
 
-  const {data:p, error} = await sb.from('products').select('*').eq('id', pid).single();
+  // Ưu tiên tìm theo slug (SEO), fallback về id (tương thích cũ)
+  let qResult;
+  if(pslug){
+    qResult = await sb.from('products').select('*').eq('slug', pslug).maybeSingle();
+    // Nếu slug không khớp (sản phẩm cũ chưa có slug), thử fallback id
+    if((!qResult.data) && /^\d+$/.test(pslug)){
+      qResult = await sb.from('products').select('*').eq('id', pslug).maybeSingle();
+    }
+  } else {
+    qResult = await sb.from('products').select('*').eq('id', pid).maybeSingle();
+  }
+  const {data:p, error} = qResult;
   if(error || !p) return showError('Sản phẩm không tồn tại hoặc đã bị xóa. <a href="danh-sach-san-pham.html" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
 
   // Chuẩn hóa mảng ảnh: ưu tiên images[], fallback về img
@@ -421,7 +433,12 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     ? p.description.replace(/<[^>]+>/g,'').slice(0,160)
     : (p.name + ' – ' + (p.condition||'') + ' – Pin ' + (p.battery||'') + ' – Bảo hành ' + (p.warranty||'') + ' tại HPHONE.');
   const seoTitle = p.name + ' – HPHONE';
-  const seoUrl   = window.location.href;
+  // Chuẩn hóa URL thành dạng slug để SEO tốt hơn
+  function toSlug(str){ return (str||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\u00f0/g,'d').replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-'); }
+  const canonSlug = p.slug || toSlug(p.name);
+  const canonUrl  = window.location.origin + window.location.pathname + '?slug=' + canonSlug;
+  if(!pslug && canonSlug){ history.replaceState(null,'',canonUrl); }
+  const seoUrl = canonUrl;
 
   function setMeta(id, attr, val){ const el=document.getElementById(id); if(el && val) el.setAttribute(attr, val); }
   setMeta('ogTitle',      'content', seoTitle);
@@ -952,7 +969,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       const rImg = r.img
         ? '<div class="phone-mock img" style="position:relative;background:var(--gray-100)"><img src="'+r.img+'" style="width:100%;height:100%;object-fit:contain;position:absolute;inset:0;border-radius:var(--radius-lg)"><span class="badge '+rBadge+'" style="position:absolute;top:14px;left:14px">'+(r.badge||r.condition||'')+'</span></div>'
         : '<div class="phone-mock'+(r.brand==='samsung'?' samsung':'')+' img"><span class="badge '+rBadge+'" style="position:absolute;top:14px;left:14px">'+(r.badge||r.condition||'')+'</span><div class="inner"><span>'+(r.short||r.name)+'</span></div></div>';
-      return '<a href="chi-tiet-san-pham.html?id='+r.id+'" class="mini-card">'
+      return '<a href="chi-tiet-san-pham.html?slug='+(r.slug||r.id)+'" class="mini-card">'
         +rImg
         +'<div class="body">'
         +'<div class="name">'+r.name+'</div>'
