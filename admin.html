@@ -150,22 +150,26 @@ body{font-family:var(--font-body);background:var(--gray-100);color:var(--black);
 
 /* variants */
 .variants-wrap{border:1px solid var(--gray-200);border-radius:var(--radius-md);overflow:hidden;margin-top:4px}
-.variant-row{display:grid;grid-template-columns:1fr 1fr 72px 80px 36px;gap:8px;padding:10px 12px;border-bottom:1px solid var(--gray-100);align-items:center}
+.variant-row{display:grid;grid-template-columns:1fr 1fr 1fr 80px 36px;gap:8px;padding:12px 12px;border-bottom:1px solid var(--gray-100);align-items:start}
 .variant-row:last-child{border-bottom:none}
 .variant-row input{border:1px solid var(--gray-200);border-radius:var(--radius-sm);padding:7px 10px;font-family:var(--font-body);font-size:13px;width:100%;outline:none}
 .variant-row input:focus{border-color:var(--black)}
-.variant-row .del-var{width:30px;height:30px;border:none;background:var(--gray-100);border-radius:var(--radius-sm);cursor:pointer;color:var(--red);font-size:16px;display:flex;align-items:center;justify-content:center}
+.variant-row .del-var{width:30px;height:30px;border:none;background:var(--gray-100);border-radius:var(--radius-sm);cursor:pointer;color:var(--red);font-size:16px;display:flex;align-items:center;justify-content:center;margin-top:4px}
 .variant-row .del-var:hover{background:var(--red-bg)}
-.variant-head{display:grid;grid-template-columns:1fr 1fr 72px 80px 36px;gap:8px;padding:8px 12px;background:var(--gray-100);font-size:12px;font-weight:600;color:var(--gray-600);letter-spacing:0.5px}
-.var-img-upload{position:relative;width:56px;height:56px;border-radius:var(--radius-sm);border:1.5px dashed var(--gray-200);cursor:pointer;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--gray-100);transition:var(--transition);flex-shrink:0}
-.var-img-upload:hover{border-color:var(--accent);background:rgba(200,169,110,0.06)}
-.var-img-upload img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:calc(var(--radius-sm) - 2px)}
-.var-img-upload .var-img-ico{display:flex;flex-direction:column;align-items:center;gap:3px;pointer-events:none}
-.var-img-upload .var-img-ico svg{width:18px;height:18px;stroke:var(--gray-400);fill:none;stroke-width:1.8}
-.var-img-upload .var-img-ico span{font-size:9px;color:var(--gray-400);font-weight:600;letter-spacing:0.3px}
-.var-img-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.var-img-del{position:absolute;top:2px;right:2px;width:16px;height:16px;background:rgba(10,10,10,0.75);color:#fff;border:none;border-radius:50%;font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:2;line-height:1}
-.var-img-upload:hover .var-img-del{display:flex}
+.variant-head{display:grid;grid-template-columns:1fr 1fr 1fr 80px 36px;gap:8px;padding:8px 12px;background:var(--gray-100);font-size:12px;font-weight:600;color:var(--gray-600);letter-spacing:0.5px}
+/* multi-image per variant */
+.var-imgs-wrap{display:flex;flex-direction:column;gap:6px}
+.var-imgs-list{display:flex;flex-wrap:wrap;gap:6px}
+.var-img-thumb{width:48px;height:48px;border-radius:var(--radius-sm);border:1.5px solid var(--gray-200);overflow:hidden;position:relative;flex-shrink:0;background:var(--gray-100)}
+.var-img-thumb img{width:100%;height:100%;object-fit:cover}
+.var-img-thumb .del-vi{position:absolute;top:2px;right:2px;width:15px;height:15px;background:rgba(10,10,10,0.75);color:#fff;border:none;border-radius:50%;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;padding:0}
+.var-img-thumb.main-vi{border-color:var(--accent);border-width:2px}
+.var-img-thumb.main-vi::after{content:'Chính';position:absolute;bottom:0;left:0;right:0;background:rgba(200,169,110,0.9);color:#000;font-size:9px;font-weight:700;text-align:center;padding:1px}
+.var-add-img-btn{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--accent);background:none;border:1.5px dashed var(--gray-200);border-radius:var(--radius-sm);padding:5px 9px;cursor:pointer;transition:var(--transition)}
+.var-add-img-btn:hover{border-color:var(--accent);background:rgba(200,169,110,0.06)}
+.var-add-img-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.var-img-upload{display:none}
+.var-img-del{display:none}
 .add-var-btn{display:flex;align-items:center;gap:6px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--accent);background:none;border:none;cursor:pointer;width:100%;border-top:1px dashed var(--gray-200)}
 .add-var-btn:hover{background:rgba(200,169,110,0.06)}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:460px;max-width:92vw;background:#fff;z-index:110;transform:translateX(100%);transition:var(--transition);display:flex;flex-direction:column;box-shadow:-12px 0 40px rgba(0,0,0,0.15)}
@@ -417,11 +421,11 @@ window.HPHONE_SUPABASE = {
         <div class="field full">
           <label>Biến thể (Dung lượng / Màu sắc / Giá) <span style="font-weight:400;color:var(--gray-400)">— để trống nếu chỉ có 1 biến thể</span></label>
           <div class="variants-wrap">
-            <div class="variant-head"><span>Dung lượng</span><span>Màu sắc</span><span>Ảnh màu</span><span>Giá (₫)</span><span></span></div>
+            <div class="variant-head"><span>Dung lượng</span><span>Màu sắc</span><span>Ảnh biến thể</span><span>Giá (₫)</span><span></span></div>
             <div id="variantRows"></div>
             <button type="button" class="add-var-btn" onclick="addVariantRow()">＋ Thêm biến thể</button>
           </div>
-          <div class="hint" style="margin-top:6px">💡 Tải ảnh riêng cho từng màu — khi khách bấm chọn màu, ảnh tương ứng sẽ tự động hiện lên.</div>
+          <div class="hint" style="margin-top:6px">💡 Thêm nhiều ảnh cho từng biến thể màu — ảnh đầu tiên là ảnh chính. Khi khách chọn màu, slide ảnh tương ứng sẽ tự hiện.</div>
         </div>
       </div>
     </div>
@@ -594,7 +598,7 @@ if(LIVE && window.supabase){ try{ _sb = window.supabase.createClient(_cfg.url,_c
 
 /* map DB <-> JS */
 function fmtDate(iso){ try{ const d=new Date(iso); return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear(); }catch(e){ return ''; } }
-function mapProd(r){ return {id:r.id,name:r.name,short:r.short||'',brand:r.brand||'apple',storage:r.storage||'',color:r.color||'',battery:r.battery||'',condition:r.condition||'',badge:r.badge||'',warranty:r.warranty||'',price:r.price||'',old:r.old_price||'',status:r.status||'instock',img:r.img||'',images:Array.isArray(r.images)?r.images:(r.img?[r.img]:[]),desc:r.description||'',variants:Array.isArray(r.variants)?r.variants:[]}; }
+function mapProd(r){ return {id:r.id,name:r.name,short:r.short||'',brand:r.brand||'apple',storage:r.storage||'',color:r.color||'',battery:r.battery||'',condition:r.condition||'',badge:r.badge||'',warranty:r.warranty||'',price:r.price||'',old:r.old_price||'',status:r.status||'instock',img:r.img||'',images:Array.isArray(r.images)?r.images:(r.img?[r.img]:[]),desc:r.description||'',variants:Array.isArray(r.variants)?r.variants.map(function(v){ return Object.assign({},v,{images:Array.isArray(v.images)?v.images:(v.colorImg?[v.colorImg]:[])}) }):[]}; }
 function prodPayload(p){ return {name:p.name,short:p.short,brand:p.brand,storage:p.storage,color:p.color,battery:p.battery,condition:p.condition,badge:p.badge,warranty:p.warranty,price:p.price,old_price:p.old||null,status:p.status,img:p.img||null,images:(p.images&&p.images.length)?p.images:null,description:p.desc||null,variants:(p.variants&&p.variants.length)?p.variants:null}; }
 function mapOrder(r){ return {id:'HP-'+(1000+r.id),dbid:r.id,customer:r.customer,phone:r.phone,addr:r.address||'',note:r.note||'',items:Array.isArray(r.items)?r.items:[],total:r.total,status:r.status||'new',date:fmtDate(r.created_at)}; }
 
@@ -823,50 +827,81 @@ function addVariantRow(v){
   const container = document.getElementById('variantRows');
   const row = document.createElement('div');
   row.className = 'variant-row';
-  const imgSrc = v?.colorImg || '';
+  // variantImages: array of image URLs for this variant
+  const varImgs = v?.images ? [...v.images] : (v?.colorImg ? [v.colorImg] : []);
+  row.dataset.varImages = JSON.stringify(varImgs);
+
   const uid = 'varimg_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
   row.innerHTML = `
     <input type="text" placeholder="VD: 256GB" value="${v?.storage||''}">
     <input type="text" placeholder="VD: Titan Đen" value="${v?.color||''}">
-    <label class="var-img-upload" title="Bấm để tải ảnh màu">
-      ${imgSrc ? `<img src="${imgSrc}" id="prev_${uid}">` : `<div class="var-img-ico"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span>Tải ảnh</span></div>`}
-      <input type="file" accept="image/*" onchange="handleVarImg(this,'${uid}')">
-      <button type="button" class="var-img-del" onclick="clearVarImg(event,'${uid}')" title="Xóa ảnh">×</button>
-    </label>
+    <div class="var-imgs-wrap">
+      <div class="var-imgs-list" id="vil_${uid}"></div>
+      <label class="var-add-img-btn" title="Thêm ảnh cho biến thể">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Thêm ảnh
+        <input type="file" accept="image/*" multiple style="display:none" onchange="handleVarImgMulti(this,'${uid}')">
+      </label>
+    </div>
     <input type="text" placeholder="VD: 32.900.000" value="${v?.price||''}">
     <button class="del-var" onclick="this.closest('.variant-row').remove()">×</button>`;
-  if(!imgSrc){
-    // placeholder in data attr
-    row.querySelector('.var-img-upload').dataset.colorImg = '';
-  } else {
-    row.querySelector('.var-img-upload').dataset.colorImg = imgSrc;
-  }
   container.appendChild(row);
+  renderVarImgList(uid, row);
 }
-function handleVarImg(input, uid){
-  const file = input.files[0]; if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e){
-    const src = e.target.result;
-    const label = input.closest('.var-img-upload');
-    label.dataset.colorImg = src;
-    // Replace inner content with preview img + del btn
-    label.innerHTML = `<img src="${src}" id="prev_${uid}"><input type="file" accept="image/*" onchange="handleVarImg(this,'${uid}')"><button type="button" class="var-img-del" onclick="clearVarImg(event,'${uid}')" title="Xóa ảnh">×</button>`;
-  };
-  reader.readAsDataURL(file);
+
+function renderVarImgList(uid, row){
+  const list = document.getElementById('vil_' + uid);
+  if(!list) return;
+  let imgs;
+  try{ imgs = JSON.parse(row.dataset.varImages || '[]'); }catch(e){ imgs = []; }
+  list.innerHTML = imgs.map((src, i) => `
+    <div class="var-img-thumb${i===0?' main-vi':''}">
+      <img src="${src}" onerror="this.parentElement.style.display='none'">
+      <button class="del-vi" onclick="removeVarImg('${uid}',${i})" title="Xóa ảnh">×</button>
+    </div>`).join('');
 }
+
+function handleVarImgMulti(input, uid){
+  const files = Array.from(input.files); if(!files.length) return;
+  const row = document.getElementById('vil_'+uid)?.closest('.variant-row');
+  if(!row) return;
+  let imgs; try{ imgs = JSON.parse(row.dataset.varImages||'[]'); }catch(e){ imgs=[]; }
+  let remaining = files.length;
+  files.forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = function(e){
+      imgs.push(e.target.result);
+      remaining--;
+      if(remaining===0){ row.dataset.varImages=JSON.stringify(imgs); renderVarImgList(uid,row); }
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value='';
+}
+
+function removeVarImg(uid, idx){
+  const row = document.getElementById('vil_'+uid)?.closest('.variant-row');
+  if(!row) return;
+  let imgs; try{ imgs=JSON.parse(row.dataset.varImages||'[]'); }catch(e){ imgs=[]; }
+  imgs.splice(idx,1);
+  row.dataset.varImages=JSON.stringify(imgs);
+  renderVarImgList(uid,row);
+}
+
+function handleVarImg(input, uid){ handleVarImgMulti(input, uid); }
 function clearVarImg(e, uid){
   e.preventDefault(); e.stopPropagation();
-  const label = e.target.closest('.var-img-upload');
-  label.dataset.colorImg = '';
-  label.innerHTML = `<div class="var-img-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span>Tải ảnh</span></div><input type="file" accept="image/*" onchange="handleVarImg(this,'${uid}')"><button type="button" class="var-img-del" onclick="clearVarImg(event,'${uid}')" title="Xóa ảnh">×</button>`;
+  const row = document.getElementById('vil_'+uid)?.closest('.variant-row');
+  if(!row) return;
+  row.dataset.varImages='[]';
+  renderVarImgList(uid,row);
 }
 function getVariants(){
   return Array.from(document.querySelectorAll('#variantRows .variant-row')).map(row=>{
     const inputs = row.querySelectorAll('input[type=text]');
-    const imgLabel = row.querySelector('.var-img-upload');
-    const colorImg = imgLabel ? (imgLabel.dataset.colorImg || '') : '';
-    return {storage:inputs[0].value.trim(),color:inputs[1].value.trim(),colorImg:colorImg,price:inputs[2].value.trim()};
+    let imgs; try{ imgs=JSON.parse(row.dataset.varImages||'[]'); }catch(e){ imgs=[]; }
+    const colorImg = imgs[0]||'';
+    return {storage:inputs[0].value.trim(),color:inputs[1].value.trim(),colorImg:colorImg,images:imgs,price:inputs[2].value.trim()};
   }).filter(v=>v.storage||v.color||v.price);
 }
 async function saveProduct(){

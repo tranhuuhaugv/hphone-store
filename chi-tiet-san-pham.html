@@ -122,36 +122,38 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 @media(max-width:768px){.nav-links,.nav-search{display:none}.footer-top{grid-template-columns:1fr}}
 
 
+/* ── LAYOUT ── */
 .pd-wrap{max-width:1280px;margin:0 auto;padding:28px 24px 0;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
 .pd-gallery{position:sticky;top:84px}
-/* Khung ảnh chính: cố định tỉ lệ 1:1, có min/max-height để ổn định trên mọi màn hình */
-.pd-main-img{
-  aspect-ratio:1/1;
-  width:100%;
-  min-height:280px;
-  max-height:560px;
-  border-radius:var(--radius-xl);
-  position:relative;
-  overflow:hidden;
-  display:block;
-  background:var(--gray-100);
-}
-.pd-main-img img{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:contain; /* contain thay vì cover để không cắt xén ảnh điện thoại */
-  object-position:center;
-  border-radius:var(--radius-xl);
-}
-.pd-main-img .badge{position:absolute;top:18px;left:18px;z-index:2}
-.pd-thumbs{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-.pd-thumb{width:74px;height:74px;border-radius:var(--radius-md);border:2px solid transparent;cursor:pointer;transition:var(--transition);background:var(--gray-100);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+
+/* ── IMAGE SLIDESHOW ── */
+.pd-slider{position:relative;aspect-ratio:1/1;width:100%;min-height:280px;max-height:560px;border-radius:var(--radius-xl);overflow:hidden;background:var(--gray-100);user-select:none}
+.pd-slides{display:flex;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);height:100%;will-change:transform}
+.pd-slide{min-width:100%;height:100%;position:relative;flex-shrink:0}
+.pd-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center}
+.pd-slide-mock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gray-100),var(--gray-200))}
+.pd-slide-mock .inner{width:52%;aspect-ratio:0.49;background:linear-gradient(145deg,#2a2a2a,#111);border-radius:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(0,0,0,0.3)}
+.pd-slide-mock .inner span{font-family:var(--font-display);font-size:13px;font-weight:600;color:rgba(255,255,255,0.78);letter-spacing:1px}
+.pd-slider .badge{position:absolute;top:18px;left:18px;z-index:4;pointer-events:none}
+/* prev/next arrows */
+.pd-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.92);border:1.5px solid var(--gray-200);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);box-shadow:0 2px 10px rgba(0,0,0,0.12)}
+.pd-arrow:hover{background:#fff;box-shadow:0 4px 18px rgba(0,0,0,0.18)}
+.pd-arrow svg{width:16px;height:16px;stroke:var(--black);fill:none;stroke-width:2.2}
+.pd-arrow.prev{left:12px}
+.pd-arrow.next{right:12px}
+.pd-arrow.hidden{opacity:0;pointer-events:none}
+/* dots */
+.pd-dots{display:flex;justify-content:center;gap:7px;margin-top:12px;flex-wrap:wrap}
+.pd-dot{width:8px;height:8px;border-radius:50%;background:var(--gray-200);cursor:pointer;transition:var(--transition);border:none;padding:0}
+.pd-dot.active{background:var(--black);transform:scale(1.25)}
+/* thumbnails */
+.pd-thumbs{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.pd-thumb{width:72px;height:72px;border-radius:var(--radius-md);border:2px solid transparent;cursor:pointer;transition:var(--transition);background:var(--gray-100);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
 .pd-thumb img{width:100%;height:100%;object-fit:contain;border-radius:8px}
-.pd-thumb .mini{width:46%;aspect-ratio:0.49;background:linear-gradient(145deg,#2a2a2a,#111);border-radius:9px}
 .pd-thumb:hover{border-color:var(--gray-400)}
 .pd-thumb.active{border-color:var(--black)}
+/* counter */
+.pd-counter{position:absolute;bottom:12px;right:14px;background:rgba(10,10,10,0.55);color:#fff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;z-index:4;pointer-events:none;letter-spacing:0.3px}
 .pd-info h1{font-family:var(--font-display);font-size:32px;font-weight:700;line-height:1.15;letter-spacing:-0.4px;margin-bottom:6px}
 .pd-rating{display:flex;align-items:center;gap:8px;margin-bottom:18px;font-size:13px;color:var(--gray-600)}
 .pd-stars{display:flex;gap:3px}
@@ -259,11 +261,12 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 @media(max-width:900px){
   .pd-wrap{grid-template-columns:1fr;gap:32px}
   .pd-gallery{position:static}
-  .pd-main-img{max-height:420px;min-height:240px}
+  .pd-slider{max-height:420px;min-height:240px}
 }
 @media(max-width:480px){
-  .pd-main-img{max-height:340px;min-height:200px;border-radius:var(--radius-lg)}
+  .pd-slider{max-height:340px;min-height:200px;border-radius:var(--radius-lg)}
   .pd-thumb{width:60px;height:60px}
+  .pd-arrow{width:32px;height:32px}
 }
 
 </style>
@@ -537,22 +540,60 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       +'</div>';
   }
 
-  const thumbsHtml = allImgs.length > 0
-    ? allImgs.map((src,i)=>`
-        <div class="pd-thumb${i===0?' active':''}" onclick="switchMainImg(${i})" style="cursor:pointer">
-          <img src="${src}" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none'">
-        </div>`).join('')
-    : `<div class="pd-thumb active"><div class="mini"></div></div>
-       <div class="pd-thumb"><div class="mini"></div></div>
-       <div class="pd-thumb"><div class="mini"></div></div>`;
+  // ── BUILD SLIDESHOW ──
+  // currentImgs: mảng ảnh đang hiển thị (có thể đổi khi chọn biến thể)
+  let currentImgs = allImgs.slice();
+  let currentSlide = 0;
+
+  function buildSlidesHtml(imgs){
+    if(!imgs.length){
+      return `<div class="pd-slide">
+        <div class="pd-slide-mock${p.brand==='samsung'?' samsung':''}">
+          <div class="inner"><span>${p.short||p.name}</span></div>
+        </div>
+      </div>`;
+    }
+    return imgs.map(src=>`
+      <div class="pd-slide">
+        <img src="${src}" alt="${p.name}" loading="lazy">
+      </div>`).join('');
+  }
+
+  function buildThumbsHtml(imgs){
+    if(!imgs.length) return '';
+    return imgs.map((src,i)=>`
+      <div class="pd-thumb${i===0?' active':''}" data-idx="${i}">
+        <img src="${src}" alt="" onerror="this.parentElement.style.display='none'">
+      </div>`).join('');
+  }
+
+  function buildDotsHtml(imgs){
+    if(imgs.length <= 1) return '';
+    return imgs.map((_,i)=>`<button class="pd-dot${i===0?' active':''}" data-idx="${i}"></button>`).join('');
+  }
+
+  function galleryHtml(imgs){
+    const hasMany = imgs.length > 1;
+    return `
+      <div class="pd-slider" id="pdSlider">
+        <span class="badge ${badgeCls}">${p.badge||p.condition||''}</span>
+        <div class="pd-slides" id="pdSlides">${buildSlidesHtml(imgs)}</div>
+        ${hasMany ? `
+        <button class="pd-arrow prev${currentSlide===0?' hidden':''}" id="pdPrev" onclick="slideGo(-1)">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="pd-arrow next${currentSlide>=imgs.length-1?' hidden':''}" id="pdNext" onclick="slideGo(1)">
+          <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+        <div class="pd-counter" id="pdCounter">1 / ${imgs.length}</div>` : ''}
+      </div>
+      ${imgs.length > 1 ? `<div class="pd-dots" id="pdDots">${buildDotsHtml(imgs)}</div>` : ''}
+      ${imgs.length > 1 ? `<div class="pd-thumbs" id="pdThumbs">${buildThumbsHtml(imgs)}</div>` : ''}`;
+  }
 
   document.getElementById('pdWrap').innerHTML = `
     <div class="pd-gallery">
-      <div class="phone-mock${p.brand==='samsung'?' samsung':''} pd-main-img" id="pdMainImg" style="position:relative">
-        <span class="badge ${badgeCls}" style="position:absolute;top:18px;left:18px;z-index:1">${p.badge||p.condition||''}</span>
-        ${mainImgInner}
-      </div>
-      <div class="pd-thumbs" id="pdThumbs">${thumbsHtml}</div>
+      ${galleryHtml(currentImgs)}
     </div>
     <div class="pd-info">
       <h1 id="pdName">${p.name}</h1>
@@ -612,6 +653,68 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       </ul>
     </div>`;
 
+  // ── SLIDER CONTROLS ──
+  function goToSlide(idx){
+    const slides = document.getElementById('pdSlides');
+    if(!slides) return;
+    const count = currentImgs.length;
+    currentSlide = Math.max(0, Math.min(idx, count - 1));
+    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+    // arrows
+    const prev = document.getElementById('pdPrev');
+    const next = document.getElementById('pdNext');
+    if(prev) prev.classList.toggle('hidden', currentSlide === 0);
+    if(next) next.classList.toggle('hidden', currentSlide >= count - 1);
+    // counter
+    const ctr = document.getElementById('pdCounter');
+    if(ctr) ctr.textContent = (currentSlide+1) + ' / ' + count;
+    // dots
+    document.querySelectorAll('#pdDots .pd-dot').forEach(function(d,i){ d.classList.toggle('active', i===currentSlide); });
+    // thumbs
+    document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t,i){ t.classList.toggle('active', i===currentSlide); });
+  }
+
+  window.slideGo = function(dir){ goToSlide(currentSlide + dir); };
+
+  // dot + thumb click delegation
+  document.addEventListener('click', function(e){
+    const dot = e.target.closest('#pdDots .pd-dot');
+    if(dot){ goToSlide(parseInt(dot.dataset.idx)); return; }
+    const thumb = e.target.closest('#pdThumbs .pd-thumb');
+    if(thumb){ goToSlide(parseInt(thumb.dataset.idx)); return; }
+  });
+
+  // touch/swipe on slider
+  (function(){
+    let startX = 0;
+    document.addEventListener('touchstart', function(e){
+      if(!e.target.closest('#pdSlider')) return;
+      startX = e.touches[0].clientX;
+    }, {passive:true});
+    document.addEventListener('touchend', function(e){
+      if(!e.target.closest('#pdSlider') && !startX) return;
+      const diff = startX - e.changedTouches[0].clientX;
+      if(Math.abs(diff) > 40){ slideGo(diff > 0 ? 1 : -1); }
+      startX = 0;
+    }, {passive:true});
+  })();
+
+  // keyboard arrows
+  document.addEventListener('keydown', function(e){
+    if(e.key==='ArrowLeft') slideGo(-1);
+    if(e.key==='ArrowRight') slideGo(1);
+  });
+
+  // ── Load variant images into slider ──
+  function loadVariantImgs(imgs){
+    currentImgs = imgs.length ? imgs : allImgs;
+    currentSlide = 0;
+    const gallery = document.querySelector('.pd-gallery');
+    if(!gallery) return;
+    gallery.innerHTML = galleryHtml(currentImgs);
+    goToSlide(0);
+  }
+
   // Tabs
   document.getElementById('pdTabsWrap').style.display='block';
   document.getElementById('desc').innerHTML = p.description || '<p>Sản phẩm chất lượng tại HPHONE.</p>';
@@ -635,19 +738,30 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     document.getElementById(this.dataset.tab).classList.add('active');
   }));
 
-  // Variant selection (khi sản phẩm có variants từ DB)
+  // ── VARIANT SELECTION ──
   if(p.variants && p.variants.length){
     let selectedStorage = p.variants[0]?.storage||'';
     let selectedColor = p.variants[0]?.color||'';
 
+    function getVariantImgs(storage, color){
+      // Ưu tiên: images[] của variant → colorImg → fallback allImgs
+      const match = p.variants.find(v=>v.storage===storage && v.color===color);
+      if(match){
+        const imgs = Array.isArray(match.images) && match.images.length ? match.images
+                   : (match.colorImg ? [match.colorImg] : []);
+        if(imgs.length) return imgs;
+      }
+      return allImgs;
+    }
 
     function updateColorGrid(){
       const varColors = p.variants.filter(v=>v.storage===selectedStorage).map(v=>v.color).filter(Boolean);
       const block = document.getElementById('colorBlock');
-      if(!varColors.length){ block.style.display='none'; return; }
-      block.style.display='block';
+      if(!varColors.length){ if(block) block.style.display='none'; return; }
+      if(block) block.style.display='block';
       if(!varColors.includes(selectedColor)) selectedColor = varColors[0];
-      document.getElementById('variantColorGrid').innerHTML = varColors.map(c=>{
+      const grid = document.getElementById('variantColorGrid');
+      if(grid) grid.innerHTML = varColors.map(c=>{
         const isActive = c===selectedColor;
         return '<button class="opt-btn'+(isActive?' active':'')+'\"'
           +' data-c="'+encodeURIComponent(c)+'"'
@@ -655,21 +769,23 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
           +c
           +'</button>';
       }).join('');
-      document.getElementById('selectedColorLabel').textContent = selectedColor;
+      const lbl = document.getElementById('selectedColorLabel');
+      if(lbl) lbl.textContent = selectedColor;
       updatePrice();
     }
 
-    function switchColorImg(src){
-      const mainEl = document.getElementById('pdMainImg');
-      if(!mainEl || !src) return;
-      const badge = mainEl.querySelector('.badge');
-      mainEl.innerHTML = (badge ? badge.outerHTML : '') +
-        '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-xl);position:absolute;inset:0">';
-      document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t){ t.classList.remove('active'); });
+    function updatePrice(){
+      const match = p.variants.find(v=>v.storage===selectedStorage && (v.color===selectedColor||!v.color));
+      if(match && match.price){
+        const el = document.getElementById('pdPrice');
+        if(el) el.innerHTML = formatPrice(match.price)+'<span class="cur">₫</span>';
+      }
+      // Load variant images into slider
+      loadVariantImgs(getVariantImgs(selectedStorage, selectedColor));
     }
 
     window.selectVariant = function(storage, color){
-      if(storage){ selectedStorage=storage; document.getElementById('selectedStorageLabel').textContent=storage; }
+      if(storage){ selectedStorage=storage; const lbl=document.getElementById('selectedStorageLabel'); if(lbl) lbl.textContent=storage; }
       if(color){ selectedColor=color; }
       document.querySelectorAll('#variantStorageGrid .opt-btn').forEach(btn=>{
         btn.classList.toggle('active', btn.textContent.trim()===selectedStorage);
@@ -677,31 +793,12 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       updateColorGrid();
     };
 
-    function updatePrice(){
-      const match = p.variants.find(v=>v.storage===selectedStorage && (v.color===selectedColor||!v.color));
-      if(match && match.price){
-        document.getElementById('pdPrice').innerHTML = formatPrice(match.price)+'<span class="cur">₫</span>';
-      }
-      // Đổi ảnh theo màu nếu variant có colorImg
-      const colorMatch = p.variants.find(v=>v.color===selectedColor && v.colorImg);
-      if(colorMatch && colorMatch.colorImg){
-        const mainEl = document.getElementById('pdMainImg');
-        if(mainEl){
-          const img = mainEl.querySelector('img');
-          if(img){ img.src = colorMatch.colorImg; }
-          else {
-            const badge = mainEl.querySelector('.badge');
-            mainEl.innerHTML = (badge?badge.outerHTML:'') +
-              `<img src="${colorMatch.colorImg}" alt="">`;
-          }
-          document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t){ t.classList.remove('active'); });
-        }
-      }
-    }
+    // Init first variant images
+    loadVariantImgs(getVariantImgs(selectedStorage, selectedColor));
     updateColorGrid();
   }
 
-  // selectColor cho màu tĩnh (từ modelColors, không có variants)
+  // selectColor cho màu tĩnh (không có variants)
   window.selectColor = function(colorName){
     document.querySelectorAll('#variantColorGrid .opt-btn').forEach(d=>{
       const active = decodeURIComponent(d.dataset.c)===colorName;
@@ -709,48 +806,10 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     });
     const lbl = document.getElementById('selectedColorLabel');
     if(lbl) lbl.textContent = colorName;
-    // Đổi ảnh nếu modelColors có colorImg, hoặc variant tĩnh có ảnh
-    if(p.variants && p.variants.length){
-      const vMatch = p.variants.find(v=>v.color===colorName && v.colorImg);
-      if(vMatch && vMatch.colorImg){
-        const mainEl = document.getElementById('pdMainImg');
-        if(mainEl){
-          const img = mainEl.querySelector('img');
-          if(img){ img.src = vMatch.colorImg; }
-          else {
-            const badge = mainEl.querySelector('.badge');
-            mainEl.innerHTML = (badge?badge.outerHTML:'') +
-              `<img src="${vMatch.colorImg}" alt="">`;
-          }
-          document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t){ t.classList.remove('active'); });
-        }
-      }
-    }
   };
 
-  // Thumbnail click — đổi ảnh chính theo allImgs[]
-  window.switchMainImg = function(idx){
-    const src = allImgs[idx];
-    if(!src) return;
-    const mainEl = document.getElementById('pdMainImg');
-    if(mainEl){
-      const badge = mainEl.querySelector('.badge');
-      // Giữ badge, thay img
-      const img = mainEl.querySelector('img');
-      if(img){
-        img.src = src;
-        img.alt = (document.getElementById('pdName')||{}).textContent || '';
-      } else {
-        mainEl.innerHTML = (badge ? badge.outerHTML : '') +
-          `<img src="${src}" alt="">`;
-      }
-    }
-    document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t,i){ t.classList.toggle('active',i===idx); });
-  };
-  // Gắn sự kiện click thumbnail (allImgs.length > 1 guard cũ bị sai — đã xóa)
-  document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t,i){
-    t.addEventListener('click', function(){ switchMainImg(i); });
-  });
+  // legacy compat
+  window.switchMainImg = function(idx){ goToSlide(idx); };
 
   // Related products — ưu tiên cùng brand + gần giá, fallback cùng brand, fallback random
   (async function(){
@@ -829,10 +888,12 @@ function saveCart(c){ localStorage.setItem('hphone_cart', JSON.stringify(c)); }
 function _addItemToCart(){
   const name    = document.getElementById('pdName')?.textContent || document.title.replace(' – HPHONE','');
   const price   = document.getElementById('pdPrice')?.textContent || '';
-  const img     = document.querySelector('#pdMainImg img')?.src || '';
+  const img     = document.querySelector('#pdSlider .pd-slide.active img')?.src
+                || document.querySelector('#pdSlider .pd-slide img')?.src
+                || '';
   const storage = document.getElementById('selectedStorageLabel')?.textContent || '';
   const color   = document.getElementById('selectedColorLabel')?.textContent || '';
-  const badge   = document.querySelector('#pdMainImg .badge')?.textContent || '';
+  const badge   = document.querySelector('#pdSlider .badge')?.textContent || '';
 
   const cart = getCart();
   const existing = cart.find(function(x){
