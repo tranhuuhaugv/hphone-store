@@ -440,8 +440,14 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   const canonSlug = p.slug || toSlug(p.name);
   // Nếu đang ở dạng ?slug=xxx thì replaceState sang clean URL
   // Nếu đã ở clean URL (pathname = /slug) thì không làm gì tránh loop
-  // Giữ URL dạng ?slug= (tránh 404 trên static host như Cloudflare Pages)
-  const seoUrl = window.location.origin + window.location.pathname + '?slug=' + encodeURIComponent(canonSlug);
+  // Nếu đang ở dạng ?slug=xxx → replaceState sang clean URL /slug
+  // (Cloudflare Pages Function đã handle route này nên không 404)
+  const canonUrl = window.location.origin + '/' + canonSlug;
+  const currentPath = window.location.pathname.replace(/^\/+/, '');
+  if (canonSlug && window.location.search.includes('slug=') && currentPath !== canonSlug) {
+    history.replaceState(null, '', canonUrl);
+  }
+  const seoUrl = canonUrl;
 
   function setMeta(id, attr, val){ const el=document.getElementById(id); if(el && val) el.setAttribute(attr, val); }
   setMeta('ogTitle',      'content', seoTitle);
