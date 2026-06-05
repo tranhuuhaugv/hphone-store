@@ -392,10 +392,12 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 
 <script>
 (async function(){
-  const params = new URLSearchParams(window.location.search);
-  const pslug = params.get('slug')
-    || (window.location.pathname !== '/' ? window.location.pathname.replace(/^\/+/, '').split('/')[0] : null)
-    || null;
+  const params   = new URLSearchParams(window.location.search);
+  // Clean URL: /san-pham/iphone-17-pro-max  →  slug = "iphone-17-pro-max"
+  const pathMatch = window.location.pathname.match(/^\/san-pham\/([^/?#]+)/);
+  const pslug = pathMatch
+    ? decodeURIComponent(pathMatch[1])          // ← clean URL (ưu tiên)
+    : (params.get('slug') || null);             // ← fallback ?slug=xxx cũ
   const pid   = params.get('id');
   const sb = window.supabase ? window.supabase.createClient(_SB_URL, _SB_KEY) : null;
 
@@ -442,7 +444,17 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   // Nếu đã ở clean URL (pathname = /slug) thì không làm gì tránh loop
   // Nếu đang ở dạng ?slug=xxx → replaceState sang clean URL /slug
   // (Cloudflare Pages Function đã handle route này nên không 404)
-  const seoUrl = window.location.origin + '/chi-tiet-san-pham.html?slug=' + encodeURIComponent(canonSlug);
+  const seoUrl = window.location.origin + '/san-pham/' + encodeURIComponent(canonSlug);
+
+  // Nếu đang truy cập qua URL cũ (?slug=xxx) thì replaceState sang clean URL
+  if(!pathMatch && canonSlug) {
+    window.history.replaceState(null, '', seoUrl);
+  }
+
+  // Canonical tag để Google không index cả 2 dạng URL
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if(!canonical){ canonical = document.createElement('link'); canonical.rel='canonical'; document.head.appendChild(canonical); }
+  canonical.href = seoUrl;
 
   function setMeta(id, attr, val){ const el=document.getElementById(id); if(el && val) el.setAttribute(attr, val); }
   setMeta('ogTitle',      'content', seoTitle);
@@ -973,7 +985,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       const rImg = r.img
         ? '<div class="phone-mock img" style="position:relative;background:var(--gray-100)"><img src="'+r.img+'" style="width:100%;height:100%;object-fit:contain;position:absolute;inset:0;border-radius:var(--radius-lg)"><span class="badge '+rBadge+'" style="position:absolute;top:14px;left:14px;max-width:calc(100% - 28px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.badge||r.condition||'')+'</span></div>'
         : '<div class="phone-mock'+(r.brand==='samsung'?' samsung':'')+' img"><span class="badge '+rBadge+'" style="position:absolute;top:14px;left:14px;max-width:calc(100% - 28px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.badge||r.condition||'')+'</span><div class="inner"><span>'+(r.short||r.name)+'</span></div></div>';
-      return '<a href="chi-tiet-san-pham.html?slug='+(r.slug||r.id)+'" class="mini-card">'
+      return '<a href="/san-pham/'+(r.slug||r.id)+'" class="mini-card">'
         +rImg
         +'<div class="body">'
         +'<div class="name">'+r.name+'</div>'

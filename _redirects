@@ -1,0 +1,6 @@
+# Clean URL cho trang chi tiết sản phẩm
+# /san-pham/iphone-17-pro-max  →  phục vụ chi-tiet-san-pham.html (200 = rewrite, không redirect)
+/san-pham/:slug  /chi-tiet-san-pham.html  200
+
+# Redirect cũ: ?slug=xxx → clean URL (301 = permanent, tốt cho SEO)
+/chi-tiet-san-pham.html  /san-pham/:slug  301  slug=:slug
