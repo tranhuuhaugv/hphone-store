@@ -1,7 +1,0 @@
-{
-  "version": 1,
-  "include": [
-    "/san-pham/*"
-  ],
-  "exclude": []
-}

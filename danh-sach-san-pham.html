@@ -385,7 +385,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
           </div>
           <div class="price">${p.price}<span class="cur">₫</span>${p.old_price?`<span style="font-size:13px;font-family:var(--font-body);font-weight:400;color:var(--gray-400);text-decoration:line-through;margin-left:8px">${p.old_price}₫</span>`:''}</div>
           <div class="actions">
-            <a href="/san-pham/${p.slug||p.id}" class="btn-d">Xem chi tiết</a>
+            <a href="chi-tiet-san-pham.html?slug=${p.slug||p.id}" class="btn-d">Xem chi tiết</a>
             <a href="#" class="btn-z btn-buy" onclick="event.preventDefault();buyNow(${JSON.stringify(p).replace(/"/g,'&quot;')})">
               Mua ngay
             </a>
