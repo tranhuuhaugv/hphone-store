@@ -32,7 +32,7 @@ html{scroll-behavior:smooth}
 body{font-family:var(--font-body);background:var(--white);color:var(--black);font-size:15px;line-height:1.6;overflow-x:hidden}
 
 /* ── NAV ── */
-nav{position:fixed;top:38px;left:0;right:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.07)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.07)}
 .nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:20px;height:64px}
 .logo{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--white);letter-spacing:2px;text-decoration:none;flex-shrink:0}
 .logo span{color:var(--accent)}
@@ -53,7 +53,7 @@ nav{position:fixed;top:38px;left:0;right:0;z-index:100;background:rgba(10,10,10,
 .zalo-btn:hover{opacity:0.85;transform:translateY(-1px)}
 
 /* ── HERO ── */
-.hero{min-height:100vh;background:var(--black);display:flex;align-items:center;position:relative;overflow:hidden;padding-top:102px}
+.hero{min-height:100vh;background:var(--black);display:flex;align-items:center;position:relative;overflow:hidden;padding-top:64px}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 65% 50%, rgba(200,169,110,0.07) 0%, transparent 70%),radial-gradient(ellipse 40% 40% at 20% 80%, rgba(200,169,110,0.04) 0%, transparent 60%)}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%)}
 .hero-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;width:100%;position:relative;z-index:2}
@@ -279,7 +279,6 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 .footer-policy a:hover{color:rgba(255,255,255,0.6)}
 
 /* ── ANNOUNCE BAR ── */
-.announce-bar{background:var(--accent);text-align:center;padding:9px 24px;font-size:12px;font-weight:600;letter-spacing:0.5px;color:var(--black);position:fixed;top:0;left:0;right:0;z-index:102;height:38px;display:flex;align-items:center;justify-content:center}
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
@@ -354,7 +353,6 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 <body>
 
 <!-- Announce Bar -->
-<div class="announce-bar">🎉 Miễn phí kiểm tra IMEI — Bảo hành minh bạch — Giao hàng toàn quốc</div>
 
 <!-- NAV -->
 <nav>
@@ -1073,10 +1071,10 @@ function tcBuyNow(p) {
 
   if(!overlay) return;
   function getNavOffset(){
-    var bar = document.querySelector('.announce-bar');
+    
     var nav = document.querySelector('nav');
     var h = 0;
-    if(bar && getComputedStyle(bar).position==='fixed') h += bar.offsetHeight;
+    
     if(nav) h += nav.offsetHeight;
     return h;
   }
