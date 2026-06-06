@@ -102,7 +102,7 @@ nav{position:fixed;top:38px;left:0;right:0;z-index:100;background:rgba(10,10,10,
 .cats-section .section-sub{color:rgba(255,255,255,0.4)}
 .cats-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:16px}
 .cats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
-.cat-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-lg);padding:28px 24px;cursor:pointer;transition:var(--transition);text-decoration:none;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;group:true}
+.cat-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-lg);padding:28px 24px;cursor:pointer;transition:var(--transition);text-decoration:none;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden}
 .cat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,169,110,0.08) 0%,transparent 60%);opacity:0;transition:var(--transition)}
 .cat-card:hover{border-color:rgba(200,169,110,0.3);transform:translateY(-4px)}
 .cat-card:hover::before{opacity:1}
@@ -228,7 +228,7 @@ nav{position:fixed;top:38px;left:0;right:0;z-index:100;background:rgba(10,10,10,
 .modal-thumbs{display:flex;gap:8px;margin-top:10px}
 .modal-thumb{width:52px;height:52px;border-radius:var(--radius-sm);background:var(--gray-200);border:2px solid transparent;cursor:pointer;transition:var(--transition)}
 .modal-thumb.active{border-color:var(--black)}
-.modal-info{}
+
 .modal-name{font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--black);margin-bottom:6px}
 .modal-price{font-size:28px;font-weight:700;color:var(--black);margin-bottom:20px;font-family:var(--font-display)}
 .modal-price small{font-family:var(--font-body);font-size:14px;color:var(--gray-600)}
@@ -309,42 +309,31 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 .skeleton-body{padding:20px;display:flex;flex-direction:column;gap:10px}
 .skeleton-line{height:14px;border-radius:4px}.skeleton-line.w80{width:80%}.skeleton-line.w50{width:50%}.skeleton-line.w60{width:60%}.skeleton-line.h22{height:22px}
 
-/* ── MOBILE MENU ── */
-.nav-hamburger{display:none;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0}
-.nav-hamburger svg{width:18px;height:18px;stroke:var(--white);fill:none;stroke-width:2;stroke-linecap:round;transition:opacity 0.2s}
-.nav-hamburger .icon-close{display:none}
-.nav-hamburger.open .icon-open{display:none}
-.nav-hamburger.open .icon-close{display:block}
-.mobile-drawer{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99;display:flex;flex-direction:column;pointer-events:none}
-.mobile-drawer-bg{position:absolute;inset:0;background:rgba(0,0,0,0.6);opacity:0;transition:opacity 0.3s;cursor:pointer}
-.mobile-drawer-panel{position:absolute;top:0;right:0;width:min(320px,85vw);height:100%;background:#0f0f0f;border-left:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);overflow-y:auto}
-.mobile-drawer.open{pointer-events:all}
-.mobile-drawer.open .mobile-drawer-bg{opacity:1}
-.mobile-drawer.open .mobile-drawer-panel{transform:translateX(0)}
-.mobile-drawer-head{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0}
-.mobile-drawer-logo{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--white);letter-spacing:2px;text-decoration:none}
-.mobile-drawer-logo span{color:var(--accent)}
-.mobile-drawer-close{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--white);flex-shrink:0}
-.mobile-drawer-close svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
-.mobile-drawer-search{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0}
-.mobile-search-box{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px}
-.mobile-search-box svg{width:16px;height:16px;stroke:rgba(255,255,255,0.4);fill:none;stroke-width:2;flex-shrink:0}
-.mobile-search-box input{background:none;border:none;outline:none;color:var(--white);font-size:14px;font-family:var(--font-body);width:100%}
-.mobile-search-box input::placeholder{color:rgba(255,255,255,0.35)}
-.mobile-drawer-nav{flex:1;padding:8px 0}
-.mobile-nav-link{display:flex;align-items:center;gap:14px;padding:14px 20px;color:rgba(255,255,255,0.75);text-decoration:none;font-size:15px;font-weight:400;transition:background 0.15s,color 0.15s;border-left:3px solid transparent}
-.mobile-nav-link:hover{background:rgba(255,255,255,0.05);color:var(--white)}
-.mobile-nav-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(200,169,110,0.06)}
-.mobile-nav-link svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;flex-shrink:0;opacity:0.7}
-.mobile-drawer-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.07);flex-shrink:0}
-.mobile-drawer-zalo{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:linear-gradient(135deg,#0068ff,#0052cc);border:none;border-radius:12px;color:#fff;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;transition:opacity 0.2s}
-.mobile-drawer-zalo:hover{opacity:0.88}
-.mobile-drawer-phone{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;padding:11px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:rgba(255,255,255,0.75);font-size:14px;font-weight:500;text-decoration:none;transition:background 0.15s}
-.mobile-drawer-phone:hover{background:rgba(255,255,255,0.09);color:var(--white)}
-.mobile-drawer-phone svg,.mobile-drawer-zalo svg{width:17px;height:17px;fill:currentColor;flex-shrink:0}
-body.drawer-open{overflow:hidden}
+
+/* ── MOBILE SEARCH ── */
+.nav-search-btn{display:none;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;color:var(--white)}
+.nav-search-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* Mobile inline search trong navbar */
+.mobile-nav-search{display:none;flex:1;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:24px;padding:7px 12px;min-width:0}
+.mobile-nav-search svg{width:15px;height:15px;stroke:rgba(255,255,255,0.55);fill:none;flex-shrink:0}
+.mobile-nav-search input{background:none;border:none;outline:none;color:var(--white);font-size:14px;font-family:var(--font-body);width:100%;min-width:0}
+.mobile-nav-search input::placeholder{color:rgba(255,255,255,0.4)}
+.nav-cart-btn{display:flex}
+.mobile-search-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.mobile-search-overlay.open{opacity:1;pointer-events:all}
+.mobile-search-bar{display:flex;align-items:center;gap:12px;background:#1a1a1a;border-bottom:1px solid rgba(255,255,255,0.1);padding:12px 16px}
+.mobile-search-bar input{flex:1;background:none;border:none;outline:none;color:var(--white);font-size:16px;font-family:var(--font-body);caret-color:var(--accent)}
+.mobile-search-bar input::placeholder{color:rgba(255,255,255,0.35)}
+.mobile-search-bar svg{width:18px;height:18px;stroke:rgba(255,255,255,0.45);fill:none;stroke-width:2;flex-shrink:0}
+.mobile-search-cancel{background:none;border:none;color:var(--accent);font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;padding:4px 0;flex-shrink:0}
+.mobile-search-hints{padding:20px 16px}
+.mobile-search-hint-title{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:12px}
+.mobile-search-tags{display:flex;flex-wrap:wrap;gap:8px}
+.mobile-search-tag{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:6px 14px;font-size:13px;color:rgba(255,255,255,0.65);cursor:pointer;transition:background 0.15s}
+.mobile-search-tag:hover{background:rgba(255,255,255,0.12);color:var(--white)}
 @media(max-width:768px){
-  .nav-hamburger{display:flex}
+  .mobile-nav-search{display:flex}
   .nav-links{display:none!important}
   .nav-search{display:none!important}
 }
@@ -383,17 +372,38 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="cursor:pointer" id="navSearchIcon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input type="text" placeholder="Tìm sản phẩm..." id="navSearchInput" autocomplete="off">
       </div>
-      <a href="gio-hang.html" class="nav-icon-btn" aria-label="Giỏ hàng">
+      <!-- Mobile inline search bar (thay thế 2 icon cũ) -->
+      <div class="mobile-nav-search" id="mobileNavSearch">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" id="mobileNavSearchIcon" style="cursor:pointer"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="mobileNavSearchInput" placeholder="Tìm iPhone..." autocomplete="off" autocorrect="off" spellcheck="false">
+      </div>
+      <a href="gio-hang.html" class="nav-icon-btn nav-cart-btn" aria-label="Giỏ hàng">
         <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <span class="cart-badge" id="cartBadge"></span>
       </a>
-      <button class="nav-hamburger" id="navHamburger" aria-label="Mở menu">
-        <svg viewBox="0 0 24 24" class="icon-open"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        <svg viewBox="0 0 24 24" class="icon-close"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
     </div>
   </div>
 </nav>
+<!-- MOBILE SEARCH OVERLAY -->
+<div class="mobile-search-overlay" id="mobileSearchOverlay">
+  <div class="mobile-search-bar">
+    <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:rgba(255,255,255,0.45);fill:none;stroke-width:2;flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="mobileSearchInput" placeholder="Tìm iPhone, model, dung lượng..." autocomplete="off" autocorrect="off" spellcheck="false">
+    <button class="mobile-search-cancel" id="mobileSearchCancel">Huỷ</button>
+  </div>
+  <div class="mobile-search-hints">
+    <div class="mobile-search-hint-title">Tìm kiếm phổ biến</div>
+    <div class="mobile-search-tags">
+      <span class="mobile-search-tag" onclick="doMobileSearch('iPhone 15 Pro Max')">iPhone 15 Pro Max</span>
+      <span class="mobile-search-tag" onclick="doMobileSearch('iPhone 14')">iPhone 14</span>
+      <span class="mobile-search-tag" onclick="doMobileSearch('iPhone 13')">iPhone 13</span>
+      <span class="mobile-search-tag" onclick="doMobileSearch('Like New')">Like New</span>
+      <span class="mobile-search-tag" onclick="doMobileSearch('256GB')">256GB</span>
+      <span class="mobile-search-tag" onclick="doMobileSearch('iPhone 12')">iPhone 12</span>
+    </div>
+  </div>
+</div>
+
 
 <!-- HERO -->
 <section class="hero">
@@ -810,6 +820,14 @@ document.querySelector('.modal-close').addEventListener('click', function() {
 .series-title{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--black);margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--gray-200);display:flex;align-items:center;gap:10px}
 .series-title::before{content:'';display:inline-block;width:4px;height:22px;background:var(--accent);border-radius:2px}
 .series-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+@media(max-width:768px){
+  .series-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .product-body{padding:12px}
+  .product-name{font-size:13px;margin-bottom:6px}
+  .product-price{font-size:18px;margin-bottom:10px}
+  .spec-tag{font-size:10px;padding:2px 6px}
+  .product-specs{gap:4px;margin-bottom:10px}
+}
 </style>
 <script>
 (async function(){
@@ -1027,39 +1045,73 @@ function tcBuyNow(p) {
   }, { passive: true });
 })();
 </script>
-
-/* ── MOBILE DRAWER ── */
+<script>
+// ── MOBILE SEARCH OVERLAY ──
 (function(){
-  var drawer = document.getElementById('mobileDrawer');
-  var btn    = document.getElementById('navHamburger');
-  var bg     = document.getElementById('mobileDrawerBg');
-  var closeBtn = document.getElementById('mobileDrawerClose');
-  var mSearch  = document.getElementById('mobileSearchInput');
-  if(!drawer||!btn) return;
-  function open(){
-    drawer.classList.add('open');
-    btn.classList.add('open');
-    document.body.classList.add('drawer-open');
-    if(mSearch) setTimeout(function(){ mSearch.focus(); }, 320);
-  }
-  function close(){
-    drawer.classList.remove('open');
-    btn.classList.remove('open');
-    document.body.classList.remove('drawer-open');
-  }
-  btn.addEventListener('click', function(){ drawer.classList.contains('open') ? close() : open(); });
-  if(bg) bg.addEventListener('click', close);
-  if(closeBtn) closeBtn.addEventListener('click', close);
-  document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
-  if(mSearch){
-    mSearch.addEventListener('keydown', function(e){
+  var overlay = document.getElementById('mobileSearchOverlay');
+  var input   = document.getElementById('mobileSearchInput');
+  var cancel  = document.getElementById('mobileSearchCancel');
+
+  // Mobile inline nav search
+  var mobileNavInput = document.getElementById('mobileNavSearchInput');
+  var mobileNavIcon  = document.getElementById('mobileNavSearchIcon');
+
+  if(mobileNavInput){
+    mobileNavInput.addEventListener('keydown', function(e){
       if(e.key==='Enter'){
-        var q = mSearch.value.trim();
-        if(q) window.location.href = 'danh-sach-san-pham.html?q='+encodeURIComponent(q);
+        var q=mobileNavInput.value.trim();
+        if(q) window.location.href='danh-sach-san-pham.html?q='+encodeURIComponent(q);
+      }
+    });
+  }
+  if(mobileNavIcon){
+    mobileNavIcon.addEventListener('click', function(){
+      var q=mobileNavInput?mobileNavInput.value.trim():'';
+      if(q) window.location.href='danh-sach-san-pham.html?q='+encodeURIComponent(q);
+    });
+  }
+
+  if(!overlay) return;
+  function getNavOffset(){
+    var bar = document.querySelector('.announce-bar');
+    var nav = document.querySelector('nav');
+    var h = 0;
+    if(bar && getComputedStyle(bar).position==='fixed') h += bar.offsetHeight;
+    if(nav) h += nav.offsetHeight;
+    return h;
+  }
+  function openSearch(){
+    var bar = overlay.querySelector('.mobile-search-bar');
+    if(bar) bar.style.marginTop = getNavOffset() + 'px';
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+    setTimeout(function(){ if(input) input.focus(); }, 50);
+  }
+  function closeSearch(){
+    overlay.classList.remove('open');
+    document.body.style.overflow='';
+    if(input) input.value='';
+  }
+  if(cancel) cancel.addEventListener('click', closeSearch);
+  overlay.addEventListener('click', function(e){
+    if(e.target===overlay) closeSearch();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape') closeSearch();
+  });
+  if(input){
+    input.addEventListener('keydown', function(e){
+      if(e.key==='Enter'){
+        var q=input.value.trim();
+        if(q) doMobileSearch(q);
       }
     });
   }
 })();
+function doMobileSearch(q){
+  window.location.href='danh-sach-san-pham.html?q='+encodeURIComponent(q);
+}
+
 
 </body>
 </html>
