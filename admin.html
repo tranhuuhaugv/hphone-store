@@ -209,6 +209,15 @@ body{font-family:var(--font-body);background:var(--gray-100);color:var(--black);
 @media(max-width:1100px){.stats{grid-template-columns:1fr 1fr}}
 @media(max-width:860px){.sidebar{display:none}.main{margin-left:0}.form-grid{grid-template-columns:1fr}.tb-search{display:none}}
 
+/* modal tabs */
+.modal-tabs{display:flex;gap:0;border-bottom:2px solid var(--gray-100);padding:0 28px;background:#fff;position:sticky;top:0;z-index:5;flex-wrap:wrap}
+.modal-tab{font-size:13px;font-weight:600;padding:12px 14px;border:none;background:none;cursor:pointer;color:var(--gray-400);border-bottom:2px solid transparent;margin-bottom:-2px;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.modal-tab svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.modal-tab:hover{color:var(--black)}
+.modal-tab.active{color:var(--black);border-bottom-color:var(--accent)}
+.tab-pane{display:none;padding:22px 28px}
+.tab-pane.active{display:block}
+
 /* login gate */
 .login-gate{position:fixed;inset:0;background:var(--black);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px}
 .login-card{background:#fff;border-radius:var(--radius-xl);width:100%;max-width:380px;padding:38px 34px;text-align:center}
@@ -399,18 +408,34 @@ window.HPHONE_SUPABASE = {
 <div class="overlay" id="prodOverlay">
   <div class="modal">
     <div class="modal-head"><h3 id="modalTitle">Thêm sản phẩm</h3><button class="modal-close" onclick="closeProductModal()">✕</button></div>
-    <div class="modal-body">
-      <input type="hidden" id="f_id">
-      <div class="field full">
-        <label>Hình ảnh sản phẩm <span style="font-weight:400;color:var(--gray-400)">(ảnh đầu tiên là ảnh chính)</span></label>
-        <div class="img-up">
-          <div class="img-up-controls">
-            <label class="file-btn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Tải nhiều ảnh lên<input type="file" id="f_file" accept="image/*" multiple hidden></label>
-            <div class="field" style="margin-bottom:0"><input type="text" id="f_imgurl" placeholder="Hoặc dán URL ảnh rồi nhấn Enter..."><div class="hint">Upload nhiều ảnh hoặc dán URL. Ảnh đầu tiên sẽ hiển thị trên trang sản phẩm.</div></div>
-          </div>
-          <div class="img-gallery" id="imgGallery"></div>
-        </div>
-      </div>
+    <input type="hidden" id="f_id">
+
+    <!-- TABS -->
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchTab('tab-basic',this)">
+        <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        Thông tin cơ bản
+      </button>
+      <button class="modal-tab" onclick="switchTab('tab-specs',this)">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Thông số kỹ thuật
+      </button>
+      <button class="modal-tab" onclick="switchTab('tab-images',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Hình ảnh
+      </button>
+      <button class="modal-tab" onclick="switchTab('tab-desc',this)">
+        <svg viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+        Mô tả
+      </button>
+      <button class="modal-tab" onclick="switchTab('tab-variants',this)">
+        <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Biến thể
+      </button>
+    </div>
+
+    <!-- TAB 1: Thông tin cơ bản -->
+    <div class="tab-pane active" id="tab-basic">
       <div class="form-grid">
         <div class="field full"><label>Tên sản phẩm</label><input type="text" id="f_name" placeholder="VD: iPhone 15 Pro Max" oninput="autoSlug()"></div>
         <div class="field full">
@@ -426,31 +451,63 @@ window.HPHONE_SUPABASE = {
         </div>
         <div class="field"><label>Nhãn rút gọn (ảnh)</label><input type="text" id="f_short" placeholder="VD: 15 Pro Max"></div>
         <div class="field"><label>Hãng</label><select id="f_brand"><option value="apple">Apple (iPhone)</option><option value="samsung">Samsung</option></select></div>
+        <div class="field"><label>Giá bán (₫)</label><input type="text" id="f_price" placeholder="VD: 32.900.000"></div>
+        <div class="field"><label>Giá gốc / gạch ngang (₫)</label><input type="text" id="f_old" placeholder="VD: 35.900.000 (tùy chọn)"></div>
+        <div class="field"><label>Nhãn (badge)</label><input type="text" id="f_badge" placeholder="VD: Like New / Đẹp 98%"></div>
+        <div class="field"><label>Trạng thái kho</label><select id="f_status"><option value="instock">Còn hàng</option><option value="outofstock">Hết hàng</option></select></div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Thông số kỹ thuật -->
+    <div class="tab-pane" id="tab-specs">
+      <div style="background:var(--gray-100);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:18px;font-size:13px;color:var(--gray-600);line-height:1.6">
+        💡 Các thông số này hiển thị trong bảng <b>Thông số kỹ thuật</b> trên trang sản phẩm.
+      </div>
+      <div class="form-grid">
         <div class="field"><label>Dung lượng</label><input type="text" id="f_storage" placeholder="VD: 256GB"></div>
         <div class="field"><label>Màu sắc</label><input type="text" id="f_color" placeholder="VD: Titan Tự Nhiên"></div>
         <div class="field"><label>Sức khỏe pin</label><input type="text" id="f_battery" placeholder="VD: 94%"></div>
-        <div class="field"><label>Tình trạng</label><input type="text" id="f_condition" placeholder="VD: Like New 99%"></div>
-        <div class="field"><label>Nhãn (badge)</label><input type="text" id="f_badge" placeholder="VD: Like New / Đẹp 98%"></div>
-        <div class="field"><label>Bảo hành</label><input type="text" id="f_warranty" placeholder="VD: 12 tháng"></div>
-        <div class="field"><label>Giá bán (₫)</label><input type="text" id="f_price" placeholder="VD: 32.900.000"></div>
-        <div class="field"><label>Giá gốc (₫)</label><input type="text" id="f_old" placeholder="VD: 35.900.000 (tùy chọn)"></div>
-        <div class="field"><label>Trạng thái kho</label><select id="f_status"><option value="instock">Còn hàng</option><option value="outofstock">Hết hàng</option></select></div>
-        <div class="field full">
-          <label>Mô tả sản phẩm <span style="font-weight:400;color:var(--gray-400)">— hỗ trợ định dạng, SEO-friendly</span></label>
-          <div id="quill-editor" style="min-height:200px"></div>
-          <textarea id="f_desc" style="display:none"></textarea>
-        </div>
-        <div class="field full">
-          <label>Biến thể (Dung lượng / Màu sắc / Giá) <span style="font-weight:400;color:var(--gray-400)">— để trống nếu chỉ có 1 biến thể</span></label>
-          <div class="variants-wrap">
-            <div class="variant-head"><span>Dung lượng</span><span>Màu sắc</span><span>Ảnh biến thể</span><span>Giá (₫)</span><span></span></div>
-            <div id="variantRows"></div>
-            <button type="button" class="add-var-btn" onclick="addVariantRow()">＋ Thêm biến thể</button>
+        <div class="field"><label>Tình trạng máy</label><input type="text" id="f_condition" placeholder="VD: Like New 99%"></div>
+        <div class="field full"><label>Bảo hành</label><input type="text" id="f_warranty" placeholder="VD: 12 tháng tại HPHONE"></div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Hình ảnh -->
+    <div class="tab-pane" id="tab-images">
+      <div class="field full">
+        <label>Hình ảnh sản phẩm <span style="font-weight:400;color:var(--gray-400)">(ảnh đầu tiên là ảnh chính)</span></label>
+        <div class="img-up">
+          <div class="img-up-controls">
+            <label class="file-btn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Tải nhiều ảnh lên<input type="file" id="f_file" accept="image/*" multiple hidden></label>
+            <div class="field" style="margin-bottom:0"><input type="text" id="f_imgurl" placeholder="Hoặc dán URL ảnh rồi nhấn Enter..."><div class="hint">Upload nhiều ảnh hoặc dán URL. Ảnh đầu tiên sẽ hiển thị trên trang sản phẩm.</div></div>
           </div>
-          <div class="hint" style="margin-top:6px">💡 Thêm nhiều ảnh cho từng biến thể màu — ảnh đầu tiên là ảnh chính. Khi khách chọn màu, slide ảnh tương ứng sẽ tự hiện.</div>
+          <div class="img-gallery" id="imgGallery"></div>
         </div>
       </div>
     </div>
+
+    <!-- TAB 4: Mô tả -->
+    <div class="tab-pane" id="tab-desc">
+      <div class="field full">
+        <label>Mô tả sản phẩm <span style="font-weight:400;color:var(--gray-400)">— hỗ trợ định dạng, SEO-friendly</span></label>
+        <div id="quill-editor" style="min-height:240px"></div>
+        <textarea id="f_desc" style="display:none"></textarea>
+      </div>
+    </div>
+
+    <!-- TAB 5: Biến thể -->
+    <div class="tab-pane" id="tab-variants">
+      <div class="field full">
+        <label>Biến thể (Dung lượng / Màu sắc / Giá) <span style="font-weight:400;color:var(--gray-400)">— để trống nếu chỉ có 1 biến thể</span></label>
+        <div class="variants-wrap">
+          <div class="variant-head"><span>Dung lượng</span><span>Màu sắc</span><span>Ảnh biến thể</span><span>Giá (₫)</span><span></span></div>
+          <div id="variantRows"></div>
+          <button type="button" class="add-var-btn" onclick="addVariantRow()">＋ Thêm biến thể</button>
+        </div>
+        <div class="hint" style="margin-top:6px">💡 Thêm nhiều ảnh cho từng biến thể màu — ảnh đầu tiên là ảnh chính.</div>
+      </div>
+    </div>
+
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeProductModal()">Hủy</button>
       <button class="btn btn-dark" onclick="saveProduct()">Lưu sản phẩm</button>
@@ -608,6 +665,27 @@ const seedOrders = [
  {id:'HP-1043',customer:'Đức Anh',phone:'0908 333 121',addr:'77 Lý Thường Kiệt, TP. Huế',date:'27/05/2026',status:'cancelled',items:[{name:'iPhone 12 Pro Max',short:'12 Pro Max',brand:'apple',meta:'128GB · Vàng đồng',qty:1,price:'11.200.000'}]},
  {id:'HP-1042',customer:'Thu Hà',phone:'0945 678 909',addr:'5 Phan Đình Phùng, TP. Huế',date:'26/05/2026',status:'done',items:[{name:'iPhone 15',short:'15',brand:'apple',meta:'128GB · Xanh',qty:1,price:'18.500.000'}]}
 ];
+
+/* ───────── MODAL TABS ───────── */
+function switchTab(id, btn){
+  document.querySelectorAll('#prodOverlay .tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#prodOverlay .modal-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  // Init Quill khi chuyển sang tab Mô tả
+  if(id === 'tab-desc'){
+    setTimeout(function(){
+      initQuill();
+      const descVal = document.getElementById('f_desc').value || '';
+      if(descVal){
+        if(descVal.trim().startsWith('<')){ _quill.clipboard.dangerouslyPasteHTML(descVal); }
+        else { _quill.setText(descVal); }
+      } else {
+        if(_quill) _quill.setText('');
+      }
+    }, 30);
+  }
+}
 
 /* ───────── SUPABASE / DATA LAYER ───────── */
 let products, orders;
@@ -973,6 +1051,8 @@ function openProductModal(id){
     document.getElementById('variantRows').innerHTML='';
   }
   m.classList.add('open');
+  // Reset về tab đầu tiên
+  switchTab('tab-basic', document.querySelector('#prodOverlay .modal-tab'));
 }
 function closeProductModal(){
   document.getElementById('prodOverlay').classList.remove('open');
@@ -1558,26 +1638,13 @@ function insertDescriptionImage(){
   });
 }
 
-// Override openProductModal để set Quill content
+// Override openProductModal để set Quill content khi chuyển tab Mô tả
 const _origOpenModal = window.openProductModal;
 window.openProductModal = function(id){
   _origOpenModal(id);
-  // Đợi modal render xong rồi init/set Quill
-  setTimeout(function(){
-    initQuill();
-    // Lấy nội dung từ hidden textarea (đã được set bởi set('desc', ...))
-    const descVal = document.getElementById('f_desc').value || '';
-    if(descVal){
-      // Nếu là HTML thì paste vào, nếu là plain text thì dùng setText
-      if(descVal.trim().startsWith('<')){
-        _quill.clipboard.dangerouslyPasteHTML(descVal);
-      } else {
-        _quill.setText(descVal);
-      }
-    } else {
-      _quill.setText('');
-    }
-  }, 50);
+  // Quill sẽ được init khi user click tab Mô tả (switchTab)
+  // Nếu muốn pre-init ngay, uncomment dưới:
+  // setTimeout(function(){ initQuill(); ... }, 50);
 };
 
 // Quill sync đã được inject trực tiếp vào saveProduct()
