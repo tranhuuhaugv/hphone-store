@@ -805,7 +805,7 @@ document.querySelector('.modal-close').addEventListener('click', function() {
       ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:inherit">`
       : `<div class="product-img-inner"><span class="product-model-label">${p.short||p.name}</span></div>`;
     const pData = JSON.stringify(p).replace(/"/g,'&quot;');
-    return `<div class="product-card" onclick="location.href='chi-tiet-san-pham.html?slug=${p.slug||p.id}'">
+    return `<div class="product-card" onclick="location.href='/san-pham/${p.slug||p.id}'">
       <div class="product-img" style="position:relative">
         ${imgHTML}
         <button class="btn-cart-icon" onclick="event.stopPropagation();tcAddToCart(${pData})" title="Thêm vào giỏ">
@@ -813,7 +813,7 @@ document.querySelector('.modal-close').addEventListener('click', function() {
         </button>
       </div>
       <div class="product-body">
-        <div class="product-name"><a href="chi-tiet-san-pham.html?slug=${p.slug||p.id}" onclick="event.stopPropagation()">${p.name}</a></div>
+        <div class="product-name"><a href="/san-pham/${p.slug||p.id}" onclick="event.stopPropagation()">${p.name}</a></div>
         <div class="product-specs">
           ${p.storage ? `<span class="spec-tag">${p.storage}</span>` : ''}
           ${p.battery ? `<span class="spec-tag highlight">Pin ${p.battery}</span>` : ''}
