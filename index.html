@@ -300,8 +300,22 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
   .footer-top{grid-template-columns:1fr}
 }
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── SKELETON LOADING ── */
+@keyframes shimmer{0%{background-position:-700px 0}100%{background-position:700px 0}}
+.skeleton{background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%);background-size:700px 100%;animation:shimmer 1.4s infinite linear;border-radius:var(--radius-sm)}
+.skeleton-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-xl);overflow:hidden}
+.skeleton-img{width:100%;aspect-ratio:1;background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%);background-size:700px 100%;animation:shimmer 1.4s infinite linear}
+.skeleton-body{padding:20px;display:flex;flex-direction:column;gap:10px}
+.skeleton-line{height:14px;border-radius:4px}.skeleton-line.w80{width:80%}.skeleton-line.w50{width:50%}.skeleton-line.w60{width:60%}.skeleton-line.h22{height:22px}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* Preconnect Supabase sớm để giảm DNS lookup time */
+(function(){
+  var l=document.createElement('link');l.rel='preconnect';l.href='https://pkmigreebudnbfkujplu.supabase.co';document.head.appendChild(l);
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
 <script>
 const _SB_URL="https://pkmigreebudnbfkujplu.supabase.co";
 const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrbWlncmVlYnVkbmJma3VqcGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTAyMjYsImV4cCI6MjA5NTYyNjIyNn0.Bb9Y6-FKshYfmxUrEU8GJfJKnnrbJ--vMtXzAwCHFns";
@@ -395,9 +409,20 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     <h2 class="section-title">Máy tuyển chọn hôm nay</h2>
     <p class="section-sub">Tất cả máy được kiểm tra kỹ về IMEI, pin, màn hình và hiệu năng trước khi lên kệ.</p>
     <div class="products-grid" id="homeProductGrid">
-      <div style="grid-column:1/-1;padding:48px;text-align:center;color:var(--gray-400)">
-        <div style="width:32px;height:32px;border:3px solid var(--gray-200);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px"></div>
-        Đang tải sản phẩm...
+      <!-- Skeleton placeholders hiển thị ngay lập tức trong khi chờ data -->
+      <div style="grid-column:1/-1">
+        <div style="height:20px;width:160px;margin-bottom:16px;border-radius:4px" class="skeleton"></div>
+        <div class="series-grid" id="skeletonGrid">
+          <!-- 8 skeleton cards -->
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line w80"></div><div style="display:flex;gap:6px"><div class="skeleton skeleton-line" style="width:52px;height:22px"></div><div class="skeleton skeleton-line" style="width:68px;height:22px"></div></div><div class="skeleton skeleton-line h22 w60"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line w80"></div><div style="display:flex;gap:6px"><div class="skeleton skeleton-line" style="width:52px;height:22px"></div><div class="skeleton skeleton-line" style="width:68px;height:22px"></div></div><div class="skeleton skeleton-line h22 w60"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line w80"></div><div style="display:flex;gap:6px"><div class="skeleton skeleton-line" style="width:52px;height:22px"></div><div class="skeleton skeleton-line" style="width:68px;height:22px"></div></div><div class="skeleton skeleton-line h22 w60"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line w80"></div><div style="display:flex;gap:6px"><div class="skeleton skeleton-line" style="width:52px;height:22px"></div><div class="skeleton skeleton-line" style="width:68px;height:22px"></div></div><div class="skeleton skeleton-line h22 w60"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line w80"></div><div style="display:flex;gap:6px"><div class="skeleton skeleton-line" style="width:52px;height:22px"></div><div class="skeleton skeleton-line" style="width:68px;height:22px"></div></div><div class="skeleton skeleton-line h22 w60"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line w80"></div><div style="display:flex;gap:6px"><div class="skeleton skeleton-line" style="width:52px;height:22px"></div><div class="skeleton skeleton-line" style="width:68px;height:22px"></div></div><div class="skeleton skeleton-line h22 w60"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line w80"></div><div style="display:flex;gap:6px"><div class="skeleton skeleton-line" style="width:52px;height:22px"></div><div class="skeleton skeleton-line" style="width:68px;height:22px"></div></div><div class="skeleton skeleton-line h22 w60"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line w80"></div><div style="display:flex;gap:6px"><div class="skeleton skeleton-line" style="width:52px;height:22px"></div><div class="skeleton skeleton-line" style="width:68px;height:22px"></div></div><div class="skeleton skeleton-line h22 w60"></div></div></div>
+        </div>
       </div>
     </div>
     <div class="products-more">
@@ -743,14 +768,30 @@ document.querySelector('.modal-close').addEventListener('click', function() {
 </style>
 <script>
 (async function(){
-  if(!window.supabase) return;
-  const sb = window.supabase.createClient(_SB_URL, _SB_KEY);
-  const {data, error} = await sb.from('products').select('*').eq('status','instock').order('id',{ascending:false});
-  const grid = document.getElementById('homeProductGrid');
-  if(error || !data || !data.length){
-    grid.innerHTML = '<div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--gray-400)">Chưa có sản phẩm nào.</div>';
-    return;
+  // Chờ supabase-js defer load xong
+  function waitForSupabase(cb, tries) {
+    tries = tries || 0;
+    if (window.supabase) { cb(); return; }
+    if (tries > 40) return; // timeout sau 2s
+    setTimeout(function(){ waitForSupabase(cb, tries + 1); }, 50);
   }
+
+  waitForSupabase(async function() {
+    const sb = window.supabase.createClient(_SB_URL, _SB_KEY);
+    const grid = document.getElementById('homeProductGrid');
+
+    // ✅ Chỉ select đúng field cần cho card — bỏ các cột nặng không dùng
+    const {data, error} = await sb
+      .from('products')
+      .select('id,name,slug,short,price,storage,battery,condition,warranty,img,status')
+      .eq('status','instock')
+      .order('id',{ascending:false})
+      .limit(60); // Giới hạn số lượng fetch — trang home không cần tất cả
+
+    if(error || !data || !data.length){
+      grid.innerHTML = '<div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--gray-400)">Chưa có sản phẩm nào.</div>';
+      return;
+    }
 
   // Nhóm sản phẩm theo series (tất cả biến thể cùng số vào 1 nhóm)
   function getSeries(name) {
@@ -825,16 +866,28 @@ document.querySelector('.modal-close').addEventListener('click', function() {
     </div>`;
   }
 
-  grid.innerHTML = seriesOrder
-    .filter(s => seriesMap[s])
-    .map(series => {
-      const products = seriesMap[series];
-      return `
-    <div class="series-block">
-      <div class="series-title">${series}</div>
-      <div class="series-grid">${products.map(cardHTML).join('')}</div>
-    </div>
-  `}).join('');
+    // Render xong → swap skeleton ra, fade content vào
+    const html = seriesOrder
+      .filter(s => seriesMap[s])
+      .map(series => {
+        const products = seriesMap[series];
+        return `
+      <div class="series-block">
+        <div class="series-title">${series}</div>
+        <div class="series-grid">${products.map(cardHTML).join('')}</div>
+      </div>
+    `}).join('');
+
+    grid.style.opacity = '0';
+    grid.style.transition = 'opacity 0.3s ease';
+    grid.innerHTML = html;
+    // Trigger reflow rồi fade in
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        grid.style.opacity = '1';
+      });
+    });
+  }); // end waitForSupabase
 })();
 
 function updateCartBadge(){
