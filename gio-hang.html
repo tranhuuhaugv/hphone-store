@@ -186,6 +186,47 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 .co-success .code{display:inline-block;margin-top:14px;background:var(--black);color:#fff;padding:8px 18px;border-radius:30px;font-weight:600;letter-spacing:1px}
 .co-err{background:#fbeae8;color:#c0392b;font-size:13px;padding:10px 14px;border-radius:var(--radius-md);margin-bottom:12px;display:none}
 .co-mode{font-size:11px;color:var(--gray-400);text-align:center;margin-top:4px}
+
+/* ── MOBILE MENU ── */
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0}
+.nav-hamburger svg{width:18px;height:18px;stroke:var(--white);fill:none;stroke-width:2;stroke-linecap:round;transition:opacity 0.2s}
+.nav-hamburger .icon-close{display:none}
+.nav-hamburger.open .icon-open{display:none}
+.nav-hamburger.open .icon-close{display:block}
+.mobile-drawer{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99;display:flex;flex-direction:column;pointer-events:none}
+.mobile-drawer-bg{position:absolute;inset:0;background:rgba(0,0,0,0.6);opacity:0;transition:opacity 0.3s;cursor:pointer}
+.mobile-drawer-panel{position:absolute;top:0;right:0;width:min(320px,85vw);height:100%;background:#0f0f0f;border-left:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);overflow-y:auto}
+.mobile-drawer.open{pointer-events:all}
+.mobile-drawer.open .mobile-drawer-bg{opacity:1}
+.mobile-drawer.open .mobile-drawer-panel{transform:translateX(0)}
+.mobile-drawer-head{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0}
+.mobile-drawer-logo{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--white);letter-spacing:2px;text-decoration:none}
+.mobile-drawer-logo span{color:var(--accent)}
+.mobile-drawer-close{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--white);flex-shrink:0}
+.mobile-drawer-close svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.mobile-drawer-search{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0}
+.mobile-search-box{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px}
+.mobile-search-box svg{width:16px;height:16px;stroke:rgba(255,255,255,0.4);fill:none;stroke-width:2;flex-shrink:0}
+.mobile-search-box input{background:none;border:none;outline:none;color:var(--white);font-size:14px;font-family:var(--font-body);width:100%}
+.mobile-search-box input::placeholder{color:rgba(255,255,255,0.35)}
+.mobile-drawer-nav{flex:1;padding:8px 0}
+.mobile-nav-link{display:flex;align-items:center;gap:14px;padding:14px 20px;color:rgba(255,255,255,0.75);text-decoration:none;font-size:15px;font-weight:400;transition:background 0.15s,color 0.15s;border-left:3px solid transparent}
+.mobile-nav-link:hover{background:rgba(255,255,255,0.05);color:var(--white)}
+.mobile-nav-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(200,169,110,0.06)}
+.mobile-nav-link svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;flex-shrink:0;opacity:0.7}
+.mobile-drawer-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.07);flex-shrink:0}
+.mobile-drawer-zalo{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:linear-gradient(135deg,#0068ff,#0052cc);border:none;border-radius:12px;color:#fff;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;transition:opacity 0.2s}
+.mobile-drawer-zalo:hover{opacity:0.88}
+.mobile-drawer-phone{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;padding:11px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:rgba(255,255,255,0.75);font-size:14px;font-weight:500;text-decoration:none;transition:background 0.15s}
+.mobile-drawer-phone:hover{background:rgba(255,255,255,0.09);color:var(--white)}
+.mobile-drawer-phone svg,.mobile-drawer-zalo svg{width:17px;height:17px;fill:currentColor;flex-shrink:0}
+body.drawer-open{overflow:hidden}
+@media(max-width:768px){
+  .nav-hamburger{display:flex}
+  .nav-links{display:none!important}
+  .nav-search{display:none!important}
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -216,6 +257,10 @@ window.HPHONE_SUPABASE = {
         <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <span class="cart-badge">2</span>
       </a>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Mở menu">
+        <svg viewBox="0 0 24 24" class="icon-open"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <svg viewBox="0 0 24 24" class="icon-close"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
   </div>
 </nav>
@@ -500,5 +545,39 @@ async function submitOrder(){
   }
 }
 </script>
+
+/* ── MOBILE DRAWER ── */
+(function(){
+  var drawer = document.getElementById('mobileDrawer');
+  var btn    = document.getElementById('navHamburger');
+  var bg     = document.getElementById('mobileDrawerBg');
+  var closeBtn = document.getElementById('mobileDrawerClose');
+  var mSearch  = document.getElementById('mobileSearchInput');
+  if(!drawer||!btn) return;
+  function open(){
+    drawer.classList.add('open');
+    btn.classList.add('open');
+    document.body.classList.add('drawer-open');
+    if(mSearch) setTimeout(function(){ mSearch.focus(); }, 320);
+  }
+  function close(){
+    drawer.classList.remove('open');
+    btn.classList.remove('open');
+    document.body.classList.remove('drawer-open');
+  }
+  btn.addEventListener('click', function(){ drawer.classList.contains('open') ? close() : open(); });
+  if(bg) bg.addEventListener('click', close);
+  if(closeBtn) closeBtn.addEventListener('click', close);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+  if(mSearch){
+    mSearch.addEventListener('keydown', function(e){
+      if(e.key==='Enter'){
+        var q = mSearch.value.trim();
+        if(q) window.location.href = 'danh-sach-san-pham.html?q='+encodeURIComponent(q);
+      }
+    });
+  }
+})();
+
 </body>
 </html>
