@@ -228,6 +228,14 @@ body{font-family:var(--font-body);background:var(--gray-100);color:var(--black);
 .mode-badge.demo{background:var(--orange-bg);color:var(--orange)}
 .logout-btn{background:none;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition)}
 .logout-btn:hover{border-color:var(--black)}
+
+/* ─── SKELETON LOADING ─── */
+@keyframes shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}
+.skel{border-radius:6px;background:linear-gradient(90deg,var(--gray-100) 25%,var(--gray-200) 50%,var(--gray-100) 75%);background-size:600px 100%;animation:shimmer 1.4s infinite linear}
+.skel-row td{padding:14px 22px;border-bottom:1px solid var(--gray-100)}
+.skel-thumb{width:52px;height:52px;border-radius:11px}
+.skel-text{height:13px;border-radius:4px}
+.skel-tag{height:24px;width:64px;border-radius:12px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -755,9 +763,41 @@ function showLogin(){
   document.getElementById('loginGate').style.display='flex';
   document.getElementById('logoutBtn').style.display='none';
 }
+function showSkeletons(){
+  // Skeleton bảng sản phẩm
+  const prodTb = document.getElementById('prodTable');
+  if(prodTb){
+    prodTb.innerHTML = Array(6).fill('').map(()=>`
+      <tr class="skel-row">
+        <td><div style="display:flex;align-items:center;gap:14px">
+          <div class="skel skel-thumb"></div>
+          <div style="flex:1"><div class="skel skel-text" style="width:60%;margin-bottom:7px"></div><div class="skel skel-text" style="width:35%"></div></div>
+        </div></td>
+        <td><div class="skel skel-text" style="width:55px"></div></td>
+        <td><div class="skel skel-text" style="width:40px"></div></td>
+        <td><div class="skel skel-text" style="width:90px"></div></td>
+        <td><div class="skel skel-text" style="width:110px;height:16px"></div></td>
+        <td><div class="skel skel-tag"></div></td>
+        <td></td>
+      </tr>`).join('');
+  }
+  // Skeleton stat cards (dashboard)
+  const sc = document.getElementById('statCards');
+  if(sc){
+    sc.innerHTML = Array(4).fill('').map(()=>`
+      <div class="stat">
+        <div class="skel" style="width:42px;height:42px;border-radius:10px;margin-bottom:14px"></div>
+        <div class="skel" style="width:70px;height:28px;border-radius:6px;margin-bottom:10px"></div>
+        <div class="skel skel-text" style="width:120px"></div>
+      </div>`).join('');
+  }
+}
+
 async function showApp(){
   document.getElementById('loginGate').style.display='none';
   document.getElementById('logoutBtn').style.display='inline-flex';
+  // Hiện skeleton ngay lập tức trong khi chờ fetch
+  showSkeletons();
   // Luôn load data bằng anon key (không cần auth session)
   if(_sb){
     try{ await loadLive(); await loadTradeIns(); }catch(e){ products=[];orders=[];tradeIns=[]; }
@@ -1294,8 +1334,7 @@ async function boot(){
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
 else boot();
 </script>
-</body>
-</html>
+
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 <script>
 // ===== QUILL RICH TEXT EDITOR =====
@@ -1493,3 +1532,5 @@ window.openProductModal = function(id){
 
 // Quill sync đã được inject trực tiếp vào saveProduct()
 </script>
+</body>
+</html>
