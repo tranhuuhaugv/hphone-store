@@ -918,6 +918,40 @@ function tcBuyNow(p) {
   tcAddToCart(p);
   window.location.href = 'gio-hang.html';
 }
+
+// ── PREFETCH KHI HOVER ──
+// Khi user di chuột vào card → browser tải sẵn trang chi tiết
+// Đến lúc click thì gần như instant vì HTML đã có trong cache
+(function(){
+  const prefetched = new Set();
+
+  function prefetchUrl(url) {
+    if(prefetched.has(url)) return;
+    prefetched.add(url);
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = url;
+    link.as = 'document';
+    document.head.appendChild(link);
+  }
+
+  // Lắng nghe hover trên toàn bộ product grid (event delegation)
+  document.addEventListener('mouseover', function(e) {
+    const card = e.target.closest('.product-card');
+    if(!card) return;
+    // Lấy href từ thẻ <a> bên trong card
+    const a = card.querySelector('a[href]');
+    if(a) prefetchUrl(a.href);
+  }, { passive: true });
+
+  // Mobile: touchstart thay cho hover
+  document.addEventListener('touchstart', function(e) {
+    const card = e.target.closest('.product-card');
+    if(!card) return;
+    const a = card.querySelector('a[href]');
+    if(a) prefetchUrl(a.href);
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>

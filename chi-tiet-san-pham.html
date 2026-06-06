@@ -466,18 +466,32 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   if(!sb) return showError('Không thể kết nối dữ liệu.');
   if(!pslug && !pid) return showError('Không tìm thấy sản phẩm. <a href="danh-sach-san-pham.html" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
 
-  // select('*') cho sản phẩm chính — cần tất cả field để render đầy đủ gallery, variants, tabs...
-  let qResult;
-  if(pslug){
-    qResult = await sb.from('products').select('*').eq('slug', pslug).maybeSingle();
-    if((!qResult.data) && /^\d+$/.test(pslug)){
-      qResult = await sb.from('products').select('*').eq('id', pslug).maybeSingle();
+  // Cache sản phẩm vào sessionStorage — tránh gọi Supabase lại khi user
+  // quay lại trang rồi vào lại (cache tồn tại trong 1 tab, tự xóa khi đóng tab)
+  const CACHE_KEY = 'hphone_pd_' + (pslug || pid);
+  let p;
+  try {
+    const cached = sessionStorage.getItem(CACHE_KEY);
+    if(cached) {
+      p = JSON.parse(cached);
     }
-  } else {
-    qResult = await sb.from('products').select('*').eq('id', pid).maybeSingle();
+  } catch(e) {}
+
+  if(!p) {
+    let qResult;
+    if(pslug){
+      qResult = await sb.from('products').select('*').eq('slug', pslug).maybeSingle();
+      if((!qResult.data) && /^\d+$/.test(pslug)){
+        qResult = await sb.from('products').select('*').eq('id', pslug).maybeSingle();
+      }
+    } else {
+      qResult = await sb.from('products').select('*').eq('id', pid).maybeSingle();
+    }
+    const {data, error} = qResult;
+    if(error || !data) return showError('Sản phẩm không tồn tại hoặc đã bị xóa. <a href="danh-sach-san-pham.html" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
+    p = data;
+    try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(p)); } catch(e) {}
   }
-  const {data:p, error} = qResult;
-  if(error || !p) return showError('Sản phẩm không tồn tại hoặc đã bị xóa. <a href="danh-sach-san-pham.html" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
 
   // Chuẩn hóa mảng ảnh: ưu tiên images[], fallback về img
   if(!Array.isArray(p.images) || !p.images.length){
