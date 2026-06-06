@@ -618,6 +618,21 @@ const LIVE = !!(_cfg.url && _cfg.anonKey && !_cfg.url.includes('YOUR-PROJECT'));
 let _sb = null;
 if(LIVE && window.supabase){ try{ _sb = window.supabase.createClient(_cfg.url,_cfg.anonKey); }catch(e){ _sb=null; } }
 
+/* PREFETCH: bắn request ngay khi script load, không chờ boot() hay login */
+let _prefetchPromise = null;
+let _prefetchData = null;
+if(_sb){
+  _prefetchPromise = (async()=>{
+    try{
+      const [prodRes, orderRes] = await Promise.all([
+        _sb.from('products').select('*').order('id',{ascending:true}),
+        _sb.from('orders').select('*').order('id',{ascending:false})
+      ]);
+      _prefetchData = { prod: prodRes, order: orderRes };
+    }catch(e){ _prefetchData = null; }
+  })();
+}
+
 /* map DB <-> JS */
 function fmtDate(iso){ try{ const d=new Date(iso); return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear(); }catch(e){ return ''; } }
 function toSlug(str){ return (str||'').toLowerCase().replace(/đ/g,'d').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-'); }
