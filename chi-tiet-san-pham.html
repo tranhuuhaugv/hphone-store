@@ -129,9 +129,9 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 .pd-gallery{position:sticky;top:84px}
 
 /* ── IMAGE SLIDESHOW ── */
-.pd-slider{position:relative;aspect-ratio:1/1;width:100%;min-height:280px;max-height:560px;border-radius:var(--radius-xl);overflow:hidden;background:var(--gray-100);user-select:none}
-.pd-slides{display:flex;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);height:100%;will-change:transform}
-.pd-slide{min-width:100%;height:100%;position:relative;flex-shrink:0}
+.pd-slider{position:relative;aspect-ratio:1/1;width:100%;min-height:280px;max-height:560px;border-radius:var(--radius-xl);overflow:hidden;background:var(--gray-100);user-select:none;contain:layout}
+.pd-slides{display:flex;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);height:100%;will-change:transform;width:100%}
+.pd-slide{width:100%;min-width:100%;height:100%;position:relative;flex-shrink:0}
 .pd-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center}
 .pd-slide-mock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gray-100),var(--gray-200))}
 .pd-slide-mock .inner{width:52%;aspect-ratio:0.49;background:linear-gradient(145deg,#2a2a2a,#111);border-radius:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(0,0,0,0.3)}
@@ -151,12 +151,12 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
 /* dots - ẩn */
 .pd-dots{display:none}
 /* thumbnail strip — khớp đúng chiều rộng main slider */
-.pd-thumb-strip{margin-top:10px;display:grid;grid-template-columns:32px 1fr 32px;gap:6px;align-items:center;width:100%}
+.pd-thumb-strip{margin-top:10px;display:grid;grid-template-columns:32px 1fr 32px;gap:6px;align-items:center;width:100%;overflow:hidden}
 .pd-thumb-arrow{width:32px;height:32px;flex-shrink:0;background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
 .pd-thumb-arrow:hover{border-color:var(--black);background:var(--gray-100)}
 .pd-thumb-arrow svg{width:13px;height:13px;stroke:var(--black);fill:none;stroke-width:2.2}
 .pd-thumb-arrow.hidden{visibility:hidden;pointer-events:none}
-.pd-thumbs-viewport{overflow:hidden;width:100%}
+.pd-thumbs-viewport{overflow:hidden;width:100%;max-width:100%}
 .pd-thumbs{display:flex;gap:8px;transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);will-change:transform}
 .pd-thumb{flex-shrink:0;aspect-ratio:1/1;border-radius:var(--radius-md);border:2px solid var(--gray-200);cursor:pointer;transition:border-color var(--transition),box-shadow var(--transition);background:var(--gray-100);overflow:hidden}
 .pd-thumb img{width:100%;height:100%;object-fit:contain;display:block}
@@ -792,9 +792,12 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   function recalcThumbSize(){
     const viewport = document.getElementById('pdThumbsViewport');
     if(!viewport) return;
+    const vw = viewport.offsetWidth || viewport.getBoundingClientRect().width;
+    if(!vw) return; // chưa render xong, bỏ qua
     const GAP = 8;
     const COLS = 5;
-    const w = Math.floor((viewport.offsetWidth - GAP * (COLS - 1)) / COLS);
+    const w = Math.floor((vw - GAP * (COLS - 1)) / COLS);
+    if(w <= 0) return;
     document.querySelectorAll('#pdThumbs .pd-thumb').forEach(function(t){
       t.style.width = w + 'px';
     });
@@ -851,9 +854,12 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   }
 
   // Gọi sau khi DOM render xong để set arrow trạng thái ban đầu đúng
+  // double-rAF đảm bảo layout đã hoàn tất trước khi đo kích thước
   requestAnimationFrame(function(){
-    recalcThumbSize();
-    applyThumbOffset();
+    requestAnimationFrame(function(){
+      recalcThumbSize();
+      applyThumbOffset();
+    });
   });
 
   // Cập nhật kích thước thumb khi resize
@@ -910,9 +916,11 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     if(!gallery) return;
     gallery.innerHTML = galleryHtml(currentImgs);
     requestAnimationFrame(function(){
-      recalcThumbSize();
-      applyThumbOffset();
-      goToSlide(0);
+      requestAnimationFrame(function(){
+        recalcThumbSize();
+        applyThumbOffset();
+        goToSlide(0);
+      });
     });
   }
 
