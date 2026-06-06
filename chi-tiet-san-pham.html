@@ -305,7 +305,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 .pd-sk-line{height:14px}.pd-sk-line.w70{width:70%}.pd-sk-line.w50{width:50%}.pd-sk-line.w40{width:40%}
 .pd-sk-opts{height:44px;border-radius:8px;width:80%}
 .pd-sk-btn{height:54px;border-radius:30px}
-@media(max-width:768px){.pd-skeleton{grid-template-columns:1fr}}
+@media(max-width:900px){.pd-skeleton{grid-template-columns:1fr;gap:24px}}
 </style>
 <script>
 (function(){
@@ -344,31 +344,30 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   <span class="current" id="breadcrumbCurrent">...</span>
 </div>
 
-<div class="pd-wrap" id="pdWrap">
-  <!-- Skeleton hiển thị ngay, cùng layout 2 cột với trang thật -->
-  <div class="pd-skeleton" id="pdSkeleton">
-    <div class="pd-sk-gallery">
-      <div class="sk pd-sk-main"></div>
-      <div class="pd-sk-thumbs">
-        <div class="sk pd-sk-thumb"></div>
-        <div class="sk pd-sk-thumb"></div>
-        <div class="sk pd-sk-thumb"></div>
-        <div class="sk pd-sk-thumb"></div>
-      </div>
-    </div>
-    <div class="pd-sk-info">
-      <div class="sk pd-sk-title"></div>
-      <div class="sk pd-sk-subtitle"></div>
-      <div class="sk pd-sk-pricebox"></div>
-      <div class="sk pd-sk-opts"></div>
-      <div class="sk pd-sk-opts" style="width:65%"></div>
-      <div class="sk pd-sk-btn"></div>
-      <div class="sk pd-sk-line w70" style="margin-top:8px"></div>
-      <div class="sk pd-sk-line w50"></div>
-      <div class="sk pd-sk-line w40"></div>
+<!-- Skeleton đứng độc lập, không bị kẹp vào grid của pd-wrap -->
+<div class="pd-skeleton" id="pdSkeleton">
+  <div class="pd-sk-gallery">
+    <div class="sk pd-sk-main"></div>
+    <div class="pd-sk-thumbs">
+      <div class="sk pd-sk-thumb"></div>
+      <div class="sk pd-sk-thumb"></div>
+      <div class="sk pd-sk-thumb"></div>
+      <div class="sk pd-sk-thumb"></div>
     </div>
   </div>
+  <div class="pd-sk-info">
+    <div class="sk pd-sk-title"></div>
+    <div class="sk pd-sk-subtitle"></div>
+    <div class="sk pd-sk-pricebox"></div>
+    <div class="sk pd-sk-opts"></div>
+    <div class="sk pd-sk-opts" style="width:65%"></div>
+    <div class="sk pd-sk-btn"></div>
+    <div class="sk pd-sk-line w70" style="margin-top:8px"></div>
+    <div class="sk pd-sk-line w50"></div>
+    <div class="sk pd-sk-line w40"></div>
+  </div>
 </div>
+<div class="pd-wrap" id="pdWrap" style="display:none"></div>
 <!-- TABS -->
 <div id="pdTabsWrap" style="display:none">
   <div class="pd-tabs-wrap">
@@ -440,7 +439,8 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     tries = tries || 0;
     if (window.supabase) { cb(); return; }
     if (tries > 60) {
-      document.getElementById('pdWrap').innerHTML = '<div style="grid-column:1/-1;padding:80px 24px;text-align:center;color:var(--gray-400)">Không thể kết nối dữ liệu. Vui lòng thử lại.</div>';
+      const sk2 = document.getElementById('pdSkeleton'); if(sk2) sk2.style.display='none';
+      const w = document.getElementById('pdWrap'); w.style.display=''; w.innerHTML = '<div style="grid-column:1/-1;padding:80px 24px;text-align:center;color:var(--gray-400)">Không thể kết nối dữ liệu. Vui lòng thử lại.</div>';
       return;
     }
     setTimeout(function(){ waitForSupabase(cb, tries + 1); }, 50);
@@ -456,7 +456,11 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   const sb = window.supabase ? window.supabase.createClient(_SB_URL, _SB_KEY) : null;
 
   function showError(msg){
-    document.getElementById('pdWrap').innerHTML = `<div style="grid-column:1/-1;padding:80px 24px;text-align:center;color:var(--gray-400)">${msg}</div>`;
+    const sk = document.getElementById('pdSkeleton');
+    if(sk) sk.style.display = 'none';
+    const wrap = document.getElementById('pdWrap');
+    wrap.style.display = '';
+    wrap.innerHTML = `<div style="grid-column:1/-1;padding:80px 24px;text-align:center;color:var(--gray-400)">${msg}</div>`;
   }
 
   if(!sb) return showError('Không thể kết nối dữ liệu.');
@@ -700,7 +704,12 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       ${thumbStripHtml}`;
   }
 
-  document.getElementById('pdWrap').innerHTML = `
+  // Ẩn skeleton, hiện pdWrap rồi render content
+  const skEl = document.getElementById('pdSkeleton');
+  if(skEl) skEl.style.display = 'none';
+  const pdWrap = document.getElementById('pdWrap');
+  pdWrap.style.display = '';
+  pdWrap.innerHTML = `
     <div class="pd-gallery">
       ${galleryHtml(currentImgs)}
     </div>
