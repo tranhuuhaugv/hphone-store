@@ -462,18 +462,15 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   if(!sb) return showError('Không thể kết nối dữ liệu.');
   if(!pslug && !pid) return showError('Không tìm thấy sản phẩm. <a href="danh-sach-san-pham.html" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
 
-  // ✅ Chỉ select field cần thiết (bỏ các cột nặng không dùng trực tiếp)
-  const FIELDS = 'id,name,slug,short,brand,price,old_price,storage,battery,condition,warranty,badge,status,img,images,color,variants,description,specs';
-
-  // Ưu tiên tìm theo slug (SEO), fallback về id (tương thích cũ)
+  // select('*') cho sản phẩm chính — cần tất cả field để render đầy đủ gallery, variants, tabs...
   let qResult;
   if(pslug){
-    qResult = await sb.from('products').select(FIELDS).eq('slug', pslug).maybeSingle();
+    qResult = await sb.from('products').select('*').eq('slug', pslug).maybeSingle();
     if((!qResult.data) && /^\d+$/.test(pslug)){
-      qResult = await sb.from('products').select(FIELDS).eq('id', pslug).maybeSingle();
+      qResult = await sb.from('products').select('*').eq('id', pslug).maybeSingle();
     }
   } else {
-    qResult = await sb.from('products').select(FIELDS).eq('id', pid).maybeSingle();
+    qResult = await sb.from('products').select('*').eq('id', pid).maybeSingle();
   }
   const {data:p, error} = qResult;
   if(error || !p) return showError('Sản phẩm không tồn tại hoặc đã bị xóa. <a href="danh-sach-san-pham.html" style="color:var(--accent)">Xem tất cả sản phẩm</a>');
