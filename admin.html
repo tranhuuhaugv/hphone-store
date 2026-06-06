@@ -290,6 +290,7 @@ window.HPHONE_SUPABASE = {
         <input type="text" id="globalSearch" placeholder="Tìm sản phẩm, đơn hàng...">
       </div>
       <a href="/" class="btn btn-ghost btn-sm" target="_blank">Xem website ↗</a>
+      <button class="btn btn-ghost btn-sm" id="resetBtn" title="Khôi phục sản phẩm & đơn hàng mẫu" onclick="resetToSeed()" style="display:none;border-color:var(--orange);color:var(--orange)">⟳ Khôi phục dữ liệu</button>
       <button class="logout-btn" id="logoutBtn" style="display:none" onclick="doLogout()">Đăng xuất</button>
     </div>
   </div>
@@ -655,24 +656,36 @@ function mapOrder(r){ return {id:'HP-'+(1000+r.id),dbid:r.id,customer:r.customer
 
 /* demo data (when Supabase not configured) */
 function loadDemo(){
+  // Luôn bắt đầu từ seed, rồi ghi đè bằng localStorage nếu có và không rỗng
   products = seedProducts.slice(); orders = seedOrders.slice();
   try{
     const ls = safeLS(); if(!ls) return;
     const p = ls.getItem('hphone_products'); const o = ls.getItem('hphone_orders');
-    if(p){ const arr=JSON.parse(p); if(Array.isArray(arr)&&arr.length) products=arr; }
-    if(o){ const arr=JSON.parse(o); if(Array.isArray(arr)&&arr.length) orders=arr; }
+    // FIX: chỉ dùng dữ liệu từ localStorage nếu mảng có ít nhất 1 phần tử
+    if(p){ try{ const arr=JSON.parse(p); if(Array.isArray(arr)&&arr.length>0) products=arr; }catch(e){} }
+    if(o){ try{ const arr=JSON.parse(o); if(Array.isArray(arr)&&arr.length>0) orders=arr; }catch(e){} }
   }catch(e){ products = seedProducts.slice(); orders = seedOrders.slice(); }
 }
 function persist(){
   if(_sb) return; // live mode persists to Supabase, not localStorage
+  // FIX: không lưu nếu mảng rỗng để tránh ghi đè seed data tốt bằng mảng trống
+  if(!products.length && !orders.length) return;
   try{
     const ls=safeLS(); if(!ls) return;
-    ls.setItem('hphone_products',JSON.stringify(products));
-    ls.setItem('hphone_orders',JSON.stringify(orders));
+    if(products.length) ls.setItem('hphone_products',JSON.stringify(products));
+    if(orders.length) ls.setItem('hphone_orders',JSON.stringify(orders));
   }catch(e){
     // localStorage có thể bị block (private mode) hoặc đầy – bỏ qua lỗi lặng
     console.warn('persist failed:',e);
   }
+}
+function resetToSeed(){
+  if(!confirm('Khôi phục toàn bộ sản phẩm và đơn hàng mẫu? Dữ liệu đã chỉnh sửa sẽ bị mất.')) return;
+  try{ const ls=safeLS(); if(ls){ ls.removeItem('hphone_products'); ls.removeItem('hphone_orders'); } }catch(e){}
+  products = seedProducts.slice(); orders = seedOrders.slice();
+  persist();
+  renderAll();
+  toast('✓ Đã khôi phục dữ liệu mẫu');
 }
 
 /* live fetch */
@@ -694,8 +707,9 @@ function renderAll(){
 }
 function setBadge(mode){
   const b=document.getElementById('modeBadge'); if(!b) return;
-  if(mode==='live'){ b.textContent='Live'; b.className='mode-badge live'; }
-  else{ b.textContent='Demo'; b.className='mode-badge demo'; }
+  const r=document.getElementById('resetBtn');
+  if(mode==='live'){ b.textContent='Live'; b.className='mode-badge live'; if(r) r.style.display='none'; }
+  else{ b.textContent='Demo'; b.className='mode-badge demo'; if(r) r.style.display='inline-flex'; }
 }
 
 /* auth */
@@ -714,9 +728,11 @@ async function showApp(){
   // Luôn load data bằng anon key (không cần auth session)
   if(_sb){
     try{ await loadLive(); await loadTradeIns(); }catch(e){ products=[];orders=[];tradeIns=[]; }
+    setBadge('live');
   } else {
     try{ loadDemo(); }catch(e){ products=seedProducts.slice(); orders=seedOrders.slice(); }
     await loadTradeIns();
+    setBadge('demo');
   }
   renderAll();
 }
