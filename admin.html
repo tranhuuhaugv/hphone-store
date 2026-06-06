@@ -745,7 +745,7 @@ async function reloadOrders(){
   }
   orders = (data||[]).map(mapOrder);
 }
-async function loadLive(){ await reloadProducts(); await reloadOrders(); }
+async function loadLive(){ await Promise.all([reloadProducts(), reloadOrders()]); }
 
 function renderAll(){
   try{ renderDashboard(); }catch(e){ console.warn('dashboard',e); }
@@ -773,7 +773,9 @@ function setBadge(mode){
 const ADMIN_PASS = 'Haudance11@'; // ← đổi mật khẩu tại đây
 const PASS_KEY   = 'hphone_admin_ok';
 
-function isLoggedIn(){ try{ return sessionStorage.getItem(PASS_KEY)==='1'; }catch(e){ return false; } }
+/* Dùng localStorage thay sessionStorage để F5 không mất login */
+function _authStore(){ try{ return localStorage; }catch(e){ try{ return sessionStorage; }catch(e2){ return null; } } }
+function isLoggedIn(){ try{ return _authStore()&&_authStore().getItem(PASS_KEY)==='1'; }catch(e){ return false; } }
 function showLogin(){
   document.getElementById('loginGate').style.display='flex';
   document.getElementById('logoutBtn').style.display='none';
@@ -811,15 +813,35 @@ function showSkeletons(){
 async function showApp(){
   document.getElementById('loginGate').style.display='none';
   document.getElementById('logoutBtn').style.display='inline-flex';
-  // Hiện skeleton ngay lập tức trong khi chờ fetch
-  showSkeletons();
-  // Luôn load data bằng anon key (không cần auth session)
+
   if(_sb){
-    try{ await loadLive(); await loadTradeIns(); }catch(e){ products=[];orders=[];tradeIns=[]; }
+    // ── LIVE MODE ──
+    // Nếu prefetch đã resolve rồi → render ngay, không skeleton
+    // Nếu chưa xong → show skeleton rồi chờ
+    const prefetchDone = !_prefetchPromise || (_prefetchData !== null);
+    if(!prefetchDone) showSkeletons();
+    try{
+      if(_prefetchPromise){ await _prefetchPromise; }
+      if(_prefetchData){
+        const pd=_prefetchData.prod, od=_prefetchData.order;
+        if(!pd.error) products=(pd.data||[]).map(mapProd);
+        else { console.error('[HPHONE] prefetch products error:',pd.error); products=[]; }
+        if(!od.error) orders=(od.data||[]).map(mapOrder);
+        else { console.error('[HPHONE] prefetch orders error:',od.error); orders=[]; }
+        _prefetchData=null; _prefetchPromise=null;
+      } else {
+        if(prefetchDone) showSkeletons(); // prefetch fail → skeleton lúc này mới cần
+        await loadLive();
+      }
+      await loadTradeIns();
+    }catch(e){ console.error('[HPHONE] showApp error:',e); products=[];orders=[];tradeIns=[]; }
     setBadge('live');
   } else {
+    // ── DEMO MODE ──
+    // loadDemo() đọc từ localStorage/seed — đồng bộ hoàn toàn, render ngay không cần skeleton
     try{ loadDemo(); }catch(e){ products=seedProducts.slice(); orders=seedOrders.slice(); }
-    await loadTradeIns();
+    // tradeIns demo cũng đồng bộ (localStorage), nhưng hàm được khai báo async nên await cho an toàn
+    try{ await loadTradeIns(); }catch(e){ tradeIns=[]; }
     setBadge('demo');
   }
   renderAll();
@@ -830,7 +852,7 @@ async function doLogin(){
   if(!pass){ err.textContent='Vui lòng nhập mật khẩu.'; err.style.display='block'; return; }
   btn.disabled=true; btn.textContent='Đang xác nhận...';
   if(pass === ADMIN_PASS){
-    try{ sessionStorage.setItem(PASS_KEY,'1'); }catch(e){}
+    try{ _authStore()&&_authStore().setItem(PASS_KEY,'1'); }catch(e){}
     err.style.display='none';
     await showApp();
   } else {
@@ -840,7 +862,7 @@ async function doLogin(){
   btn.disabled=false; btn.textContent='Đăng nhập';
 }
 async function doLogout(){
-  try{ sessionStorage.removeItem(PASS_KEY); }catch(e){}
+  try{ _authStore()&&_authStore().removeItem(PASS_KEY); }catch(e){}
   showLogin();
 }
 
@@ -952,7 +974,11 @@ function openProductModal(id){
   }
   m.classList.add('open');
 }
-function closeProductModal(){document.getElementById('prodOverlay').classList.remove('open');}
+function closeProductModal(){
+  document.getElementById('prodOverlay').classList.remove('open');
+  // Reset Quill để lần mở sau init lại trên DOM mới
+  if(window._quill){ try{ window._quill = null; _quill = null; }catch(e){} }
+}
 document.getElementById('f_file').addEventListener('change',function(e){
   const files = Array.from(e.target.files);
   if(!files.length) return;
@@ -1339,10 +1365,12 @@ async function boot(){
       }
     }catch(e){}
   }
-  // Kiểm tra đã đăng nhập chưa (session storage)
+  // Kiểm tra đã đăng nhập chưa (localStorage, tồn tại qua F5)
   if(isLoggedIn()){
     await showApp();
   } else {
+    // Huỷ prefetch nếu không cần (chưa login)
+    _prefetchData = null;
     showLogin();
   }
 }
@@ -1357,7 +1385,14 @@ window._quill = null;
 let _quill = null;
 
 function initQuill(){
-  if(_quill) return;
+  // Kiểm tra xem editor DOM có còn tồn tại và kết nối không
+  const editorEl = document.getElementById('quill-editor');
+  if(!editorEl) return;
+  // Nếu _quill đang trỏ đúng vào DOM hiện tại thì không cần init lại
+  if(_quill && _quill.root && editorEl.contains(_quill.root)) return;
+  // Trường hợp DOM bị tái tạo (modal đóng rồi mở lại), xóa nội dung cũ
+  editorEl.innerHTML = '';
+  _quill = null;
   _quill = window._quill = new Quill('#quill-editor', {
     theme: 'snow',
     placeholder: 'Viết mô tả sản phẩm, điểm nổi bật, thông tin SEO...',
