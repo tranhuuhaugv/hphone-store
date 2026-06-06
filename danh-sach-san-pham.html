@@ -431,12 +431,32 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
     render();
   }));
 
-  // Search
+  // Search — gõ realtime lọc ngay, Enter hoặc click icon cũng lọc
   const searchInput = document.querySelector('.nav-search input');
-  if(searchInput) searchInput.addEventListener('input', function(){
-    searchQ = this.value.trim().toLowerCase();
-    render();
-  });
+  if(searchInput){
+    searchInput.addEventListener('input', function(){
+      searchQ = this.value.trim().toLowerCase();
+      render();
+    });
+    searchInput.addEventListener('keydown', function(e){
+      if(e.key==='Enter'){ searchQ=this.value.trim().toLowerCase(); render(); }
+    });
+    const searchIcon = document.querySelector('.nav-search svg');
+    if(searchIcon){ searchIcon.style.cursor='pointer'; searchIcon.addEventListener('click', function(){ searchQ=searchInput.value.trim().toLowerCase(); render(); }); }
+  }
+
+  // ── ĐỌC ?q= TỪ URL (redirect từ trang chủ) ──
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlQ = urlParams.get('q');
+  if(urlQ){
+    searchQ = urlQ.trim().toLowerCase();
+    // Pre-fill vào nav search input
+    const si = document.querySelector('.nav-search input');
+    if(si){ si.value = urlQ.trim(); }
+    // Cập nhật page heading
+    const sub = document.querySelector('.page-head p.sub');
+    if(sub) sub.textContent = 'Kết quả tìm kiếm cho: "' + urlQ.trim() + '"';
+  }
 
   loadAll();
 })();
