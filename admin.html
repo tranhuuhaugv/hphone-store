@@ -697,11 +697,30 @@ function clearCache(){
 /* live fetch */
 async function reloadProducts(){
   const {data,error}=await _sb.from('products').select('*').order('id',{ascending:true});
-  products = (!error&&data)?data.map(mapProd):[];
+  if(error){
+    console.error('[HPHONE] reloadProducts error:', error);
+    // Hiện cảnh báo rõ trong UI
+    const tb=document.getElementById('prodTable');
+    if(tb){
+      const isRLS = error.code==='42501' || (error.message&&(error.message.includes('policy')||error.message.includes('permission')));
+      const msg = isRLS
+        ? '⚠️ Lỗi RLS: Vào <b>Supabase Dashboard → Table Editor → products → RLS</b>, thêm policy <b>SELECT for anon</b>'
+        : '⚠️ Lỗi tải sản phẩm: <code>'+error.message+'</code>';
+      tb.innerHTML='<tr><td colspan="7"><div class="empty" style="color:var(--red);line-height:1.8">'+msg+'<br><small style="color:var(--gray-400)">Code: '+(error.code||'unknown')+'</small></div></td></tr>';
+    }
+    products = [];
+    return;
+  }
+  products = (data||[]).map(mapProd);
 }
 async function reloadOrders(){
   const {data,error}=await _sb.from('orders').select('*').order('id',{ascending:false});
-  orders = (!error&&data)?data.map(mapOrder):[];
+  if(error){
+    console.error('[HPHONE] reloadOrders error:', error);
+    orders = [];
+    return;
+  }
+  orders = (data||[]).map(mapOrder);
 }
 async function loadLive(){ await reloadProducts(); await reloadOrders(); }
 
