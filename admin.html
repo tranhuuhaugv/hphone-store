@@ -291,6 +291,7 @@ window.HPHONE_SUPABASE = {
       </div>
       <a href="/" class="btn btn-ghost btn-sm" target="_blank">Xem website ↗</a>
       <button class="btn btn-ghost btn-sm" id="resetBtn" title="Khôi phục sản phẩm & đơn hàng mẫu" onclick="resetToSeed()" style="display:none;border-color:var(--orange);color:var(--orange)">⟳ Khôi phục dữ liệu</button>
+      <button class="btn btn-ghost btn-sm" id="clearCacheBtn" title="Xóa cache trình duyệt nếu bảng bị trống" onclick="clearCache()" style="display:none;border-color:var(--red);color:var(--red)">✕ Xóa cache</button>
       <button class="logout-btn" id="logoutBtn" style="display:none" onclick="doLogout()">Đăng xuất</button>
     </div>
   </div>
@@ -656,26 +657,25 @@ function mapOrder(r){ return {id:'HP-'+(1000+r.id),dbid:r.id,customer:r.customer
 
 /* demo data (when Supabase not configured) */
 function loadDemo(){
-  // Luôn bắt đầu từ seed, rồi ghi đè bằng localStorage nếu có và không rỗng
+  // Bắt đầu từ seed
   products = seedProducts.slice(); orders = seedOrders.slice();
   try{
     const ls = safeLS(); if(!ls) return;
     const p = ls.getItem('hphone_products'); const o = ls.getItem('hphone_orders');
-    // FIX: chỉ dùng dữ liệu từ localStorage nếu mảng có ít nhất 1 phần tử
-    if(p){ try{ const arr=JSON.parse(p); if(Array.isArray(arr)&&arr.length>0) products=arr; }catch(e){} }
-    if(o){ try{ const arr=JSON.parse(o); if(Array.isArray(arr)&&arr.length>0) orders=arr; }catch(e){} }
+    // Dùng localStorage nếu key tồn tại và có ít nhất 1 item
+    // (array rỗng trong localStorage = bug cũ ghi sai, fallback về seed)
+    if(p !== null){ try{ const arr=JSON.parse(p); if(Array.isArray(arr)&&arr.length>0) products=arr; }catch(e){} }
+    if(o !== null){ try{ const arr=JSON.parse(o); if(Array.isArray(arr)&&arr.length>0) orders=arr; }catch(e){} }
   }catch(e){ products = seedProducts.slice(); orders = seedOrders.slice(); }
 }
 function persist(){
-  if(_sb) return; // live mode persists to Supabase, not localStorage
-  // FIX: không lưu nếu mảng rỗng để tránh ghi đè seed data tốt bằng mảng trống
-  if(!products.length && !orders.length) return;
+  if(_sb) return;
   try{
     const ls=safeLS(); if(!ls) return;
+    // Chỉ lưu khi có dữ liệu thực sự để không ghi đè seed bằng array rỗng
     if(products.length) ls.setItem('hphone_products',JSON.stringify(products));
     if(orders.length) ls.setItem('hphone_orders',JSON.stringify(orders));
   }catch(e){
-    // localStorage có thể bị block (private mode) hoặc đầy – bỏ qua lỗi lặng
     console.warn('persist failed:',e);
   }
 }
@@ -683,9 +683,15 @@ function resetToSeed(){
   if(!confirm('Khôi phục toàn bộ sản phẩm và đơn hàng mẫu? Dữ liệu đã chỉnh sửa sẽ bị mất.')) return;
   try{ const ls=safeLS(); if(ls){ ls.removeItem('hphone_products'); ls.removeItem('hphone_orders'); } }catch(e){}
   products = seedProducts.slice(); orders = seedOrders.slice();
-  persist();
+  // Lưu seed vào localStorage để tránh load lại bị rỗng
+  try{ const ls=safeLS(); if(ls){ ls.setItem('hphone_products',JSON.stringify(products)); ls.setItem('hphone_orders',JSON.stringify(orders)); } }catch(e){}
   renderAll();
   toast('✓ Đã khôi phục dữ liệu mẫu');
+}
+function clearCache(){
+  if(!confirm('Xóa cache trình duyệt và tải lại dữ liệu mẫu?')) return;
+  try{ const ls=safeLS(); if(ls){ ls.removeItem('hphone_products'); ls.removeItem('hphone_orders'); ls.removeItem('hphone_tradein'); } }catch(e){}
+  location.reload();
 }
 
 /* live fetch */
@@ -708,8 +714,16 @@ function renderAll(){
 function setBadge(mode){
   const b=document.getElementById('modeBadge'); if(!b) return;
   const r=document.getElementById('resetBtn');
-  if(mode==='live'){ b.textContent='Live'; b.className='mode-badge live'; if(r) r.style.display='none'; }
-  else{ b.textContent='Demo'; b.className='mode-badge demo'; if(r) r.style.display='inline-flex'; }
+  const c=document.getElementById('clearCacheBtn');
+  if(mode==='live'){
+    b.textContent='Live'; b.className='mode-badge live';
+    if(r) r.style.display='none';
+    if(c) c.style.display='none';
+  } else {
+    b.textContent='Demo'; b.className='mode-badge demo';
+    if(r) r.style.display='inline-flex';
+    if(c) c.style.display='inline-flex';
+  }
 }
 
 /* auth */
@@ -1239,6 +1253,18 @@ document.getElementById('delOverlay').addEventListener('click',e=>{if(e.target.i
 /* init — demo (no backend) or live (Supabase + login) */
 async function boot(){
   if(_sb){ setBadge('live'); } else { setBadge('demo'); }
+  // Auto-fix: nếu localStorage bị ghi array rỗng từ bug cũ thì xóa để dùng seed
+  if(!_sb){
+    try{
+      const ls=safeLS();
+      if(ls){
+        const p=ls.getItem('hphone_products');
+        if(p!==null){ try{ const arr=JSON.parse(p); if(!Array.isArray(arr)||arr.length===0){ ls.removeItem('hphone_products'); console.log('[HPHONE] Auto-cleared empty hphone_products cache'); } }catch(e){ ls.removeItem('hphone_products'); } }
+        const o=ls.getItem('hphone_orders');
+        if(o!==null){ try{ const arr=JSON.parse(o); if(!Array.isArray(arr)||arr.length===0){ ls.removeItem('hphone_orders'); console.log('[HPHONE] Auto-cleared empty hphone_orders cache'); } }catch(e){ ls.removeItem('hphone_orders'); } }
+      }
+    }catch(e){}
+  }
   // Kiểm tra đã đăng nhập chưa (session storage)
   if(isLoggedIn()){
     await showApp();
