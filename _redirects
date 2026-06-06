@@ -1,14 +1,12 @@
 # ============================================================
 # HPHONE – Cloudflare Pages _redirects
-# Đặt file này ở ROOT của project (cùng cấp với index.html)
 # ============================================================
 
 # ── CLEAN URL: Sản phẩm ──────────────────────────────────────
-# /san-pham/{slug}  →  chi-tiet-san-pham.html?slug={slug}
-# Code 200 = rewrite (URL trên browser giữ nguyên /san-pham/...)
 /san-pham/:slug     /chi-tiet-san-pham.html?slug=:slug    200
 
 # ── CLEAN URL: Trang tĩnh ────────────────────────────────────
+# QUAN TRỌNG: /san-pham (không slug) phải đứng SAU /san-pham/:slug
 /iphone             /danh-sach-san-pham.html              200
 /san-pham           /danh-sach-san-pham.html              200
 /gio-hang           /gio-hang.html                        200
@@ -21,11 +19,4 @@
 /trade-in           /thu-cu-doi-moi.html                  200
 
 # ── REDIRECT 301: URL cũ → URL mới ───────────────────────────
-# Lưu ý: KHÔNG redirect chi-tiet-san-pham.html vì Cloudflare
-# không đọc được query string (?slug=xxx) trong _redirects.
-# JS trong trang tự xử lý replaceState sang /san-pham/slug.
 /danh-sach-san-pham.html /iphone                          301
-
-# ── SPA Fallback ─────────────────────────────────────────────
-# (Chỉ bật nếu dùng SPA routing, comment lại nếu không cần)
-# /*  /index.html  200
