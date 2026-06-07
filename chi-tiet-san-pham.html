@@ -1006,9 +1006,10 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
       const grid = document.getElementById('variantColorGrid');
       if(grid) grid.innerHTML = varColors.map(c=>{
         const isActive = c===selectedColor;
+        const enc = encodeURIComponent(c);
         return '<button class="opt-btn'+(isActive?' active':'')+'\"'
-          +' data-c="'+encodeURIComponent(c)+'"'
-          +' onclick="selectVariant(\'\',decodeURIComponent(this.dataset.c))">'
+          +' data-c="'+enc+'"'
+          +' onclick="selectVariant(\'\',decodeURIComponent(\''+enc+'\'))">'
           +c
           +'</button>';
       }).join('');
