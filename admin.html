@@ -289,6 +289,10 @@ window.HPHONE_SUPABASE = {
       <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
       Thu cũ đổi mới <span class="count" id="navTradeCount">0</span>
     </div>
+    <div class="sb-item" data-view="blog">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Blog <span class="count" id="navBlogCount">0</span>
+    </div>
   </nav>
   <div class="sb-foot">
     <div class="sb-avatar">AD</div>
@@ -401,6 +405,168 @@ window.HPHONE_SUPABASE = {
       </div>
     </section>
 
+    <!-- ════ BLOG ════ -->
+    <section class="view" id="view-blog">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Quản lý bài viết</h2>
+            <div class="sub" id="blogSummary">Đang tải...</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <div class="pills" id="blogFilter">
+              <span class="pill on" data-f="all">Tất cả</span>
+              <span class="pill" data-f="published">Đã đăng</span>
+              <span class="pill" data-f="draft">Nháp</span>
+            </div>
+            <button class="btn btn-gold" onclick="openBlogModal()">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Viết bài mới
+            </button>
+          </div>
+        </div>
+        <table class="tbl" id="blogTable">
+          <thead><tr><th>Bài viết</th><th>Danh mục</th><th>Tác giả</th><th>Trạng thái</th><th>Ngày đăng</th><th style="text-align:right">Thao tác</th></tr></thead>
+          <tbody id="blogTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- BLOG MODAL -->
+<div class="overlay" id="blogOverlay">
+  <div class="modal" style="max-width:780px">
+    <div class="modal-head">
+      <h3 id="blogModalTitle">Viết bài mới</h3>
+      <button class="modal-close" onclick="closeBlogModal()">✕</button>
+    </div>
+    <input type="hidden" id="bf_id">
+
+    <!-- TABS -->
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchBlogTab('btab-info',this)">
+        <svg viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+        Thông tin bài viết
+      </button>
+      <button class="modal-tab" onclick="switchBlogTab('btab-content',this)">
+        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+        Nội dung
+      </button>
+      <button class="modal-tab" onclick="switchBlogTab('btab-cover',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Ảnh bìa
+      </button>
+    </div>
+
+    <!-- TAB 1: Thông tin -->
+    <div class="tab-pane active" id="btab-info" style="padding:22px 28px">
+      <div class="form-grid">
+        <div class="field full">
+          <label>Tiêu đề bài viết</label>
+          <input type="text" id="bf_title" placeholder="VD: Top 5 mẹo dùng iPhone tiết kiệm pin" oninput="autoBlogSlug()">
+        </div>
+        <div class="field full">
+          <label style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <span>Slug (URL)</span>
+            <button type="button" onclick="forceBlogSlug()" style="font-family:var(--font-body);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;border:1.5px solid var(--accent);background:rgba(200,169,110,0.1);color:var(--accent);cursor:pointer;transition:.2s" onmouseenter="this.style.background='rgba(200,169,110,0.2)'" onmouseleave="this.style.background='rgba(200,169,110,0.1)'">✦ Tạo tự động</button>
+          </label>
+          <input type="text" id="bf_slug" placeholder="VD: meo-dung-iphone-tiet-kiem-pin" style="font-family:monospace">
+          <div id="blogSlugPreview" style="margin-top:6px;font-size:12px;color:var(--gray-400);font-family:monospace"></div>
+        </div>
+        <div class="field full">
+          <label>Mô tả ngắn (excerpt)</label>
+          <textarea id="bf_excerpt" rows="3" placeholder="Tóm tắt ngắn gọn về nội dung bài viết, hiển thị ở trang blog và SEO..."></textarea>
+        </div>
+        <div class="field">
+          <label>Danh mục</label>
+          <select id="bf_category">
+            <option value="tips">Mẹo & Thủ thuật</option>
+            <option value="review">Đánh giá máy</option>
+            <option value="compare">So sánh</option>
+            <option value="news">Tin tức</option>
+            <option value="guide">Hướng dẫn</option>
+            <option value="other">Khác</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tác giả</label>
+          <input type="text" id="bf_author" placeholder="VD: Đội ngũ HPHONE">
+        </div>
+        <div class="field">
+          <label>Thời gian đọc (phút)</label>
+          <input type="number" id="bf_readtime" placeholder="VD: 5" min="1" max="60">
+        </div>
+        <div class="field">
+          <label>Trạng thái</label>
+          <select id="bf_status">
+            <option value="draft">Nháp – chưa hiển thị</option>
+            <option value="published">Đăng – hiển thị công khai</option>
+          </select>
+        </div>
+        <div class="field full" style="display:flex;align-items:center;gap:10px">
+          <input type="checkbox" id="bf_featured" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+          <label for="bf_featured" style="text-transform:none;letter-spacing:0;font-size:14px;color:var(--black);cursor:pointer;font-weight:500">Đặt làm bài viết nổi bật (featured) trên trang Blog</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Nội dung -->
+    <div class="tab-pane" id="btab-content" style="padding:16px 28px 22px">
+      <div style="background:var(--gray-100);border-radius:var(--radius-md);padding:11px 14px;margin-bottom:14px;font-size:13px;color:var(--gray-600)">
+        ✏️ Soạn thảo nội dung bài viết. Hỗ trợ định dạng văn bản, tiêu đề, danh sách, hình ảnh nhúng, và liên kết.
+      </div>
+      <textarea id="bf_content_hidden" style="display:none"></textarea>
+      <div id="blogEditor" style="min-height:340px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);overflow:hidden"></div>
+    </div>
+
+    <!-- TAB 3: Ảnh bìa -->
+    <div class="tab-pane" id="btab-cover" style="padding:22px 28px">
+      <div class="field full">
+        <label>URL ảnh bìa</label>
+        <input type="text" id="bf_coverurl" placeholder="https://... (dán URL ảnh bìa)" oninput="previewCover()">
+        <div class="hint">Kích thước khuyến nghị: 1200×630px (tỉ lệ 16:9). Ảnh sẽ hiển thị ở đầu bài viết và thẻ blog.</div>
+      </div>
+      <div class="field full">
+        <label>Hoặc tải ảnh từ máy</label>
+        <label class="file-btn" style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;padding:9px 16px;border-radius:var(--radius-md);border:1.5px solid var(--gray-200);cursor:pointer;transition:var(--transition);margin-bottom:10px">
+          <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Chọn ảnh bìa
+          <input type="file" id="bf_coverfile" accept="image/*" hidden onchange="handleCoverFile(this)">
+        </label>
+      </div>
+      <div id="coverPreviewWrap" style="display:none;margin-top:4px">
+        <div style="font-size:12px;font-weight:700;letter-spacing:.5px;color:var(--gray-600);text-transform:uppercase;margin-bottom:8px">Xem trước ảnh bìa</div>
+        <img id="coverPreviewImg" src="" alt="" style="width:100%;max-height:280px;object-fit:cover;border-radius:var(--radius-md);border:1px solid var(--gray-200)">
+        <button onclick="clearCoverImg()" style="margin-top:8px;font-size:12px;font-weight:600;color:var(--red);background:none;border:none;cursor:pointer;padding:0">✕ Xóa ảnh bìa</button>
+      </div>
+    </div>
+
+    <div class="modal-foot" style="justify-content:space-between">
+      <div style="font-size:13px;color:var(--gray-400)" id="blogSaveNote"></div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-ghost" onclick="saveBlogPost('draft')">Lưu nháp</button>
+        <button class="btn btn-gold" onclick="saveBlogPost('published')">
+          <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4z"/></svg>
+          Đăng bài
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BLOG DELETE CONFIRM -->
+<div class="overlay" id="blogDelOverlay">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-head"><h3>Xác nhận xóa</h3><button class="modal-close" onclick="closeBlogDel()">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:15px;line-height:1.7">Bạn chắc chắn muốn xóa bài viết <b id="blogDelName"></b>? Thao tác này không thể hoàn tác.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeBlogDel()">Hủy</button>
+      <button class="btn" style="background:var(--red);color:#fff" onclick="confirmBlogDel()">Xóa bài viết</button>
+    </div>
   </div>
 </div>
 
@@ -830,6 +996,7 @@ function renderAll(){
   try{ renderProducts(); }catch(e){ console.warn('products',e); }
   try{ renderOrders(); }catch(e){ console.warn('orders',e); }
   try{ renderTradeIns(); }catch(e){ console.warn('tradein',e); }
+  try{ renderBlogPosts(); }catch(e){ console.warn('blog',e); }
 }
 function setBadge(mode){
   const b=document.getElementById('modeBadge'); if(!b) return;
@@ -912,6 +1079,7 @@ async function showApp(){
         await loadLive();
       }
       await loadTradeIns();
+      await reloadBlogPosts();
     }catch(e){ console.error('[HPHONE] showApp error:',e); products=[];orders=[];tradeIns=[]; }
     setBadge('live');
   } else {
@@ -920,6 +1088,7 @@ async function showApp(){
     try{ loadDemo(); }catch(e){ products=seedProducts.slice(); orders=seedOrders.slice(); }
     // tradeIns demo cũng đồng bộ (localStorage), nhưng hàm được khai báo async nên await cho an toàn
     try{ await loadTradeIns(); }catch(e){ tradeIns=[]; }
+    try{ loadDemoBlog(); }catch(e){ blogPosts=[]; }
     setBadge('demo');
   }
   renderAll();
@@ -960,7 +1129,7 @@ function toast(msg){
 }
 
 /* ───────── NAV ───────── */
-const TITLES={dashboard:'Tổng quan',products:'Quản lý sản phẩm',orders:'Quản lý đơn hàng',tradein:'Đơn thu cũ đổi mới'};
+const TITLES={dashboard:'Tổng quan',products:'Quản lý sản phẩm',orders:'Quản lý đơn hàng',tradein:'Đơn thu cũ đổi mới',blog:'Quản lý Blog'};
 function go(view){
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.toggle('active',i.dataset.view===view));
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -1446,9 +1615,340 @@ async function saveTradeStatus(){
   toast('Đã cập nhật trạng thái đơn '+t.id);
 }
 
+/* ───────── BLOG ───────── */
+const BLOG_CAT_LABELS = {
+  tips:'Mẹo & Thủ thuật', review:'Đánh giá máy', compare:'So sánh',
+  news:'Tin tức', guide:'Hướng dẫn', other:'Khác'
+};
+let blogPosts=[], blogFilter='all', editingBlogId=null;
+let _blogQuill=null;
+
+/* map Supabase row → local object */
+function mapBlogPost(r){
+  return {
+    id:r.id, title:r.title||'', slug:r.slug||'', excerpt:r.excerpt||'',
+    category:r.category||'other', author:r.author||'', read_time:r.read_time||'',
+    cover_image:r.cover_image||'', content:r.content||'',
+    status:r.status||'draft', featured:!!r.featured,
+    published_at:r.published_at||r.created_at||null,
+    created_at:r.created_at||null
+  };
+}
+function blogPayload(p){
+  return {
+    title:p.title, slug:p.slug, excerpt:p.excerpt||null,
+    category:p.category, author:p.author||null, read_time:p.read_time?parseInt(p.read_time):null,
+    cover_image:p.cover_image||null, content:p.content||null,
+    status:p.status, featured:!!p.featured,
+    published_at:p.status==='published'?(p.published_at||new Date().toISOString()):null
+  };
+}
+
+async function reloadBlogPosts(){
+  if(!_sb){ loadDemoBlog(); return; }
+  const {data,error}=await _sb.from('blog_posts').select('*').order('created_at',{ascending:false});
+  if(error){ console.error('[HPHONE] blog error',error); blogPosts=[]; return; }
+  blogPosts=(data||[]).map(mapBlogPost);
+}
+function loadDemoBlog(){
+  try{
+    const ls=safeLS();
+    const raw=ls&&ls.getItem('hphone_blog');
+    blogPosts=raw?JSON.parse(raw):[];
+  }catch(e){ blogPosts=[]; }
+}
+function persistBlog(){
+  if(_sb) return;
+  try{ const ls=safeLS(); if(ls) ls.setItem('hphone_blog',JSON.stringify(blogPosts)); }catch(e){}
+}
+
+function fmtBlogDate(iso){
+  if(!iso) return '—';
+  try{ const d=new Date(iso); return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear(); }catch(e){ return '—'; }
+}
+
+function renderBlogPosts(){
+  const filtered = blogFilter==='all' ? blogPosts : blogPosts.filter(p=>p.status===blogFilter);
+  document.getElementById('navBlogCount').textContent=blogPosts.length;
+  document.getElementById('blogSummary').textContent=blogPosts.length+' bài viết · '+blogPosts.filter(p=>p.status==='published').length+' đã đăng';
+  const tb=document.getElementById('blogTableBody');
+  if(!filtered.length){
+    tb.innerHTML='<tr><td colspan="6"><div class="empty">Chưa có bài viết nào. Nhấn <b>Viết bài mới</b> để bắt đầu.</div></td></tr>';
+    return;
+  }
+  tb.innerHTML=filtered.map(p=>{
+    const cat=BLOG_CAT_LABELS[p.category]||p.category;
+    const st=p.status==='published'
+      ?'<span class="tag green">Đã đăng</span>'
+      :'<span class="tag gray">Nháp</span>';
+    const featured=p.featured?'<span class="tag orange" style="margin-left:5px;font-size:10px">★ Nổi bật</span>':'';
+    const cover=p.cover_image
+      ?'<img src="'+p.cover_image+'" style="width:46px;height:34px;object-fit:cover;border-radius:6px;border:1px solid var(--gray-200);flex-shrink:0" onerror="this.style.display=\'none\'">'
+      :'<div style="width:46px;height:34px;background:var(--gray-100);border-radius:6px;border:1px solid var(--gray-200);flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--gray-400);fill:none;stroke-width:1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>';
+    return '<tr>'
+      +'<td><div style="display:flex;align-items:center;gap:12px">'+cover
+        +'<div><div style="font-weight:600;font-size:14px;line-height:1.3">'+p.title+'</div>'
+        +'<div style="font-size:11px;color:var(--gray-400);font-family:monospace;margin-top:2px">'+p.slug+'</div></div></div></td>'
+      +'<td><span class="tag blue" style="font-size:11px">'+cat+'</span></td>'
+      +'<td style="font-size:13px;color:var(--gray-600)">'+(p.author||'—')+(p.read_time?' · '+p.read_time+' phút':'')+'</td>'
+      +'<td>'+st+featured+'</td>'
+      +'<td style="color:var(--gray-600);font-size:13px">'+fmtBlogDate(p.published_at||p.created_at)+'</td>'
+      +'<td><div class="row-actions">'
+        +'<a href="bai-viet.html?slug='+encodeURIComponent(p.slug||p.id)+'" target="_blank" class="act-btn" title="Xem bài viết" style="text-decoration:none"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>'
+        +'<button class="act-btn" title="Sửa bài" onclick="openBlogModal('+p.id+')"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></button>'
+        +'<button class="act-btn del" title="Xóa bài" onclick="askBlogDel('+p.id+')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>'
+      +'</div></td>'
+      +'</tr>';
+  }).join('');
+}
+document.querySelectorAll('#blogFilter .pill').forEach(p=>p.addEventListener('click',function(){
+  document.querySelectorAll('#blogFilter .pill').forEach(x=>x.classList.remove('on'));
+  this.classList.add('on'); blogFilter=this.dataset.f; renderBlogPosts();
+}));
+
+/* Blog slug helpers */
+function autoBlogSlug(){
+  const s=document.getElementById('bf_slug');
+  if(s&&!s.dataset.manual){ s.value=toSlug(document.getElementById('bf_title').value||''); updateBlogSlugPreview(); }
+}
+function forceBlogSlug(){
+  const s=document.getElementById('bf_slug'); if(!s)return;
+  s.value=toSlug((document.getElementById('bf_title')||{}).value||'');
+  s.dataset.manual=s.value?'1':'';
+  updateBlogSlugPreview();
+  toast('Đã tạo slug tự động');
+}
+function updateBlogSlugPreview(){
+  const s=document.getElementById('bf_slug');
+  const pr=document.getElementById('blogSlugPreview');
+  if(!pr) return;
+  const v=(s&&s.value.trim())||'';
+  if(v){
+    pr.innerHTML='<span style="color:#a0a0a0">🔗</span> <a href="bai-viet.html?slug='+encodeURIComponent(v)+'" target="_blank" style="color:var(--accent);text-decoration:none">bai-viet.html?slug='+v+'</a>';
+  } else {
+    pr.textContent='Slug được tạo tự động từ tiêu đề';
+  }
+}
+document.addEventListener('DOMContentLoaded',function(){
+  const s=document.getElementById('bf_slug');
+  if(s) s.addEventListener('input',function(){ this.dataset.manual=this.value?'1':''; updateBlogSlugPreview(); });
+});
+
+/* Blog Quill init */
+function initBlogQuill(){
+  if(_blogQuill) return;
+  const el=document.getElementById('blogEditor');
+  if(!el||typeof Quill==='undefined') return;
+  if(!document.getElementById('_blogQuillCSS')){
+    const s=document.createElement('style');
+    s.id='_blogQuillCSS';
+    s.textContent='.ql-toolbar.ql-snow{border:none!important;border-bottom:1.5px solid var(--gray-200)!important;padding:10px 12px!important}.ql-container.ql-snow{border:none!important;font-family:var(--font-body)!important;font-size:15px!important}.ql-editor{min-height:300px!important;padding:16px!important;line-height:1.75!important}.ql-snow .ql-toolbar button:hover .ql-stroke,.ql-snow .ql-toolbar button.ql-active .ql-stroke{stroke:#c8a96e}.ql-snow .ql-toolbar button:hover .ql-fill,.ql-snow .ql-toolbar button.ql-active .ql-fill{fill:#c8a96e}';
+    document.head.appendChild(s);
+  }
+  _blogQuill=new Quill('#blogEditor',{
+    theme:'snow',
+    modules:{toolbar:[
+      [{header:[1,2,3,false]}],
+      ['bold','italic','underline','strike'],
+      [{list:'ordered'},{list:'bullet'}],
+      ['blockquote','code-block'],
+      ['link','image'],
+      [{'align':[]}],
+      ['clean']
+    ]}
+  });
+  // Custom image handler – dùng cùng dialog như product
+  _blogQuill.getModule('toolbar').addHandler('image',function(){
+    insertBlogImage();
+  });
+}
+
+function insertBlogImage(){
+  const existing=document.getElementById('_blogImgDialog');
+  if(existing) existing.remove();
+  const dialog=document.createElement('div');
+  dialog.id='_blogImgDialog';
+  dialog.style.cssText='position:fixed;inset:0;background:rgba(10,10,10,0.55);backdrop-filter:blur(4px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+  dialog.innerHTML=`<div style="background:#fff;border-radius:20px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.18)">
+    <div style="padding:22px 24px 16px;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;justify-content:space-between">
+      <span style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700">Chèn ảnh vào nội dung</span>
+      <button id="_blogImgClose" style="width:30px;height:30px;border-radius:50%;background:#f5f5f5;border:none;cursor:pointer;font-size:16px">✕</button>
+    </div>
+    <div style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:14px">
+      <div style="border:1.5px dashed #e8e8e8;border-radius:12px;padding:18px;text-align:center;cursor:pointer;background:#fafafa;position:relative;overflow:hidden" id="_blogDropZone" onmouseenter="this.style.borderColor='#c8a96e'" onmouseleave="this.style.borderColor='#e8e8e8'">
+        <svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:#c8a96e;fill:none;stroke-width:1.8;margin:0 auto 8px;display:block"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <div style="font-weight:600;font-size:14px;margin-bottom:4px">Tải ảnh lên từ máy tính</div>
+        <div style="font-size:12px;color:#a0a0a0">JPG, PNG, WEBP — tối đa 5MB</div>
+        <input type="file" id="_blogImgFile" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer">
+      </div>
+      <div style="display:flex;align-items:center;gap:10px"><div style="flex:1;height:1px;background:#e8e8e8"></div><span style="font-size:12px;color:#a0a0a0">hoặc dán URL ảnh</span><div style="flex:1;height:1px;background:#e8e8e8"></div></div>
+      <div style="display:flex;gap:8px">
+        <input id="_blogImgUrl" type="text" placeholder="https://example.com/anh.jpg" style="flex:1;padding:11px 13px;border:1.5px solid #e8e8e8;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none" onfocus="this.style.borderColor='#c8a96e'" onblur="this.style.borderColor='#e8e8e8'">
+        <button id="_blogImgUrlBtn" style="padding:11px 16px;background:#0a0a0a;color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer">Chèn</button>
+      </div>
+    </div>
+  </div>`;
+  document.body.appendChild(dialog);
+  function ins(src){ const r=_blogQuill.getSelection(true); const i=r?r.index:_blogQuill.getLength(); _blogQuill.insertEmbed(i,'image',src,'user'); _blogQuill.setSelection(i+1,0,'silent'); dialog.remove(); }
+  document.getElementById('_blogImgClose').onclick=()=>dialog.remove();
+  dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.remove();});
+  const dz=document.getElementById('_blogDropZone');
+  const fi=document.getElementById('_blogImgFile');
+  fi.onchange=function(){ const f=fi.files&&fi.files[0]; if(!f)return; if(f.size>5*1024*1024){toast('Ảnh quá lớn, tối đa 5MB');return;} const r=new FileReader(); r.onload=e=>ins(e.target.result); r.readAsDataURL(f); };
+  dz.ondragover=e=>{e.preventDefault();dz.style.borderColor='#c8a96e';};
+  dz.ondragleave=()=>{dz.style.borderColor='#e8e8e8';};
+  dz.ondrop=e=>{ e.preventDefault(); dz.style.borderColor='#e8e8e8'; const f=e.dataTransfer.files[0]; if(!f||!f.type.startsWith('image/')){toast('Vui lòng chọn file ảnh');return;} const r=new FileReader(); r.onload=ev=>ins(ev.target.result); r.readAsDataURL(f); };
+  document.getElementById('_blogImgUrlBtn').onclick=()=>{ const u=document.getElementById('_blogImgUrl').value.trim(); if(!u){toast('Vui lòng nhập URL ảnh');return;} ins(u); };
+  document.getElementById('_blogImgUrl').addEventListener('keydown',e=>{if(e.key==='Enter'){const u=e.target.value.trim();if(u)ins(u);}});
+}
+
+/* Blog tab switch */
+function switchBlogTab(id, btn){
+  document.querySelectorAll('#blogOverlay .tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#blogOverlay .modal-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(id==='btab-content'){
+    setTimeout(function(){
+      initBlogQuill();
+      const val=document.getElementById('bf_content_hidden').value||'';
+      if(_blogQuill){
+        if(val.trim().startsWith('<')){ _blogQuill.clipboard.dangerouslyPasteHTML(val); }
+        else if(val){ _blogQuill.setText(val); }
+        else { _blogQuill.setText(''); }
+      }
+    },30);
+  }
+}
+
+/* cover image */
+function previewCover(){
+  const url=document.getElementById('bf_coverurl').value.trim();
+  const wrap=document.getElementById('coverPreviewWrap');
+  const img=document.getElementById('coverPreviewImg');
+  if(url){ img.src=url; wrap.style.display='block'; }
+  else { wrap.style.display='none'; }
+}
+function handleCoverFile(input){
+  const file=input.files&&input.files[0]; if(!file)return;
+  if(file.size>5*1024*1024){toast('Ảnh quá lớn, tối đa 5MB');return;}
+  compressImage(file,1200,630,0.82).then(function(data){
+    document.getElementById('bf_coverurl').value=data;
+    previewCover();
+  });
+}
+function clearCoverImg(){
+  document.getElementById('bf_coverurl').value='';
+  document.getElementById('coverPreviewWrap').style.display='none';
+}
+
+/* open / close modal */
+function openBlogModal(id){
+  editingBlogId=(id!==undefined&&id!==null)?id:null;
+  _blogQuill=null; // reset quill
+  const setV=(k,v)=>{ const el=document.getElementById('bf_'+k); if(el){ if(el.type==='checkbox') el.checked=!!v; else el.value=v!==undefined&&v!==null?v:''; } };
+  document.getElementById('blogModalTitle').textContent=editingBlogId?'Sửa bài viết':'Viết bài mới';
+  document.getElementById('blogSaveNote').textContent='';
+  document.getElementById('bf_id').value=editingBlogId||'';
+
+  if(editingBlogId){
+    const p=blogPosts.find(x=>x.id==editingBlogId);
+    if(!p){ toast('Không tìm thấy bài viết'); return; }
+    setV('title',p.title); setV('excerpt',p.excerpt); setV('category',p.category);
+    setV('author',p.author); setV('readtime',p.read_time);
+    setV('status',p.status); setV('featured',p.featured);
+    setV('content_hidden',p.content||'');
+    const sEl=document.getElementById('bf_slug'); if(sEl){ sEl.value=p.slug||''; sEl.dataset.manual='1'; }
+    setV('coverurl',p.cover_image||'');
+    previewCover();
+  } else {
+    ['title','excerpt','author','readtime','content_hidden','coverurl'].forEach(k=>setV(k,''));
+    setV('category','tips'); setV('status','draft'); setV('featured',false);
+    const sEl=document.getElementById('bf_slug'); if(sEl){ sEl.value=''; delete sEl.dataset.manual; }
+    document.getElementById('coverPreviewWrap').style.display='none';
+  }
+  updateBlogSlugPreview();
+  document.getElementById('blogOverlay').classList.add('open');
+  // Reset to first tab
+  switchBlogTab('btab-info', document.querySelector('#blogOverlay .modal-tab'));
+}
+function closeBlogModal(){
+  document.getElementById('blogOverlay').classList.remove('open');
+  _blogQuill=null;
+}
+
+/* save */
+async function saveBlogPost(statusOverride){
+  // Sync quill
+  if(_blogQuill){
+    const h=_blogQuill.root.innerHTML;
+    document.getElementById('bf_content_hidden').value=(h==='<p><br></p>'||h==='<p></p>')?'':h;
+  }
+  const g=k=>{ const el=document.getElementById('bf_'+k); if(!el)return''; return el.type==='checkbox'?el.checked:el.value.trim(); };
+  const title=g('title'); if(!title){toast('Vui lòng nhập tiêu đề bài viết');return;}
+  const slug=(g('slug')||toSlug(title));
+  if(!slug){toast('Vui lòng nhập slug cho bài viết');return;}
+  const status=statusOverride||g('status');
+  const data={
+    title, slug, excerpt:g('excerpt')||null,
+    category:g('category')||'other', author:g('author')||null,
+    read_time:g('readtime')?parseInt(g('readtime')):null,
+    cover_image:g('coverurl')||null, content:g('content_hidden')||null,
+    status, featured:g('featured'),
+    published_at: status==='published'?(
+      editingBlogId?blogPosts.find(x=>x.id==editingBlogId)?.published_at||new Date().toISOString():new Date().toISOString()
+    ):null
+  };
+
+  if(_sb){
+    try{
+      if(editingBlogId){
+        const {error}=await _sb.from('blog_posts').update(blogPayload(data)).eq('id',editingBlogId);
+        if(error) throw error; toast(status==='published'?'Đã cập nhật và đăng bài ✓':'Đã lưu nháp ✓');
+      }else{
+        const {error}=await _sb.from('blog_posts').insert(blogPayload(data));
+        if(error) throw error; toast(status==='published'?'Đã đăng bài viết mới ✓':'Đã lưu nháp ✓');
+      }
+      await reloadBlogPosts();
+    }catch(ex){ toast('Lỗi lưu bài: '+(ex.message||'kết nối')); return; }
+  } else {
+    if(editingBlogId){
+      const p=blogPosts.find(x=>x.id==editingBlogId);
+      if(!p){toast('Không tìm thấy bài viết');return;}
+      Object.assign(p,data); toast(status==='published'?'Đã cập nhật bài viết ✓':'Đã lưu nháp ✓');
+    }else{
+      blogPosts.unshift(Object.assign({id:Date.now(),created_at:new Date().toISOString()},data));
+      toast(status==='published'?'Đã đăng bài viết ✓':'Đã lưu nháp ✓');
+    }
+    persistBlog();
+  }
+  renderBlogPosts(); closeBlogModal();
+}
+
+/* delete */
+let delBlogId=null;
+function askBlogDel(id){
+  delBlogId=id;
+  const p=blogPosts.find(x=>x.id==id);
+  document.getElementById('blogDelName').textContent=p?'"'+p.title+'"':'bài viết này';
+  document.getElementById('blogDelOverlay').classList.add('open');
+}
+function closeBlogDel(){ document.getElementById('blogDelOverlay').classList.remove('open'); }
+async function confirmBlogDel(){
+  if(_sb){
+    try{ const {error}=await _sb.from('blog_posts').delete().eq('id',delBlogId); if(error) throw error; await reloadBlogPosts(); }
+    catch(ex){ toast('Lỗi xóa: '+(ex.message||'kết nối')); closeBlogDel(); return; }
+  }else{
+    blogPosts=blogPosts.filter(p=>p.id!=delBlogId); persistBlog();
+  }
+  renderBlogPosts(); closeBlogDel(); toast('Đã xóa bài viết');
+}
+
 /* overlay click-out */
 document.getElementById('prodOverlay').addEventListener('click',e=>{if(e.target.id==='prodOverlay')closeProductModal();});
 document.getElementById('delOverlay').addEventListener('click',e=>{if(e.target.id==='delOverlay')closeDel();});
+document.getElementById('blogOverlay').addEventListener('click',e=>{if(e.target.id==='blogOverlay')closeBlogModal();});
+document.getElementById('blogDelOverlay').addEventListener('click',e=>{if(e.target.id==='blogDelOverlay')closeBlogDel();});
 
 /* init — demo (no backend) or live (Supabase + login) */
 async function boot(){
