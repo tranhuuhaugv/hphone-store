@@ -1252,13 +1252,50 @@ function compressImage(file, maxW, maxH, quality){
   });
 }
 
+/* ── Upload ảnh lên Supabase Storage (thay vì nhúng base64 vào DB) ──
+   Nén ảnh thành blob JPEG rồi upload, trả về URL công khai để lưu DB/nội dung.
+   Yêu cầu: đã tạo bucket Storage "media" công khai + policy cho phép upload. */
+const STORAGE_BUCKET = 'media';
+function compressToBlob(file, maxW, maxH, quality){
+  maxW=maxW||1000; maxH=maxH||1000; quality=quality||0.8;
+  return new Promise(function(resolve,reject){
+    const r=new FileReader();
+    r.onload=function(ev){
+      const img=new Image();
+      img.onload=function(){
+        let w=img.width,h=img.height;
+        if(w>maxW||h>maxH){ const ratio=Math.min(maxW/w,maxH/h); w=Math.round(w*ratio); h=Math.round(h*ratio); }
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        c.toBlob(function(blob){ blob?resolve(blob):reject(new Error('toBlob null')); },'image/jpeg',quality);
+      };
+      img.onerror=reject; img.src=ev.target.result;
+    };
+    r.onerror=reject; r.readAsDataURL(file);
+  });
+}
+async function uploadToStorage(blob, folder){
+  if(!_sb){ toast('Chưa kết nối Supabase'); return null; }
+  const name=(folder||'misc')+'/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.jpg';
+  const up=await _sb.storage.from(STORAGE_BUCKET).upload(name, blob, { contentType:'image/jpeg', upsert:false });
+  if(up.error){ toast('Lỗi tải ảnh lên Storage: '+(up.error.message||up.error)); return null; }
+  const pub=_sb.storage.from(STORAGE_BUCKET).getPublicUrl(name);
+  return pub && pub.data && pub.data.publicUrl;
+}
+async function uploadImage(file, maxW, maxH, quality, folder){
+  try{
+    const blob=await compressToBlob(file,maxW,maxH,quality);
+    return await uploadToStorage(blob, folder);
+  }catch(e){ toast('Không xử lý được ảnh'); return null; }
+}
+
 document.getElementById('f_file').addEventListener('change',function(e){
   const files = Array.from(e.target.files);
   if(!files.length) return;
+  toast('Đang tải '+files.length+' ảnh lên...');
   files.forEach(file => {
-    compressImage(file, 800, 800, 0.75).then(function(data){
-      pendingImgs.push(data);
-      renderGallery();
+    uploadImage(file, 1000, 1000, 0.8, 'products').then(function(url){
+      if(url){ pendingImgs.push(url); renderGallery(); }
     });
   });
   e.target.value = '';
@@ -1321,9 +1358,10 @@ function handleVarImgMulti(input, uid){
   if(!row) return;
   let imgs; try{ imgs = JSON.parse(row.dataset.varImages||'[]'); }catch(e){ imgs=[]; }
   let remaining = files.length;
+  toast('Đang tải '+files.length+' ảnh lên...');
   files.forEach(file=>{
-    compressImage(file, 600, 600, 0.72).then(function(data){
-      imgs.push(data);
+    uploadImage(file, 800, 800, 0.78, 'variants').then(function(url){
+      if(url) imgs.push(url);
       remaining--;
       if(remaining===0){ row.dataset.varImages=JSON.stringify(imgs); renderVarImgList(uid,row); }
     });
@@ -1794,10 +1832,10 @@ function insertBlogImage(){
   dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.remove();});
   const dz=document.getElementById('_blogDropZone');
   const fi=document.getElementById('_blogImgFile');
-  fi.onchange=function(){ const f=fi.files&&fi.files[0]; if(!f)return; if(f.size>5*1024*1024){toast('Ảnh quá lớn, tối đa 5MB');return;} const r=new FileReader(); r.onload=e=>ins(e.target.result); r.readAsDataURL(f); };
+  fi.onchange=function(){ const f=fi.files&&fi.files[0]; if(!f)return; if(f.size>5*1024*1024){toast('Ảnh quá lớn, tối đa 5MB');return;} toast('Đang tải ảnh lên...'); uploadImage(f,1400,1400,0.82,'content').then(u=>{ if(u) ins(u); }); };
   dz.ondragover=e=>{e.preventDefault();dz.style.borderColor='#c8a96e';};
   dz.ondragleave=()=>{dz.style.borderColor='#e8e8e8';};
-  dz.ondrop=e=>{ e.preventDefault(); dz.style.borderColor='#e8e8e8'; const f=e.dataTransfer.files[0]; if(!f||!f.type.startsWith('image/')){toast('Vui lòng chọn file ảnh');return;} const r=new FileReader(); r.onload=ev=>ins(ev.target.result); r.readAsDataURL(f); };
+  dz.ondrop=e=>{ e.preventDefault(); dz.style.borderColor='#e8e8e8'; const f=e.dataTransfer.files[0]; if(!f||!f.type.startsWith('image/')){toast('Vui lòng chọn file ảnh');return;} toast('Đang tải ảnh lên...'); uploadImage(f,1400,1400,0.82,'content').then(u=>{ if(u) ins(u); }); };
   document.getElementById('_blogImgUrlBtn').onclick=()=>{ const u=document.getElementById('_blogImgUrl').value.trim(); if(!u){toast('Vui lòng nhập URL ảnh');return;} ins(u); };
   document.getElementById('_blogImgUrl').addEventListener('keydown',e=>{if(e.key==='Enter'){const u=e.target.value.trim();if(u)ins(u);}});
 }
@@ -1832,10 +1870,11 @@ function previewCover(){
 function handleCoverFile(input){
   const file=input.files&&input.files[0]; if(!file)return;
   if(file.size>5*1024*1024){toast('Ảnh quá lớn, tối đa 5MB');return;}
-  compressImage(file,1200,630,0.82).then(function(data){
-    document.getElementById('bf_coverurl').value=data;
-    previewCover();
+  toast('Đang tải ảnh bìa lên...');
+  uploadImage(file,1200,630,0.82,'covers').then(function(url){
+    if(url){ document.getElementById('bf_coverurl').value=url; previewCover(); toast('Đã tải ảnh bìa lên'); }
   });
+  input.value='';
 }
 function clearCoverImg(){
   document.getElementById('bf_coverurl').value='';
@@ -2019,14 +2058,14 @@ function initQuill(){
         e.preventDefault();
         const file = items[i].getAsFile();
         if(!file) continue;
-        const reader = new FileReader();
-        reader.onload = function(ev){
+        toast('Đang tải ảnh lên...');
+        uploadImage(file, 1400, 1400, 0.82, 'content').then(function(url){
+          if(!url) return;
           const range = _quill.getSelection(true);
           const index = range ? range.index : _quill.getLength();
-          _quill.insertEmbed(index, 'image', ev.target.result, 'user');
+          _quill.insertEmbed(index, 'image', url, 'user');
           _quill.setSelection(index + 1, 0, 'silent');
-        };
-        reader.readAsDataURL(file);
+        });
         break; // chỉ xử lý ảnh đầu tiên nếu paste nhiều
       }
     }
@@ -2126,10 +2165,8 @@ function insertDescriptionImage(){
     if(!file) return;
     if(!file.type.startsWith('image/')){ toast('Vui lòng chọn file ảnh'); return; }
     if(file.size > 5 * 1024 * 1024){ toast('Ảnh quá lớn, tối đa 5MB'); return; }
-    const reader = new FileReader();
-    reader.onload = e => insertImg(e.target.result);
-    reader.onerror = () => toast('Không đọc được file ảnh');
-    reader.readAsDataURL(file);
+    toast('Đang tải ảnh lên...');
+    uploadImage(file, 1400, 1400, 0.82, 'content').then(u => { if(u) insertImg(u); });
   };
 
   // Drag & drop vào dropzone
@@ -2139,9 +2176,8 @@ function insertDescriptionImage(){
     e.preventDefault(); dropZone.style.borderColor='#e8e8e8';
     const file = e.dataTransfer.files[0];
     if(!file || !file.type.startsWith('image/')){ toast('Vui lòng chọn file ảnh'); return; }
-    const reader = new FileReader();
-    reader.onload = ev => insertImg(ev.target.result);
-    reader.readAsDataURL(file);
+    toast('Đang tải ảnh lên...');
+    uploadImage(file, 1400, 1400, 0.82, 'content').then(u => { if(u) insertImg(u); });
   };
 
   // URL input
