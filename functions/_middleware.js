@@ -20,6 +20,14 @@
 //    CANONICAL KHÔNG ĐUÔI "/chi-tiet-san-pham": next() đi thẳng xuống tầng asset,
 //    không re-chạy middleware nên không loop.
 
+// Tên các trang THẬT (file .html trong repo, bỏ đuôi). Cloudflare tự bỏ .html
+// nên /blog.html → 308 → /blog (không đuôi) — phải nhận diện để KHÔNG nhầm
+// thành slug sản phẩm. ⚠️ Thêm trang .html mới thì nhớ thêm tên vào đây.
+const PAGES = new Set([
+  'index', 'danh-sach-san-pham', 'chi-tiet-san-pham', 'gio-hang',
+  'thu-cu-doi-moi', 'blog', 'bai-viet', 'bao-hanh', 'lien-he', 'admin',
+]);
+
 export async function onRequest(context) {
   const { request, next } = context;
   const url = new URL(request.url);
@@ -35,8 +43,9 @@ export async function onRequest(context) {
 
   const seg = path.replace(/^\/+/, '').replace(/\/+$/, '');
 
-  // 2) Trang gốc hoặc file có đuôi (.html, .css, .js, .png…) → phục vụ bình thường
-  if (seg === '' || seg.includes('.')) {
+  // 2) Trang gốc, file có đuôi (.html, .css, .js, .png…), hoặc trang thật đã biết
+  //    (vd /blog do Pages bỏ .html) → phục vụ bình thường
+  if (seg === '' || seg.includes('.') || PAGES.has(seg)) {
     return next();
   }
 

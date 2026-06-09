@@ -115,6 +115,7 @@ phẩm có ô **slug** và nút **copy link**.
 | Link sản phẩm mở ra trang trống / "Sản phẩm không tồn tại" | Slug trên link không khớp slug trong Admin. Vào Admin sửa lại slug cho khớp. |
 | Sửa code xong mà web không đổi | Chưa push lên GitHub, hoặc đang xem bản cache. Thử **Ctrl+F5** (tải lại cứng), hoặc kiểm tra tab **Deployments** trên Cloudflare đã build xong chưa. |
 | Mở file HTML trên máy (file://) thì URL đẹp không chạy | Bình thường. URL đẹp **chỉ chạy khi đã lên Cloudflare**. |
+| Vừa **thêm trang .html mới** mà mở ra bị nhầm sang trang chi tiết sản phẩm | Mở `functions/_middleware.js`, thêm tên trang (bỏ `.html`) vào danh sách `PAGES`. Vd thêm `gioi-thieu.html` thì thêm `'gioi-thieu'` vào danh sách đó. |
 
 ---
 
