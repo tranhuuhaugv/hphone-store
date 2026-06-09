@@ -555,12 +555,11 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   // Chuẩn hóa URL thành dạng slug để SEO tốt hơn
   function toSlug(str){ return (str||'').toLowerCase().replace(/đ/g,'d').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-'); }
   const canonSlug = p.slug || toSlug(p.name);
-  // Nếu đang ở dạng ?slug=xxx thì replaceState sang clean URL
-  // Nếu đã ở clean URL (pathname = /slug) thì không làm gì tránh loop
-  // Nếu đang ở dạng ?slug=xxx → replaceState sang clean URL /slug
-  // (Cloudflare Pages Function đã handle route này nên không 404)
-  // ── Clean URL: /san-pham/{slug} ──
-  const cleanUrl = window.location.origin + '/san-pham/' + encodeURIComponent(canonSlug);
+  // ── Clean URL: /{slug} (ngay ở gốc, vd hphone.store/iphone-17-pro-max) ──
+  // Nếu đang ở dạng ?slug=xxx → replaceState sang clean URL /slug.
+  // Nếu đã ở clean URL (pathname = /slug) thì giữ nguyên, tránh loop.
+  // (functions/_middleware.js trên Cloudflare Pages đã route /{slug} → trang này nên không 404)
+  const cleanUrl = window.location.origin + '/' + encodeURIComponent(canonSlug);
   const seoUrl   = cleanUrl;
 
   // Canonical tag — chống duplicate content
@@ -568,10 +567,10 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   if(canonEl) canonEl.setAttribute('href', cleanUrl);
 
   // replaceState: đổi URL trên thanh địa chỉ thành clean URL (không reload trang)
-  // Chỉ thực hiện nếu URL hiện tại chưa phải clean URL
+  // Chỉ thực hiện nếu URL hiện tại chưa phải clean URL (còn .html, query, hoặc gốc /)
   const curPath = window.location.pathname;
-  if(curPath.includes('.html') || curPath === '/'){
-    history.replaceState(null, '', '/san-pham/' + encodeURIComponent(canonSlug));
+  if(curPath.includes('.html') || curPath === '/' || window.location.search){
+    history.replaceState(null, '', '/' + encodeURIComponent(canonSlug));
   }
 
   function setMeta(id, attr, val){ const el=document.getElementById(id); if(el && val) el.setAttribute(attr, val); }
@@ -1106,7 +1105,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
         const rImg = r.img
           ? '<div class="phone-mock img" style="position:relative;background:var(--gray-100)"><img src="'+r.img+'" loading="lazy" style="width:100%;height:100%;object-fit:contain;position:absolute;inset:0;border-radius:var(--radius-lg)"><span class="badge '+rBadge+'" style="position:absolute;top:14px;left:14px;max-width:calc(100% - 28px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.badge||r.condition||'')+'</span></div>'
           : '<div class="phone-mock'+(r.brand==='samsung'?' samsung':'')+' img"><span class="badge '+rBadge+'" style="position:absolute;top:14px;left:14px;max-width:calc(100% - 28px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.badge||r.condition||'')+'</span><div class="inner"><span>'+(r.short||r.name)+'</span></div></div>';
-        return '<a href="/san-pham/'+(r.slug||r.id)+'" class="mini-card">'
+        return '<a href="/'+(r.slug||r.id)+'" class="mini-card">'
           +rImg
           +'<div class="body">'
           +'<div class="name">'+r.name+'</div>'
