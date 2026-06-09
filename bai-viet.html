@@ -6,6 +6,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="pageTitle">Bài viết – HPHONE Blog</title>
 <meta name="description" id="pageDesc" content="Mẹo hay, hướng dẫn sử dụng iPhone từ đội ngũ HPHONE.">
+<link rel="canonical" id="canonicalTag" href="https://hphone.store/blog">
+<meta property="og:type" content="article">
+<meta property="og:title" id="ogTitle" content="HPHONE Blog">
+<meta property="og:description" id="ogDesc" content="">
+<meta property="og:url" id="ogUrl" content="https://hphone.store/blog">
+<meta property="og:image" id="ogImage" content="">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -437,7 +444,7 @@ function renderRelated(posts,currentId){
   var related=posts.filter(function(p){return p.id!==currentId;}).slice(0,4);
   if(!related.length){el.innerHTML='<div style="font-size:13px;color:var(--gray-400)">Chưa có bài liên quan.</div>';return;}
   el.innerHTML=related.map(function(p){
-    return '<a href="bai-viet.html?slug='+encodeURIComponent(p.slug||p.id)+'" class="related-post">'
+    return '<a href="/blog/'+encodeURIComponent(p.slug||p.id)+'" class="related-post">'
       +'<div class="related-post-thumb">'+(p.cover_image?'<img src="'+p.cover_image+'" alt="" loading="lazy">':'')+'</div>'
       +'<div><div class="related-post-title">'+p.title+'</div><div class="related-post-date">'+fmtDate(p.published_at||p.created_at)+'</div></div>'
       +'</a>';
@@ -468,6 +475,11 @@ function initTOC(){
 waitForSupabase(async function(){
   var sb=window.supabase.createClient(_SB_URL,_SB_KEY);
   var slug=new URLSearchParams(location.search).get('slug');
+  // Clean URL: /blog/{slug} → đọc slug từ pathname
+  if(!slug){
+    var segs=location.pathname.replace(/^\/+/,'').replace(/\/+$/,'').split('/');
+    if(segs[0]==='blog' && segs[1]) slug=decodeURIComponent(segs[1]);
+  }
 
   if(!slug){renderNotFound();return;}
 
@@ -488,6 +500,20 @@ waitForSupabase(async function(){
   // ── Update page title / meta ──
   document.getElementById('pageTitle').textContent=post.title+' – HPHONE Blog';
   if(post.excerpt) document.getElementById('pageDesc').setAttribute('content',post.excerpt);
+
+  // ── Clean URL + SEO (canonical / Open Graph) ──
+  var canonSlug=post.slug||post.id;
+  var cleanUrl='https://hphone.store/blog/'+encodeURIComponent(canonSlug);
+  function setAttr(id,attr,val){ var el=document.getElementById(id); if(el&&val) el.setAttribute(attr,val); }
+  setAttr('canonicalTag','href',cleanUrl);
+  setAttr('ogTitle','content',post.title+' – HPHONE Blog');
+  setAttr('ogDesc','content',post.excerpt||'');
+  setAttr('ogUrl','content',cleanUrl);
+  if(post.cover_image) setAttr('ogImage','content',post.cover_image);
+  // Đổi URL trên thanh địa chỉ sang dạng sạch /blog/{slug} (nếu đang ?slug= hoặc .html)
+  if(location.pathname.indexOf('.html')>=0 || location.search){
+    history.replaceState(null,'','/blog/'+encodeURIComponent(canonSlug));
+  }
 
   // ── Hero ──
   var catLabel=CAT_LABELS[post.category]||post.category||'Blog';
@@ -573,8 +599,8 @@ waitForSupabase(async function(){
     var navEl=document.getElementById('postNavWrap');
     if(navEl){
       navEl.innerHTML=''
-        +(prev?'<a href="bai-viet.html?slug='+encodeURIComponent(prev.slug||prev.id)+'" class="post-nav-btn prev"><div class="post-nav-dir"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Bài trước</div><h4>'+prev.title+'</h4></a>':'<div></div>')
-        +(next?'<a href="bai-viet.html?slug='+encodeURIComponent(next.slug||next.id)+'" class="post-nav-btn next"><div class="post-nav-dir" style="justify-content:flex-end">Bài tiếp <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><h4>'+next.title+'</h4></a>':'<div></div>');
+        +(prev?'<a href="/blog/'+encodeURIComponent(prev.slug||prev.id)+'" class="post-nav-btn prev"><div class="post-nav-dir"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Bài trước</div><h4>'+prev.title+'</h4></a>':'<div></div>')
+        +(next?'<a href="/blog/'+encodeURIComponent(next.slug||next.id)+'" class="post-nav-btn next"><div class="post-nav-dir" style="justify-content:flex-end">Bài tiếp <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div><h4>'+next.title+'</h4></a>':'<div></div>');
     }
   } else {
     document.getElementById('relatedPosts').innerHTML='<div style="font-size:13px;color:var(--gray-400)">Chưa có bài liên quan.</div>';

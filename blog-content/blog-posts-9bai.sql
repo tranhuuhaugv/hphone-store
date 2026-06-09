@@ -1,0 +1,333 @@
+-- 9 bài blog HPHONE (EEAT, iPhone cũ, Đà Nẵng). Chạy trong Supabase SQL Editor.
+-- An toàn chạy lại nhiều lần: xoá theo slug trước rồi insert mới.
+DELETE FROM blog_posts WHERE slug IN ('meo-tiet-kiem-pin-iphone','meo-tang-toc-iphone-cu-chay-muot','meo-bao-quan-iphone-cu-ben-dep','cach-kiem-tra-pin-iphone-cu','cach-kiem-tra-icloud-an-iphone-cu','cach-chuyen-du-lieu-iphone-cu-sang-moi','nen-mua-iphone-cu-hay-moi','so-sanh-iphone-13-va-iphone-14-cu','so-sanh-iphone-like-new-va-troi-bao-hanh');
+INSERT INTO blog_posts (title, slug, excerpt, content, category, author, read_time, featured, status, published_at) VALUES
+('15 Mẹo Tiết Kiệm Pin iPhone Hiệu Quả, Đơn Giản Nhất 2026', 'meo-tiet-kiem-pin-iphone', 'Pin iPhone nhanh hết, tụt pin nhanh? Tổng hợp 15 mẹo tiết kiệm pin iPhone hiệu quả, đơn giản nhất 2026 — kèm đường dẫn cài đặt cụ thể, áp dụng được cả cho iPhone cũ.', '
+<p>Pin iPhone tụt nhanh là nỗi bực mình quen thuộc, đặc biệt với những máy đã dùng một thời gian. Tại HPHONE, mỗi ngày chúng tôi nhận hàng chục câu hỏi kiểu &ldquo;iPhone em mới sạc đầy mà dùng vài tiếng đã hết pin&rdquo;. Phần lớn không phải do pin hỏng, mà do thiết lập chưa tối ưu. Dưới đây là 15 mẹo tiết kiệm pin iPhone đã được kỹ thuật viên HPHONE kiểm chứng trên thực tế, áp dụng được cho cả iPhone mới lẫn iPhone cũ.</p>
+
+<h2>1. Bật Chế độ nguồn điện thấp</h2>
+<p>Vào <strong>Cài đặt → Pin → Chế độ nguồn điện thấp</strong> và bật lên. Tính năng này giảm hoạt động nền, tự động khoá màn hình nhanh hơn và có thể kéo dài thời lượng pin thêm 1–2 tiếng. Bạn cũng có thể thêm nút tắt nhanh vào Trung tâm điều khiển.</p>
+
+<h2>2. Giảm độ sáng và bật độ sáng tự động</h2>
+<p>Màn hình là bộ phận ngốn pin nhiều nhất. Vào <strong>Cài đặt → Màn hình &amp; Độ sáng</strong> để giảm độ sáng, và bật <strong>Cài đặt → Trợ năng → Màn hình &amp; Cỡ chữ → Tự động điều chỉnh độ sáng</strong>.</p>
+
+<h2>3. Dùng nền tối (Dark Mode)</h2>
+<p>Với iPhone màn hình OLED (từ iPhone X trở lên), nền tối giúp tiết kiệm pin thật sự. Bật tại <strong>Cài đặt → Màn hình &amp; Độ sáng → Tối</strong>.</p>
+
+<h2>4. Tắt làm mới ứng dụng nền</h2>
+<p>Nhiều app vẫn chạy ngầm để tải dữ liệu. Tắt bớt tại <strong>Cài đặt → Cài đặt chung → Làm mới ứng dụng nền</strong> — chỉ giữ lại app thực sự cần.</p>
+
+<h2>5. Quản lý Dịch vụ định vị</h2>
+<p>Vào <strong>Cài đặt → Quyền riêng tư &amp; Bảo mật → Dịch vụ định vị</strong>, chuyển các app không cần thiết sang &ldquo;Không bao giờ&rdquo; hoặc &ldquo;Khi đang dùng app&rdquo;.</p>
+
+<h2>6. Kiểm tra app nào ngốn pin</h2>
+<p>Vào <strong>Cài đặt → Pin</strong>, kéo xuống xem &ldquo;Mức sử dụng pin theo ứng dụng&rdquo;. App nào chiếm tỉ lệ cao bất thường thì cân nhắc hạn chế hoặc gỡ.</p>
+
+<h2>7. Tắt thông báo đẩy không cần thiết</h2>
+<p>Mỗi lần màn hình sáng lên vì thông báo là một lần hao pin. Dọn bớt tại <strong>Cài đặt → Thông báo</strong>.</p>
+
+<h2>8. Giảm thời gian tự khoá màn hình</h2>
+<p><strong>Cài đặt → Màn hình &amp; Độ sáng → Tự động khoá</strong> → đặt 30 giây hoặc 1 phút.</p>
+
+<h2>9. Tắt Always-On Display (iPhone 14 Pro trở lên)</h2>
+<p>Màn hình luôn bật khá tốn pin. Tắt tại <strong>Cài đặt → Màn hình &amp; Độ sáng → Màn hình luôn bật</strong>.</p>
+
+<h2>10. Dùng Wi-Fi thay vì 4G/5G khi có thể</h2>
+<p>Sóng yếu khiến máy &ldquo;gồng&rdquo; để bắt mạng, rất hao pin. Ở nơi sóng kém, bật Wi-Fi hoặc Chế độ máy bay khi không cần dùng mạng.</p>
+
+<h2>11. Tắt 5G nếu không cần</h2>
+<p>Vào <strong>Cài đặt → Di động → Tuỳ chọn dữ liệu di động → Thoại &amp; Dữ liệu</strong>, chọn &ldquo;Tự động 5G&rdquo; hoặc về 4G/LTE để tiết kiệm.</p>
+
+<h2>12. Cập nhật iOS mới nhất</h2>
+<p>Apple thường vá lỗi hao pin trong các bản cập nhật. Kiểm tra tại <strong>Cài đặt → Cài đặt chung → Cập nhật phần mềm</strong>.</p>
+
+<h2>13. Tắt làm mới/đồng bộ iCloud Photos qua dữ liệu di động</h2>
+<p>Quá trình tải ảnh lên iCloud rất tốn pin. Giới hạn tại <strong>Cài đặt → Ảnh</strong> và phần dữ liệu di động.</p>
+
+<h2>14. Hạn chế hiệu ứng chuyển động</h2>
+<p><strong>Cài đặt → Trợ năng → Chuyển động → Giảm chuyển động</strong> giúp giảm tải cho máy, gián tiếp tiết kiệm pin.</p>
+
+<h2>15. Sạc đúng cách để pin bền lâu</h2>
+<p>Bật <strong>Cài đặt → Pin → Tình trạng pin &amp; Sạc → Sạc pin tối ưu</strong>. Tránh để máy cạn 0% thường xuyên và không vừa sạc vừa chơi game nặng.</p>
+
+<h2>Khi nào nên thay pin?</h2>
+<p>Nếu đã áp dụng hết các mẹo trên mà pin vẫn tụt nhanh, hãy kiểm tra <strong>Cài đặt → Pin → Tình trạng pin &amp; Sạc</strong>. Khi dung lượng tối đa dưới 80%, đó là lúc nên cân nhắc thay pin. Với iPhone cũ, một viên pin khoẻ tạo khác biệt rất lớn cho trải nghiệm.</p>
+<blockquote><p><strong>Về HPHONE:</strong> Mỗi chiếc iPhone cũ tại HPHONE (249 Hà Huy Tập, Thanh Khê, Đà Nẵng) đều được kỹ thuật viên kiểm tra IMEI, độ chai pin và toàn bộ chức năng trước khi lên kệ. Xem các mẫu iPhone cũ pin khoẻ, giá minh bạch tại <a href="/danh-sach-san-pham">danh sách sản phẩm</a>. Hotline/Zalo: 0379.443.613.</p></blockquote><p><em>Bài viết được biên soạn và kiểm chứng thực tế bởi đội ngũ kỹ thuật HPHONE — cập nhật tháng 6/2026.</em></p>', 'meo-hay', 'Đội ngũ kỹ thuật HPHONE', 8, true, 'published', '2026-06-09T09:00:00+07:00'),
+('10 Mẹo Tăng Tốc iPhone Cũ Chạy Mượt Như Máy Mới (2026)', 'meo-tang-toc-iphone-cu-chay-muot', 'iPhone cũ bị chậm, giật lag, đầy bộ nhớ? 10 mẹo tăng tốc iPhone cũ chạy mượt như mới — đơn giản, làm tại nhà, kèm đường dẫn cài đặt chi tiết.', '
+<p>iPhone cũ dùng một thời gian thường chậm dần: mở app lâu, cuộn giật, bộ nhớ đầy. Tin tốt là đa phần xử lý được mà không tốn tiền. Đây là 10 mẹo tăng tốc iPhone cũ mà kỹ thuật viên HPHONE Đà Nẵng vẫn áp dụng trước khi bàn giao máy cho khách.</p>
+
+<h2>1. Khởi động lại máy định kỳ</h2>
+<p>Nghe đơn giản nhưng rất hiệu quả: tắt nguồn hoàn toàn rồi bật lại mỗi vài ngày giúp giải phóng bộ nhớ tạm và đóng các tiến trình treo.</p>
+
+<h2>2. Giải phóng dung lượng lưu trữ</h2>
+<p>Máy gần đầy bộ nhớ sẽ chậm rõ rệt. Kiểm tra tại <strong>Cài đặt → Cài đặt chung → Dung lượng iPhone</strong>, xoá app không dùng, ảnh/video trùng và dọn bộ nhớ đệm. Nên chừa tối thiểu 10% dung lượng trống.</p>
+
+<h2>3. Cập nhật iOS — nhưng cân nhắc với máy quá cũ</h2>
+<p><strong>Cài đặt → Cài đặt chung → Cập nhật phần mềm</strong>. Bản mới vá lỗi và tối ưu hiệu năng. Tuy nhiên với dòng quá đời (iPhone 8/X…), nên tham khảo trước vì iOS mới nhất đôi khi nặng so với phần cứng.</p>
+
+<h2>4. Cập nhật ứng dụng</h2>
+<p>App cũ dễ xung đột với iOS mới. Mở App Store → ảnh đại diện → cập nhật toàn bộ.</p>
+
+<h2>5. Tắt làm mới ứng dụng nền</h2>
+<p><strong>Cài đặt → Cài đặt chung → Làm mới ứng dụng nền</strong> → tắt bớt để giảm tải CPU.</p>
+
+<h2>6. Giảm hiệu ứng chuyển động</h2>
+<p><strong>Cài đặt → Trợ năng → Chuyển động → Giảm chuyển động</strong>. Giao diện sẽ phản hồi nhanh hơn thấy rõ trên máy cũ.</p>
+
+<h2>7. Tắt hiệu ứng trong suốt</h2>
+<p><strong>Cài đặt → Trợ năng → Màn hình &amp; Cỡ chữ → Giảm độ trong suốt</strong> giúp GPU đỡ phải xử lý.</p>
+
+<h2>8. Dọn lịch sử &amp; dữ liệu Safari</h2>
+<p><strong>Cài đặt → Apps → Safari → Xoá lịch sử và dữ liệu trang web</strong> để trình duyệt nhẹ và nhanh hơn.</p>
+
+<h2>9. Tắt tải tự động</h2>
+<p><strong>Cài đặt → App Store → Tải xuống tự động</strong> → tắt, tránh máy âm thầm tải app/cập nhật làm chậm khi đang dùng.</p>
+
+<h2>10. Khôi phục cài đặt gốc (giải pháp cuối)</h2>
+<p>Nếu máy vẫn ì ạch, hãy sao lưu rồi vào <strong>Cài đặt → Cài đặt chung → Chuyển hoặc Đặt lại iPhone → Xoá tất cả nội dung và cài đặt</strong>. Cài lại như máy mới thường giúp iPhone cũ nhanh trở lại đáng kể.</p>
+
+<h2>Lưu ý quan trọng</h2>
+<p>Nếu máy chậm kèm nóng bất thường hoặc tụt pin nhanh, nguyên nhân có thể nằm ở pin chai hoặc linh kiện. Khi đó các mẹo phần mềm chỉ giúp một phần — nên mang máy đi kiểm tra.</p>
+<blockquote><p><strong>Về HPHONE:</strong> Mỗi chiếc iPhone cũ tại HPHONE (249 Hà Huy Tập, Thanh Khê, Đà Nẵng) đều được kỹ thuật viên kiểm tra IMEI, độ chai pin và toàn bộ chức năng trước khi lên kệ. Cần một chiếc iPhone cũ đã được tối ưu sẵn, chạy mượt? Tham khảo <a href="/danh-sach-san-pham">iPhone cũ tại HPHONE</a>. Hotline/Zalo: 0379.443.613.</p></blockquote><p><em>Bài viết được biên soạn và kiểm chứng thực tế bởi đội ngũ kỹ thuật HPHONE — cập nhật tháng 6/2026.</em></p>', 'meo-hay', 'Đội ngũ kỹ thuật HPHONE', 7, false, 'published', '2026-06-09T08:55:00+07:00'),
+('9 Mẹo Bảo Quản iPhone Cũ Bền Đẹp, Giữ Giá Khi Bán Lại', 'meo-bao-quan-iphone-cu-ben-dep', 'Muốn iPhone cũ bền đẹp và bán lại được giá? 9 mẹo bảo quản iPhone đúng cách từ kỹ thuật viên HPHONE Đà Nẵng — bảo vệ pin, màn hình, vỏ máy và dữ liệu.', '
+<p>Một chiếc iPhone được giữ gìn tốt không chỉ dùng bền hơn mà còn bán lại được giá cao hơn hẳn. Tại HPHONE, máy nào ngoại hình đẹp, pin khoẻ luôn có giá thu/đổi tốt nhất. Dưới đây là 9 mẹo bảo quản iPhone cũ mà bạn nên áp dụng ngay.</p>
+
+<h2>1. Dùng ốp lưng và dán màn hình</h2>
+<p>Khoản đầu tư rẻ nhất nhưng hiệu quả nhất: ốp lưng chống sốc và kính cường lực giúp máy sống sót qua những cú rơi và giữ màn hình, mặt lưng không trầy.</p>
+
+<h2>2. Bảo vệ pin đúng cách</h2>
+<p>Bật <strong>Cài đặt → Pin → Tình trạng pin &amp; Sạc → Sạc pin tối ưu</strong>. Tránh để pin cạn kiệt 0% hay sạc qua đêm thường xuyên; giữ pin trong khoảng 20–80% là lý tưởng nhất cho tuổi thọ.</p>
+
+<h2>3. Tránh nhiệt độ cao</h2>
+<p>Nhiệt độ là &ldquo;kẻ thù&rdquo; của pin lithium. Đừng để máy trong ô tô đỗ nắng, gần bếp, hay vừa sạc vừa chơi game nặng — đặc biệt ở thời tiết nóng của miền Trung.</p>
+
+<h2>4. Hạn chế tiếp xúc nước dù máy kháng nước</h2>
+<p>Khả năng kháng nước (IP) giảm dần theo thời gian, nhất là với máy cũ từng bung máy. Đừng chủ quan mang đi bơi hay tắm.</p>
+
+<h2>5. Vệ sinh cổng sạc và loa</h2>
+<p>Bụi vải tích trong cổng sạc gây sạc chập chờn. Dùng cọ mềm hoặc tăm gỗ làm sạch nhẹ nhàng, định kỳ.</p>
+
+<h2>6. Giữ máy luôn còn dung lượng trống</h2>
+<p>Bộ nhớ đầy khiến máy chậm và pin nóng. Duy trì ít nhất 10% trống, dọn ảnh/video định kỳ.</p>
+
+<h2>7. Cập nhật iOS để vá lỗi bảo mật</h2>
+<p>Cập nhật giúp máy an toàn và ổn định hơn — quan trọng cho cả độ bền phần mềm lẫn giá trị máy.</p>
+
+<h2>8. Sao lưu dữ liệu định kỳ</h2>
+<p>Bật <strong>Cài đặt → [Tên Apple ID] → iCloud → Sao lưu iCloud</strong>. Dữ liệu là thứ giá trị hơn cả chiếc máy.</p>
+
+<h2>9. Giữ lại hộp và phụ kiện</h2>
+<p>Hộp, cáp, hoá đơn còn đầy đủ giúp máy bán lại được giá cao hơn và tạo niềm tin cho người mua.</p>
+
+<h2>Mẹo &ldquo;giữ giá&rdquo; khi định bán lại</h2>
+<p>Trước khi bán, hãy lau máy sạch sẽ, chụp ảnh rõ ngoại hình và in tình trạng pin (% dung lượng tối đa). Máy minh bạch luôn được trả giá tốt hơn.</p>
+<blockquote><p><strong>Về HPHONE:</strong> Mỗi chiếc iPhone cũ tại HPHONE (249 Hà Huy Tập, Thanh Khê, Đà Nẵng) đều được kỹ thuật viên kiểm tra IMEI, độ chai pin và toàn bộ chức năng trước khi lên kệ. Muốn bán hoặc lên đời iPhone? Xem chương trình <a href="/thu-cu-doi-moi">thu cũ đổi mới</a> tại HPHONE. Hotline/Zalo: 0379.443.613.</p></blockquote><p><em>Bài viết được biên soạn và kiểm chứng thực tế bởi đội ngũ kỹ thuật HPHONE — cập nhật tháng 6/2026.</em></p>', 'meo-hay', 'Đội ngũ kỹ thuật HPHONE', 6, false, 'published', '2026-06-09T08:50:00+07:00'),
+('Cách Kiểm Tra Pin iPhone Cũ: Xem % Chai Pin & Lịch Sử Thay Linh Kiện', 'cach-kiem-tra-pin-iphone-cu', 'Hướng dẫn cách kiểm tra pin iPhone cũ chính xác: xem phần trăm chai pin (dung lượng tối đa), nhận biết pin đã thay và đọc lịch sử linh kiện — checklist từng bước từ HPHONE.', '
+<p>Pin là bộ phận xuống cấp nhanh nhất trên iPhone và cũng là thứ dễ bị &ldquo;phù phép&rdquo; nhất khi mua máy cũ. Một viên pin chai sẽ khiến máy tụt nguồn, sập đột ngột dù còn 30–40%. Bài này hướng dẫn bạn cách tự kiểm tra pin iPhone cũ chính xác trước khi xuống tiền — đúng quy trình kỹ thuật viên HPHONE Đà Nẵng vẫn làm.</p>
+
+<h2>1. Xem phần trăm chai pin (dung lượng tối đa)</h2>
+<p>Vào <strong>Cài đặt → Pin → Tình trạng pin &amp; Sạc</strong>. Dòng <strong>Dung lượng tối đa</strong> cho biết pin còn bao nhiêu so với lúc mới:</p>
+<ul>
+<li><strong>90–100%:</strong> pin còn rất tốt.</li>
+<li><strong>80–89%:</strong> dùng ổn, bình thường với máy đã qua sử dụng.</li>
+<li><strong>Dưới 80%:</strong> pin yếu, nên thương lượng giá hoặc chuẩn bị thay pin.</li>
+</ul>
+
+<h2>2. Kiểm tra mục &ldquo;Khả năng sạc đỉnh&rdquo;</h2>
+<p>Ngay dưới dung lượng tối đa, nếu hiện cảnh báo &ldquo;Pin của bạn đã suy giảm đáng kể&rdquo; nghĩa là pin cần thay. Trên các iPhone đời mới, mục này hiển thị trạng thái &ldquo;Bình thường&rdquo; là tốt.</p>
+
+<h2>3. Nhận biết pin đã bị thay</h2>
+<p>Trên iPhone chính hãng còn zin, nếu pin từng bị thay bằng pin không chính hãng, máy sẽ hiện dòng thông báo &ldquo;Không thể xác minh iPhone có pin Apple chính hãng&rdquo; ngay trong mục Tình trạng pin. Đây là dấu hiệu quan trọng cần lưu ý.</p>
+
+<h2>4. Đọc lịch sử linh kiện &amp; dịch vụ</h2>
+<p>Với iPhone đời mới (iOS hỗ trợ), vào <strong>Cài đặt → Cài đặt chung → Giới thiệu → Lịch sử linh kiện &amp; dịch vụ</strong>. Tại đây hiển thị các linh kiện (pin, màn hình, camera) đã từng được thay và có phải hàng chính hãng Apple hay không.</p>
+
+<h2>5. Thử tải nặng để kiểm tra pin thực tế</h2>
+<p>Sạc đầy rồi dùng thử các tác vụ nặng (quay video, chơi game) trong 15–20 phút. Pin tốt sẽ tụt đều; pin chai thường tụt giật cục hoặc máy nóng nhanh.</p>
+
+<h2>6. Cảnh giác với máy đã &ldquo;reset&rdquo; thông số pin</h2>
+<p>Một số nơi can thiệp để hiển thị dung lượng tối đa ảo (vd 100% trên máy đời cũ). Hãy đối chiếu: máy dùng lâu mà pin báo 100% là điều bất thường — nên nhờ kiểm tra bằng phần mềm chuyên dụng.</p>
+
+<blockquote><p><strong>Mẹo:</strong> Kết hợp số chu kỳ sạc (cycle count) với dung lượng tối đa sẽ cho bức tranh chính xác nhất về tình trạng pin. Cycle count cần phần mềm chuyên dụng để đọc — đây là việc các cửa hàng uy tín thực hiện khi nhập máy.</p></blockquote>
+
+<h2>Kết luận</h2>
+<p>Chỉ cần 5 phút kiểm tra trong Cài đặt là bạn đã loại được phần lớn rủi ro về pin. Nếu không tự tin, hãy mua ở nơi cam kết minh bạch tình trạng pin bằng văn bản.</p>
+<blockquote><p><strong>Về HPHONE:</strong> Mỗi chiếc iPhone cũ tại HPHONE (249 Hà Huy Tập, Thanh Khê, Đà Nẵng) đều được kỹ thuật viên kiểm tra IMEI, độ chai pin và toàn bộ chức năng trước khi lên kệ. Tại HPHONE, mỗi máy đều ghi rõ % dung lượng pin trên phiếu. Xem ngay <a href="/danh-sach-san-pham">iPhone cũ pin khoẻ</a>. Hotline/Zalo: 0379.443.613.</p></blockquote><p><em>Bài viết được biên soạn và kiểm chứng thực tế bởi đội ngũ kỹ thuật HPHONE — cập nhật tháng 6/2026.</em></p>', 'huong-dan', 'Đội ngũ kỹ thuật HPHONE', 7, true, 'published', '2026-06-09T08:45:00+07:00'),
+('Cách Kiểm Tra iPhone Cũ Dính iCloud Ẩn Hay Không (Chi Tiết Từng Bước)', 'cach-kiem-tra-icloud-an-iphone-cu', 'iCloud ẩn là rủi ro lớn nhất khi mua iPhone cũ. Hướng dẫn cách kiểm tra iPhone cũ có dính iCloud ẩn hay không, từng bước rõ ràng để tránh mua phải máy có thể bị khoá bất cứ lúc nào.', '
+<p>&ldquo;iCloud ẩn&rdquo; là cơn ác mộng của người mua iPhone cũ: máy đang dùng bình thường bỗng bị khoá từ xa và đòi tài khoản chủ cũ. Máy dính iCloud ẩn gần như thành &ldquo;cục gạch&rdquo;. Đây là cách kiểm tra kỹ trước khi mua, theo đúng quy trình HPHONE áp dụng khi nhập máy.</p>
+
+<h2>iCloud ẩn là gì?</h2>
+<p>Là tình trạng máy vẫn còn liên kết với tài khoản iCloud (Apple ID) của người khác mà bạn không thấy ngay. Tính năng &ldquo;Tìm&rdquo; (Find My) vẫn bật, nên chủ cũ có thể khoá máy từ xa bất kỳ lúc nào.</p>
+
+<h2>1. Kiểm tra đã đăng xuất iCloud chưa</h2>
+<p>Vào <strong>Cài đặt</strong> và nhìn trên cùng. Nếu hiện tên/Apple ID của người khác → máy <strong>chưa</strong> đăng xuất iCloud, tuyệt đối không mua cho đến khi chủ cũ đăng xuất ngay trước mặt bạn.</p>
+
+<h2>2. Kiểm tra trạng thái &ldquo;Tìm&rdquo; (Find My)</h2>
+<p>Vào <strong>Cài đặt → [Tên Apple ID] → Tìm → Tìm iPhone</strong>. Tính năng này phải ở trạng thái có thể tắt được bằng mật khẩu Apple ID hiện tại — chứng tỏ máy không bị khoá tài khoản lạ.</p>
+
+<h2>3. Thử khôi phục cài đặt gốc trước mặt người bán</h2>
+<p>Đây là bước quyết định. Vào <strong>Cài đặt → Cài đặt chung → Chuyển hoặc Đặt lại iPhone → Xoá tất cả nội dung và cài đặt</strong>. Nếu máy yêu cầu nhập mật khẩu Apple ID để xoá → đó là <strong>khoá kích hoạt (iCloud) đang bật</strong>. Sau khi xoá, máy phải qua được màn hình &ldquo;Xin chào&rdquo; và thiết lập như máy mới mà không đòi tài khoản nào — lúc đó mới an toàn.</p>
+
+<h2>4. Quan sát màn hình kích hoạt</h2>
+<p>Khi máy khởi động sau khi reset, nếu màn hình hiện &ldquo;iPhone đã bị khoá với Apple ID&rdquo; hoặc đòi đăng nhập một tài khoản cụ thể → máy dính khoá iCloud, không dùng được.</p>
+
+<h2>5. Kiểm tra IMEI</h2>
+<p>Bấm <strong>*#06#</strong> hoặc vào <strong>Cài đặt → Cài đặt chung → Giới thiệu</strong> để lấy IMEI, đối chiếu với IMEI in trên khay sim/vỏ hộp. IMEI giúp tra cứu thêm tình trạng máy.</p>
+
+<blockquote><p><strong>Nguyên tắc vàng:</strong> Chỉ nhận máy sau khi đã đăng xuất iCloud hoàn toàn và khôi phục cài đặt gốc thành công ngay trước mặt bạn. Đừng tin lời hứa &ldquo;về nhà xoá sau&rdquo;.</p></blockquote>
+
+<h2>Kết luận</h2>
+<p>Kiểm tra iCloud là bước không được bỏ qua khi mua iPhone cũ. Nếu mua online hoặc không rành kỹ thuật, hãy chọn cửa hàng có cam kết &ldquo;máy sạch iCloud&rdquo; bằng văn bản và chính sách đổi trả rõ ràng.</p>
+<blockquote><p><strong>Về HPHONE:</strong> Mỗi chiếc iPhone cũ tại HPHONE (249 Hà Huy Tập, Thanh Khê, Đà Nẵng) đều được kỹ thuật viên kiểm tra IMEI, độ chai pin và toàn bộ chức năng trước khi lên kệ. iPhone cũ tại HPHONE đều đã đăng xuất iCloud, kiểm tra sạch trước khi bán. Xem <a href="/danh-sach-san-pham">danh sách máy</a>. Hotline/Zalo: 0379.443.613.</p></blockquote><p><em>Bài viết được biên soạn và kiểm chứng thực tế bởi đội ngũ kỹ thuật HPHONE — cập nhật tháng 6/2026.</em></p>', 'huong-dan', 'Đội ngũ kỹ thuật HPHONE', 6, false, 'published', '2026-06-09T08:40:00+07:00'),
+('Cách Chuyển Toàn Bộ Dữ Liệu Từ iPhone Cũ Sang iPhone Mới Nhanh & Đầy Đủ', 'cach-chuyen-du-lieu-iphone-cu-sang-moi', 'Mới lên đời iPhone? Hướng dẫn cách chuyển toàn bộ dữ liệu từ iPhone cũ sang iPhone mới nhanh và đầy đủ: danh bạ, ảnh, ứng dụng, tin nhắn — bằng Bắt đầu nhanh, iCloud hoặc máy tính.', '
+<p>Lên đời iPhone xong, ai cũng lo mất danh bạ, ảnh, tin nhắn. Thực ra Apple cho phép chuyển gần như toàn bộ dữ liệu chỉ trong một lần thiết lập. Dưới đây là 3 cách phổ biến nhất, kèm ưu nhược điểm để bạn chọn cách phù hợp.</p>
+
+<h2>Chuẩn bị trước khi chuyển</h2>
+<ul>
+<li>Hai máy đều sạc trên 50% pin (hoặc cắm sạc).</li>
+<li>Cập nhật iPhone cũ lên iOS mới nhất: <strong>Cài đặt → Cài đặt chung → Cập nhật phần mềm</strong>.</li>
+<li>Kết nối Wi-Fi ổn định; để hai máy gần nhau.</li>
+</ul>
+
+<h2>Cách 1: Bắt đầu nhanh (Quick Start) — khuyên dùng</h2>
+<p>Đây là cách nhanh và đầy đủ nhất, chuyển trực tiếp từ máy sang máy không cần qua máy tính:</p>
+<ol>
+<li>Bật iPhone mới và đặt cạnh iPhone cũ.</li>
+<li>iPhone cũ hiện màn hình &ldquo;Bắt đầu nhanh&rdquo; → nhấn Tiếp tục.</li>
+<li>Dùng camera iPhone cũ quét hình ảnh động hiện trên iPhone mới.</li>
+<li>Nhập mật mã iPhone cũ, thiết lập Face ID/Touch ID.</li>
+<li>Chọn <strong>Chuyển trực tiếp từ iPhone</strong> để copy toàn bộ dữ liệu, ứng dụng, cài đặt sang máy mới.</li>
+</ol>
+<p>Giữ hai máy gần nhau cho đến khi hoàn tất. Thời gian tuỳ dung lượng dữ liệu.</p>
+
+<h2>Cách 2: Khôi phục từ bản sao lưu iCloud</h2>
+<p>Phù hợp khi không có sẵn cả hai máy cùng lúc:</p>
+<ol>
+<li>Trên iPhone cũ: <strong>Cài đặt → [Tên Apple ID] → iCloud → Sao lưu iCloud → Sao lưu ngay</strong>.</li>
+<li>Trên iPhone mới, ở bước thiết lập chọn <strong>Khôi phục từ iCloud</strong> và đăng nhập Apple ID.</li>
+<li>Chọn bản sao lưu mới nhất và chờ tải về.</li>
+</ol>
+<p>Lưu ý: iCloud miễn phí chỉ 5GB, dữ liệu nhiều có thể cần mua thêm dung lượng tạm thời.</p>
+
+<h2>Cách 3: Dùng máy tính (Finder/iTunes)</h2>
+<p>Cách này sao lưu được nhiều dữ liệu và không phụ thuộc dung lượng iCloud:</p>
+<ol>
+<li>Kết nối iPhone cũ với máy tính, mở Finder (macOS) hoặc iTunes (Windows).</li>
+<li>Chọn <strong>Sao lưu toàn bộ dữ liệu</strong> (nên bật mã hoá để giữ cả mật khẩu, dữ liệu sức khoẻ).</li>
+<li>Kết nối iPhone mới, chọn <strong>Khôi phục bản sao lưu</strong>.</li>
+</ol>
+
+<h2>Sau khi chuyển xong</h2>
+<ul>
+<li>Đăng nhập lại một số app ngân hàng, ví điện tử (vì lý do bảo mật).</li>
+<li>Kiểm tra ảnh, danh bạ, tin nhắn đã đủ.</li>
+<li>Chỉ <strong>xoá sạch iPhone cũ</strong> (đăng xuất iCloud + Xoá tất cả nội dung) sau khi chắc chắn dữ liệu đã sang máy mới — đặc biệt quan trọng nếu bạn định bán lại.</li>
+</ul>
+<blockquote><p><strong>Về HPHONE:</strong> Mỗi chiếc iPhone cũ tại HPHONE (249 Hà Huy Tập, Thanh Khê, Đà Nẵng) đều được kỹ thuật viên kiểm tra IMEI, độ chai pin và toàn bộ chức năng trước khi lên kệ. Định bán lại máy cũ sau khi lên đời? Tham khảo <a href="/thu-cu-doi-moi">thu cũ đổi mới</a> tại HPHONE. Hotline/Zalo: 0379.443.613.</p></blockquote><p><em>Bài viết được biên soạn và kiểm chứng thực tế bởi đội ngũ kỹ thuật HPHONE — cập nhật tháng 6/2026.</em></p>', 'huong-dan', 'Đội ngũ kỹ thuật HPHONE', 7, false, 'published', '2026-06-09T08:35:00+07:00'),
+('Nên Mua iPhone Cũ Hay iPhone Mới? So Sánh Chi Tiết Để Không Tiếc Tiền', 'nen-mua-iphone-cu-hay-moi', 'Nên mua iPhone cũ hay iPhone mới? So sánh chi tiết về giá, bảo hành, tình trạng máy và rủi ro — giúp bạn chọn đúng theo nhu cầu và ngân sách, không tiếc tiền về sau.', '
+<p>&ldquo;Nên mua iPhone cũ hay mới?&rdquo; là câu hỏi gần như khách nào đến HPHONE cũng băn khoăn. Không có đáp án đúng cho tất cả — nó phụ thuộc vào ngân sách, nhu cầu và mức độ chấp nhận rủi ro của bạn. Bài viết này so sánh thẳng thắn hai lựa chọn để bạn tự quyết định.</p>
+
+<h2>Điểm giống nhau</h2>
+<p>Dù mua cũ hay mới, một chiếc iPhone &ldquo;ngon&rdquo; đều phải: chính hãng (không lock/dựng), sạch iCloud, đầy đủ chức năng và được bảo hành. Trải nghiệm iOS, kho ứng dụng và khả năng cập nhật phần mềm nhiều năm là như nhau trên cùng một đời máy.</p>
+
+<h2>So sánh về giá bán</h2>
+<p>Đây là khác biệt lớn nhất. iPhone cũ (qua sử dụng, like new) thường rẻ hơn máy mới 25–50% tuỳ đời và tình trạng. Cùng một số tiền, mua cũ bạn có thể sở hữu đời máy cao hơn hẳn — ví dụ thay vì mua máy mới đời thấp, bạn có thể mua máy cũ đời cao với camera/hiệu năng tốt hơn.</p>
+
+<h2>So sánh về tình trạng &amp; độ bền</h2>
+<p>Máy mới: 100% nguyên zin, pin đầy. Máy cũ: tuỳ tình trạng (pin có thể đã chai một phần, ngoại hình có thể trầy nhẹ). Tuy nhiên iPhone nổi tiếng bền — một máy cũ được bảo quản tốt, pin trên 85% vẫn dùng ổn định nhiều năm.</p>
+
+<h2>So sánh về bảo hành</h2>
+<p>Máy mới chính hãng có bảo hành 12 tháng từ Apple/đại lý. Máy cũ thường có bảo hành ngắn hơn từ cửa hàng (vài tháng đến 1 năm tuỳ nơi). Đây là lý do <strong>nên mua iPhone cũ ở nơi uy tín, có chính sách bảo hành và đổi trả rõ ràng</strong>.</p>
+
+<h2>So sánh về rủi ro</h2>
+<p>Mua mới gần như không rủi ro. Mua cũ có rủi ro: máy dựng, dính iCloud ẩn, pin chai, linh kiện đã thay. Toàn bộ rủi ro này <em>có thể loại bỏ</em> nếu mua ở cửa hàng kiểm tra kỹ và minh bạch tình trạng máy.</p>
+
+<h2>Bảng so sánh nhanh</h2>
+<table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px">
+<thead><tr><th style="text-align:left;padding:10px 12px;background:#0a0a0a;color:#fff;font-weight:600;border:1px solid #e8e8e8">Tiêu chí</th><th style="text-align:left;padding:10px 12px;background:#0a0a0a;color:#fff;font-weight:600;border:1px solid #e8e8e8">iPhone mới</th><th style="text-align:left;padding:10px 12px;background:#0a0a0a;color:#fff;font-weight:600;border:1px solid #e8e8e8">iPhone cũ</th></tr></thead>
+<tbody>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Giá</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Cao nhất</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Rẻ hơn 25–50%</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Tình trạng</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Nguyên zin 100%</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Tuỳ máy, cần kiểm tra</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Pin</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">100%</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Thường 85–100%</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Bảo hành</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">12 tháng chính hãng</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Vài tháng – 1 năm (cửa hàng)</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Rủi ro</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Gần như không</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Có, giảm nếu mua nơi uy tín</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Phù hợp với</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Người ưu tiên an tâm tuyệt đối</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Người muốn tối ưu chi phí</td></tr>
+</tbody>
+</table>
+
+<h2>Tạm kết: nên chọn loại nào?</h2>
+<p><strong>Chọn iPhone mới</strong> nếu bạn muốn yên tâm tuyệt đối, dùng lâu dài và ngân sách thoải mái. <strong>Chọn iPhone cũ</strong> nếu bạn muốn sở hữu đời máy cao với chi phí hợp lý và biết chọn nơi bán uy tín. Với đa số người dùng phổ thông, một chiếc iPhone cũ like new, pin khoẻ, có bảo hành là lựa chọn &ldquo;đáng đồng tiền&rdquo; nhất.</p>
+<blockquote><p><strong>Về HPHONE:</strong> Mỗi chiếc iPhone cũ tại HPHONE (249 Hà Huy Tập, Thanh Khê, Đà Nẵng) đều được kỹ thuật viên kiểm tra IMEI, độ chai pin và toàn bộ chức năng trước khi lên kệ. Xem các mẫu iPhone cũ đã kiểm định, bảo hành rõ ràng tại <a href="/danh-sach-san-pham">HPHONE</a>. Hotline/Zalo: 0379.443.613.</p></blockquote><p><em>Bài viết được biên soạn và kiểm chứng thực tế bởi đội ngũ kỹ thuật HPHONE — cập nhật tháng 6/2026.</em></p>', 'so-sanh', 'Đội ngũ kỹ thuật HPHONE', 8, true, 'published', '2026-06-09T08:30:00+07:00'),
+('So Sánh iPhone 13 và iPhone 14 Cũ: Nên Mua Bản Nào Năm 2026?', 'so-sanh-iphone-13-va-iphone-14-cu', 'So sánh iPhone 13 và iPhone 14 cũ chi tiết: thiết kế, màn hình, hiệu năng, camera, pin và giá. Nên mua iPhone 13 hay 14 cũ năm 2026 để hợp túi tiền nhất?', '
+<p>iPhone 13 và iPhone 14 là hai trong những lựa chọn iPhone cũ &ldquo;quốc dân&rdquo; nhất hiện nay nhờ giá tốt và còn cập nhật iOS nhiều năm. Hai máy rất giống nhau, nên chọn đúng sẽ giúp bạn tiết kiệm kha khá. Cùng HPHONE so sánh chi tiết.</p>
+
+<h2>Điểm tương đồng</h2>
+<p>iPhone 13 và 14 dùng chung chip <strong>A15 Bionic</strong>, cùng màn hình <strong>6.1 inch OLED tần số 60Hz</strong>, cùng thiết kế cạnh vuông, cổng Lightning và camera kép 12MP. Trên thực tế sử dụng hằng ngày, hai máy cho trải nghiệm gần như không phân biệt được.</p>
+
+<h2>So sánh thiết kế</h2>
+<p>Gần như giống hệt: cùng kích thước, cùng cụm camera chéo, notch tai thỏ. iPhone 14 nhẹ hơn không đáng kể. Điểm khác: màu sắc khác nhau giữa hai đời.</p>
+
+<h2>So sánh màn hình</h2>
+<p>Cả hai đều OLED Super Retina XDR 6.1&quot;, độ sáng tương đương, đều 60Hz (không có ProMotion 120Hz như bản Pro). Khác biệt gần như bằng 0.</p>
+
+<h2>So sánh hiệu năng</h2>
+<p>Cùng chip A15 Bionic, nhưng iPhone 14 dùng bản A15 <strong>GPU 5 nhân</strong> (iPhone 13 bản GPU 4 nhân). Khác biệt chỉ thấy rõ khi chơi game đồ hoạ nặng; tác vụ thường ngày là như nhau. iPhone 14 cũng có RAM nhiều hơn một chút, giữ app nền tốt hơn.</p>
+
+<h2>So sánh camera</h2>
+<p>iPhone 14 nâng cấp cảm biến chính lớn hơn và bổ sung <strong>Photonic Engine</strong> giúp chụp thiếu sáng tốt hơn, thêm chế độ quay <strong>Action Mode</strong> chống rung mạnh. Nếu bạn hay chụp đêm/quay video, iPhone 14 nhỉnh hơn.</p>
+
+<h2>So sánh pin &amp; tính năng an toàn</h2>
+<p>iPhone 14 có pin lớn hơn một chút và bổ sung <strong>Phát hiện va chạm (Crash Detection)</strong> cùng nhắn tin khẩn cấp qua vệ tinh (tuỳ thị trường). iPhone 13 không có các tính năng này.</p>
+
+<h2>So sánh giá (máy cũ)</h2>
+<p>Đây là yếu tố quyết định: iPhone 13 cũ thường rẻ hơn iPhone 14 cũ một khoảng đáng kể, trong khi trải nghiệm hằng ngày tương đương. Nếu ưu tiên tiết kiệm, iPhone 13 là &ldquo;vua giá trị&rdquo;.</p>
+
+<h2>Bảng so sánh nhanh</h2>
+<table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px">
+<thead><tr><th style="text-align:left;padding:10px 12px;background:#0a0a0a;color:#fff;font-weight:600;border:1px solid #e8e8e8">Tiêu chí</th><th style="text-align:left;padding:10px 12px;background:#0a0a0a;color:#fff;font-weight:600;border:1px solid #e8e8e8">iPhone 13</th><th style="text-align:left;padding:10px 12px;background:#0a0a0a;color:#fff;font-weight:600;border:1px solid #e8e8e8">iPhone 14</th></tr></thead>
+<tbody>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Chip</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">A15 (GPU 4 nhân)</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">A15 (GPU 5 nhân)</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Màn hình</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">6.1&quot; OLED 60Hz</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">6.1&quot; OLED 60Hz</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Camera</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Kép 12MP</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Kép 12MP + Photonic Engine, Action Mode</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Pin</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Tốt</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Nhỉnh hơn nhẹ</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">An toàn</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">—</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Phát hiện va chạm, SOS vệ tinh</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Giá cũ</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Rẻ hơn</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Cao hơn</td></tr>
+</tbody>
+</table>
+
+<h2>Tạm kết: nên mua bản nào?</h2>
+<p><strong>Chọn iPhone 13 cũ</strong> nếu bạn muốn tối ưu chi phí — trải nghiệm gần như y hệt 14 với giá mềm hơn. <strong>Chọn iPhone 14 cũ</strong> nếu bạn chụp ảnh/quay video nhiều và muốn các tính năng an toàn mới. Cả hai đều là lựa chọn iPhone cũ rất đáng tiền trong năm 2026.</p>
+<blockquote><p><strong>Về HPHONE:</strong> Mỗi chiếc iPhone cũ tại HPHONE (249 Hà Huy Tập, Thanh Khê, Đà Nẵng) đều được kỹ thuật viên kiểm tra IMEI, độ chai pin và toàn bộ chức năng trước khi lên kệ. So sánh giá iPhone 13 và 14 cũ thực tế tại <a href="/danh-sach-san-pham">HPHONE Đà Nẵng</a>. Hotline/Zalo: 0379.443.613.</p></blockquote><p><em>Bài viết được biên soạn và kiểm chứng thực tế bởi đội ngũ kỹ thuật HPHONE — cập nhật tháng 6/2026.</em></p>', 'so-sanh', 'Đội ngũ kỹ thuật HPHONE', 7, false, 'published', '2026-06-09T08:25:00+07:00'),
+('iPhone Like New vs Trôi Bảo Hành: Khác Gì, Nên Chọn Loại Nào?', 'so-sanh-iphone-like-new-va-troi-bao-hanh', 'iPhone like new là gì? iPhone trôi bảo hành là gì? So sánh hai loại iPhone cũ phổ biến về tình trạng, giá và bảo hành — giúp bạn chọn đúng loại hợp nhu cầu.', '
+<p>Đi mua iPhone cũ, bạn sẽ nghe nhiều cụm như &ldquo;like new&rdquo;, &ldquo;trôi bảo hành&rdquo;, &ldquo;qua sử dụng&rdquo;. Hiểu đúng các khái niệm này giúp bạn không trả nhầm giá và chọn đúng máy. HPHONE giải thích rõ và so sánh hai loại phổ biến nhất.</p>
+
+<h2>iPhone like new là gì?</h2>
+<p><strong>Like new</strong> (như mới) là máy đã qua sử dụng rất ít hoặc gần như chưa dùng, ngoại hình đẹp 99%, pin còn cao, đầy đủ chức năng. Cũng có trường hợp là máy đổi bảo hành của Apple. Đây là dòng iPhone cũ cao cấp nhất.</p>
+
+<h2>iPhone trôi bảo hành là gì?</h2>
+<p><strong>Trôi bảo hành</strong> là máy mới nguyên seal hoặc gần như mới nhưng đã <em>kích hoạt bảo hành</em> (thời gian bảo hành chính hãng đã bắt đầu chạy), nên không còn được tính là &ldquo;mới 100%&rdquo; và có giá thấp hơn máy new seal. Máy thực chất chưa qua sử dụng hoặc dùng rất ít.</p>
+
+<h2>So sánh tình trạng máy</h2>
+<p>Máy trôi bảo hành thường gần như mới (chưa dùng/dùng cực ít), pin gần 100%. Máy like new là đã qua sử dụng nhưng được tuyển chọn kỹ, ngoại hình rất đẹp — pin có thể đã hao nhẹ tuỳ máy.</p>
+
+<h2>So sánh bảo hành</h2>
+<p>Máy trôi bảo hành thường vẫn còn một phần bảo hành chính hãng (vì đã kích hoạt). Máy like new (đã qua sử dụng) thường được bảo hành bởi cửa hàng. Hãy hỏi rõ thời hạn và đơn vị bảo hành.</p>
+
+<h2>So sánh giá</h2>
+<p>Cùng đời máy: <em>new seal &gt; trôi bảo hành &gt; like new &gt; qua sử dụng thường</em>. Máy trôi bảo hành là cách &ldquo;mua máy gần như mới&rdquo; với giá tốt hơn new seal; máy like new tiết kiệm hơn nữa.</p>
+
+<h2>Bảng so sánh nhanh</h2>
+<table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:14px">
+<thead><tr><th style="text-align:left;padding:10px 12px;background:#0a0a0a;color:#fff;font-weight:600;border:1px solid #e8e8e8">Tiêu chí</th><th style="text-align:left;padding:10px 12px;background:#0a0a0a;color:#fff;font-weight:600;border:1px solid #e8e8e8">iPhone like new</th><th style="text-align:left;padding:10px 12px;background:#0a0a0a;color:#fff;font-weight:600;border:1px solid #e8e8e8">iPhone trôi bảo hành</th></tr></thead>
+<tbody>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Bản chất</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Đã qua sử dụng ít, tuyển chọn</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Gần như mới, đã kích hoạt bảo hành</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Ngoại hình</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Đẹp 95–99%</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Như mới</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Pin</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Cao, có thể hao nhẹ</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Gần 100%</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Bảo hành</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Cửa hàng</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Thường còn 1 phần chính hãng</td></tr>
+<tr><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top;font-weight:600;background:#faf7f0">Giá</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Mềm hơn</td><td style="padding:10px 12px;border:1px solid #e8e8e8;vertical-align:top">Cao hơn like new</td></tr>
+</tbody>
+</table>
+
+<h2>Tạm kết: nên chọn loại nào?</h2>
+<p><strong>Chọn trôi bảo hành</strong> nếu bạn muốn máy gần như mới, pin cao, còn bảo hành chính hãng mà giá vẫn tốt hơn new seal. <strong>Chọn like new</strong> nếu muốn tiết kiệm tối đa mà vẫn có máy đẹp, chức năng đầy đủ. Dù chọn loại nào, điều quan trọng nhất vẫn là mua ở nơi minh bạch tình trạng và có bảo hành rõ ràng.</p>
+<blockquote><p><strong>Về HPHONE:</strong> Mỗi chiếc iPhone cũ tại HPHONE (249 Hà Huy Tập, Thanh Khê, Đà Nẵng) đều được kỹ thuật viên kiểm tra IMEI, độ chai pin và toàn bộ chức năng trước khi lên kệ. HPHONE phân loại rõ từng máy (like new / trôi BH) kèm tình trạng pin. Xem <a href="/danh-sach-san-pham">danh sách</a>. Hotline/Zalo: 0379.443.613.</p></blockquote><p><em>Bài viết được biên soạn và kiểm chứng thực tế bởi đội ngũ kỹ thuật HPHONE — cập nhật tháng 6/2026.</em></p>', 'so-sanh', 'Đội ngũ kỹ thuật HPHONE', 6, false, 'published', '2026-06-09T08:20:00+07:00');

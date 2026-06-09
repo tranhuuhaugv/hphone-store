@@ -472,7 +472,7 @@ function renderFeatured(post){
   var el = document.getElementById('featuredPost');
   if(!post){el.style.display='none';return;}
   var catLabel = CAT_LABELS[post.category]||post.category||'Blog';
-  el.innerHTML = '<a href="bai-viet.html?slug='+encodeURIComponent(post.slug||post.id)+'" class="featured-card">'
+  el.innerHTML = '<a href="/blog/'+encodeURIComponent(post.slug||post.id)+'" class="featured-card">'
     +'<div class="featured-img">'+(post.cover_image?'<img src="'+post.cover_image+'" alt="">':'<div class="featured-img-placeholder"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>HPHONE Blog</span></div>')+'</div>'
     +'<div class="featured-content">'
     +'<div class="post-cat-badge">⭐ Nổi bật &nbsp;·&nbsp; '+catLabel+'</div>'
@@ -489,7 +489,7 @@ function renderFeatured(post){
 
 function postCardHTML(post){
   var catLabel = CAT_LABELS[post.category]||post.category||'Blog';
-  return '<a href="bai-viet.html?slug='+encodeURIComponent(post.slug||post.id)+'" class="post-card">'
+  return '<a href="/blog/'+encodeURIComponent(post.slug||post.id)+'" class="post-card">'
     +'<div class="post-card-img">'+(post.cover_image?'<img src="'+post.cover_image+'" alt="" loading="lazy">':'<div class="post-card-img-placeholder"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>')+'</div>'
     +'<div class="post-card-body">'
     +'<div class="post-card-cat">'+catLabel+'</div>'
@@ -540,7 +540,7 @@ function renderPopular(posts){
     return '<div class="popular-post">'
       +'<div class="popular-num">0'+(i+1)+'</div>'
       +'<div>'
-      +'<a href="bai-viet.html?slug='+encodeURIComponent(p.slug||p.id)+'" class="popular-post-title">'+p.title+'</a>'
+      +'<a href="/blog/'+encodeURIComponent(p.slug||p.id)+'" class="popular-post-title">'+p.title+'</a>'
       +'<div class="popular-post-meta">'+fmtDate(p.published_at||p.created_at)+(p.read_time?' · '+p.read_time+' phút':'')+'</div>'
       +'</div>'
       +'</div>';

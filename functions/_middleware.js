@@ -41,6 +41,15 @@ export async function onRequest(context) {
     }
   }
 
+  // 1b) Bài viết blog clean URL: /blog/{slug} → phục vụ trang bai-viet.
+  //     (/blog không có slug rơi xuống nhánh PAGES bên dưới → blog.html danh sách)
+  if (path.startsWith('/blog/')) {
+    const slug = path.slice('/blog/'.length).replace(/\/+$/, '');
+    if (slug) {
+      return next(new Request(new URL('/bai-viet', url.origin), request));
+    }
+  }
+
   const seg = path.replace(/^\/+/, '').replace(/\/+$/, '');
 
   // 2) Trang gốc, file có đuôi (.html, .css, .js, .png…), hoặc trang thật đã biết
