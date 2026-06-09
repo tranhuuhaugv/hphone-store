@@ -14,9 +14,11 @@
 // LƯU Ý:
 //  - KHÔNG dựa vào status 404: project bật SPA fallback nên next() trả
 //    index.html kèm 200 cho route lạ. Phải phân loại theo đuôi file.
-//  - KHÔNG dùng next(new Request(...)) để lấy asset khác — trên Pages nó trả
-//    body rỗng. Dùng fetch() tới URL tuyệt đối của file tĩnh (subrequest này
-//    quay lại worker, rơi vào nhánh "có đuôi file" → phục vụ tĩnh, không loop).
+//  - Cloudflare Pages tự bỏ đuôi .html: /chi-tiet-san-pham.html bị 308 sang
+//    /chi-tiet-san-pham. Nên KHÔNG fetch(".html") (gây 308 → loop → error 1000)
+//    và KHÔNG fetch() tới chính host (self-loop). Dùng next() với ĐƯỜNG DẪN
+//    CANONICAL KHÔNG ĐUÔI "/chi-tiet-san-pham": next() đi thẳng xuống tầng asset,
+//    không re-chạy middleware nên không loop.
 
 export async function onRequest(context) {
   const { request, next } = context;
@@ -38,13 +40,7 @@ export async function onRequest(context) {
     return next();
   }
 
-  // 3) Đường dẫn sạch không đuôi → trả nội dung trang chi tiết (URL giữ nguyên)
-  const assetResp = await fetch(new URL('/chi-tiet-san-pham.html', url.origin).toString(), {
-    headers: { Accept: 'text/html' },
-  });
-  const html = await assetResp.text();
-  return new Response(html, {
-    status: 200,
-    headers: { 'content-type': 'text/html; charset=utf-8' },
-  });
+  // 3) Đường dẫn sạch không đuôi → phục vụ asset trang chi tiết (URL giữ nguyên).
+  //    Dùng đường dẫn canonical KHÔNG đuôi để tránh 308 .html → loop.
+  return next(new Request(new URL('/chi-tiet-san-pham', url.origin), request));
 }
