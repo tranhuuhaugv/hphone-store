@@ -201,7 +201,7 @@ body.drawer-open{overflow:hidden}
 }
 
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
 <script>
 const _SB_URL="https://pkmigreebudnbfkujplu.supabase.co";
 const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrbWlncmVlYnVkbmJma3VqcGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTAyMjYsImV4cCI6MjA5NTYyNjIyNn0.Bb9Y6-FKshYfmxUrEU8GJfJKnnrbJ--vMtXzAwCHFns";
@@ -365,7 +365,10 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 
 <script>
 (async function(){
-  if(!window.supabase){ document.getElementById('plGrid').innerHTML='<div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--gray-400)">Không thể kết nối dữ liệu.</div>'; return; }
+  // Chờ thư viện supabase-js (CDN, tải bất đồng bộ) sẵn sàng — tránh lỗi trắng
+  // danh sách khi truy cập lần đầu / refresh lúc cache nguội (tối đa ~3s).
+  for(let i=0; i<60 && !window.supabase; i++){ await new Promise(function(r){ setTimeout(r, 50); }); }
+  if(!window.supabase){ document.getElementById('plGrid').innerHTML='<div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--gray-400)">Không thể kết nối dữ liệu. Vui lòng tải lại trang.</div>'; return; }
   const sb = window.supabase.createClient(_SB_URL, _SB_KEY);
   let allProducts = [];
 
