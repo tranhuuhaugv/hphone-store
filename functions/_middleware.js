@@ -11,9 +11,12 @@
 //      phẩm → trả nội dung chi-tiet-san-pham.html (giữ nguyên URL). JS trong
 //      trang sẽ đọc slug từ pathname và tra Supabase.
 //
-// LƯU Ý QUAN TRỌNG: KHÔNG dựa vào status 404 để phát hiện "không có file".
-// Project bật SPA fallback nên next() trả index.html kèm status 200 cho route
-// lạ — nếu check 404 sẽ không bao giờ đúng. Vì vậy phân loại theo đuôi file.
+// LƯU Ý:
+//  - KHÔNG dựa vào status 404: project bật SPA fallback nên next() trả
+//    index.html kèm 200 cho route lạ. Phải phân loại theo đuôi file.
+//  - KHÔNG dùng next(new Request(...)) để lấy asset khác — trên Pages nó trả
+//    body rỗng. Dùng fetch() tới URL tuyệt đối của file tĩnh (subrequest này
+//    quay lại worker, rơi vào nhánh "có đuôi file" → phục vụ tĩnh, không loop).
 
 export async function onRequest(context) {
   const { request, next } = context;
@@ -35,12 +38,13 @@ export async function onRequest(context) {
     return next();
   }
 
-  // 3) Đường dẫn sạch không đuôi → trang chi tiết sản phẩm (giữ nguyên URL trên address bar)
-  const detail = await next(
-    new Request(new URL('/chi-tiet-san-pham.html', url.origin), request)
-  );
-  return new Response(detail.body, {
+  // 3) Đường dẫn sạch không đuôi → trả nội dung trang chi tiết (URL giữ nguyên)
+  const assetResp = await fetch(new URL('/chi-tiet-san-pham.html', url.origin).toString(), {
+    headers: { Accept: 'text/html' },
+  });
+  const html = await assetResp.text();
+  return new Response(html, {
     status: 200,
-    headers: detail.headers,
+    headers: { 'content-type': 'text/html; charset=utf-8' },
   });
 }
