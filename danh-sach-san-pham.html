@@ -373,7 +373,9 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   let allProducts = [];
 
   async function loadAll(){
-    const {data,error} = await sb.from('products').select('*').order('id',{ascending:false});
+    // Chỉ lấy cột cần cho thẻ sản phẩm — KHÔNG lấy images[]/description/variants
+    // (chỉ trang chi tiết cần) để tránh tải hàng MB ảnh base64 → trắng danh sách.
+    const {data,error} = await sb.from('products').select('id,name,slug,short,brand,storage,battery,condition,badge,price,old_price,status,img').order('id',{ascending:false});
     allProducts = (!error && data) ? data : [];
     render();
   }
