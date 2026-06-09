@@ -5,15 +5,15 @@
 //
 // Cách hoạt động (chạy trên MỌI request):
 //   1) /san-pham/{slug}  (định dạng cũ)  → 301 về /{slug} để gộp SEO.
-//   2) Thử phục vụ file tĩnh / route mặc định trước (next()).
-//   3) Nếu 404 và path trông như slug sản phẩm (không có đuôi file) → trả nội
-//      dung chi-tiet-san-pham.html (HTTP 200). JS trong trang sẽ đọc slug từ
-//      pathname và tra Supabase.
-//   4) Còn lại: giữ nguyên 404.
+//   2) Trang gốc "/" và mọi đường dẫn CÓ ĐUÔI FILE (.html, .css, .js, ảnh…)
+//      → phục vụ bình thường qua next().
+//   3) Đường dẫn KHÔNG có đuôi file (vd /iphone-17-pro-max) → coi là slug sản
+//      phẩm → trả nội dung chi-tiet-san-pham.html (giữ nguyên URL). JS trong
+//      trang sẽ đọc slug từ pathname và tra Supabase.
 //
-// Lưu ý: trên Cloudflare Pages, rule trong _redirects "luôn được áp dụng dù file
-// có tồn tại hay không" — nên KHÔNG dùng được catch-all /* ở _redirects (sẽ nuốt
-// cả trang thật). Vì vậy phải route bằng Pages Function như dưới đây.
+// LƯU Ý QUAN TRỌNG: KHÔNG dựa vào status 404 để phát hiện "không có file".
+// Project bật SPA fallback nên next() trả index.html kèm status 200 cho route
+// lạ — nếu check 404 sẽ không bao giờ đúng. Vì vậy phân loại theo đuôi file.
 
 export async function onRequest(context) {
   const { request, next } = context;
@@ -28,23 +28,19 @@ export async function onRequest(context) {
     }
   }
 
-  // 2) Ưu tiên file tĩnh / route mặc định
-  const response = await next();
-  if (response.status !== 404) return response;
-
-  // 3) 404 + path không có đuôi file → coi như slug sản phẩm
   const seg = path.replace(/^\/+/, '').replace(/\/+$/, '');
-  if (seg && !seg.includes('.')) {
-    const detail = await next(
-      new Request(new URL('/chi-tiet-san-pham.html', url.origin), request)
-    );
-    // Trả 200 để không bị đánh dấu là trang lỗi
-    return new Response(detail.body, {
-      status: 200,
-      headers: detail.headers,
-    });
+
+  // 2) Trang gốc hoặc file có đuôi (.html, .css, .js, .png…) → phục vụ bình thường
+  if (seg === '' || seg.includes('.')) {
+    return next();
   }
 
-  // 4) Giữ nguyên 404 cho file không tồn tại (vd /thieu-anh.png)
-  return response;
+  // 3) Đường dẫn sạch không đuôi → trang chi tiết sản phẩm (giữ nguyên URL trên address bar)
+  const detail = await next(
+    new Request(new URL('/chi-tiet-san-pham.html', url.origin), request)
+  );
+  return new Response(detail.body, {
+    status: 200,
+    headers: detail.headers,
+  });
 }
