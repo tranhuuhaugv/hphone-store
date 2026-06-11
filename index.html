@@ -861,6 +861,12 @@ document.querySelector('.modal-close').addEventListener('click', function() {
       return;
     }
 
+  // Pre-populate sessionStorage với card data → chi-tiet render ngay lập tức kể cả không hover
+  data.forEach(function(p) {
+    var k = 'hphone_pd_' + (p.slug || String(p.id));
+    try { if(!sessionStorage.getItem(k)) sessionStorage.setItem(k, JSON.stringify(Object.assign({_partial:true}, p))); } catch(e) {}
+  });
+
   // Nhóm sản phẩm theo series (tất cả biến thể cùng số vào 1 nhóm)
   function getSeries(name) {
     const n = (name||'').toLowerCase();

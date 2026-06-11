@@ -498,18 +498,39 @@ function createSbClient(url,key){var hdr={apikey:key,Authorization:'Bearer '+key
 
   const CACHE_KEY = 'hphone_pd_' + (pslug || pid);
 
-  // Kiểm tra sessionStorage ngay — trước khi chờ supabase.js load
-  // Full data = có field 'description' (từ select('*') của Supabase)
-  // Nguồn: hover prefetch từ index.html hoặc lần truy cập trước
+  // Kiểm tra sessionStorage ngay — trước khi fetch bất cứ thứ gì
+  // Partial data (_partial:true) = card data từ index.html → render ngay, fetch full ở background
+  // Full data = từ hover prefetch hoặc lần truy cập trước → render ngay, không fetch thêm
   try {
     const raw = sessionStorage.getItem(CACHE_KEY);
     if(raw) {
       const d = JSON.parse(raw);
-      if(d && 'description' in d) { doRender(d); return; }
+      if(d && d.id) {
+        doRender(d);
+        if(d._partial) {
+          // Fetch full data ngầm để update gallery + mô tả
+          (async function(){
+            const sb = createSbClient(_SB_URL, _SB_KEY);
+            const qr = pslug
+              ? await sb.from('products').select('*').eq('slug', pslug).maybeSingle()
+              : await sb.from('products').select('*').eq('id', pid).maybeSingle();
+            if(!qr || !qr.data) return;
+            try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(qr.data)); } catch(e) {}
+            const fp = qr.data;
+            // Update gallery nếu có nhiều ảnh hơn
+            if(!Array.isArray(fp.images)||!fp.images.length) fp.images = fp.img?[fp.img]:[];
+            if(fp.images.length > 1 && window._hp_loadGallery) window._hp_loadGallery(fp.images);
+            // Update mô tả
+            const descEl = document.getElementById('desc');
+            if(descEl && fp.description) descEl.innerHTML = fp.description;
+          })();
+        }
+        return;
+      }
     }
   } catch(e) {}
 
-  // Không có cache: chờ supabase.js rồi fetch
+  // Không có cache gì cả: fetch từ đầu
   (async function(){
     const sb = createSbClient(_SB_URL, _SB_KEY);
 
@@ -935,6 +956,8 @@ function createSbClient(url,key){var hdr={apikey:key,Authorization:'Bearer '+key
   });
 
   // ── Load variant images into slider ──
+  // Expose globally so background full-data fetch can update gallery after partial render
+  window._hp_loadGallery = function(imgs){ loadVariantImgs(imgs); };
   function loadVariantImgs(imgs){
     currentImgs = imgs.length ? imgs : allImgs;
     currentSlide = 0;
