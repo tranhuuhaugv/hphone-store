@@ -53,7 +53,41 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.9
 @media(max-width:768px){
   .mobile-nav-search{display:flex}
   .nav-links{display:none!important}
+  .nav-hamburger{display:flex}
 }
+.nav-hamburger{display:none;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0}
+.nav-hamburger svg{width:18px;height:18px;stroke:var(--white);fill:none;stroke-width:2;stroke-linecap:round}
+.nav-hamburger .icon-close{display:none}
+.nav-hamburger.open .icon-open{display:none}
+.nav-hamburger.open .icon-close{display:block}
+.mobile-drawer{position:fixed;top:0;left:0;right:0;bottom:0;z-index:999;display:flex;flex-direction:column;pointer-events:none}
+.mobile-drawer-bg{position:absolute;inset:0;background:rgba(0,0,0,0.6);opacity:0;transition:opacity 0.3s;cursor:pointer}
+.mobile-drawer-panel{position:absolute;top:0;right:0;width:min(320px,85vw);height:100%;background:#0f0f0f;border-left:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);overflow-y:auto}
+.mobile-drawer.open{pointer-events:all}
+.mobile-drawer.open .mobile-drawer-bg{opacity:1}
+.mobile-drawer.open .mobile-drawer-panel{transform:translateX(0)}
+.mobile-drawer-head{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0}
+.mobile-drawer-logo{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--white);letter-spacing:2px;text-decoration:none}
+.mobile-drawer-logo span{color:var(--accent)}
+.mobile-drawer-close{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--white);flex-shrink:0}
+.mobile-drawer-close svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.mobile-drawer-search{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0}
+.mobile-search-box{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px}
+.mobile-search-box svg{width:16px;height:16px;stroke:rgba(255,255,255,0.4);fill:none;stroke-width:2;flex-shrink:0}
+.mobile-search-box input{background:none;border:none;outline:none;color:var(--white);font-size:14px;font-family:var(--font-body);width:100%}
+.mobile-search-box input::placeholder{color:rgba(255,255,255,0.35)}
+.mobile-drawer-nav{flex:1;padding:8px 0}
+.mobile-nav-link{display:flex;align-items:center;gap:14px;padding:14px 20px;color:rgba(255,255,255,0.75);text-decoration:none;font-size:15px;font-weight:400;transition:background 0.15s,color 0.15s;border-left:3px solid transparent}
+.mobile-nav-link:hover{background:rgba(255,255,255,0.05);color:var(--white)}
+.mobile-nav-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(200,169,110,0.06)}
+.mobile-nav-link svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;flex-shrink:0;opacity:0.7}
+.mobile-drawer-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.07);flex-shrink:0}
+.mobile-drawer-zalo{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:linear-gradient(135deg,#0068ff,#0052cc);border:none;border-radius:12px;color:#fff;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;transition:opacity 0.2s}
+.mobile-drawer-zalo:hover{opacity:0.88}
+.mobile-drawer-phone{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;padding:11px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:rgba(255,255,255,0.75);font-size:14px;font-weight:500;text-decoration:none;transition:background 0.15s}
+.mobile-drawer-phone:hover{background:rgba(255,255,255,0.09);color:var(--white)}
+.mobile-drawer-phone svg,.mobile-drawer-zalo svg{width:17px;height:17px;fill:currentColor;flex-shrink:0}
+body.drawer-open{overflow:hidden}
 
 /* ── PAGE HEADER ── */
 .page-header{background:var(--black);padding:96px 24px 64px;margin-top:64px;position:relative;overflow:hidden}
@@ -240,6 +274,10 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
         <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <span class="cart-badge" id="cartBadge"></span>
       </a>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Mở menu">
+        <svg viewBox="0 0 24 24" class="icon-open"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <svg viewBox="0 0 24 24" class="icon-close"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
   </div>
 </nav>
@@ -602,6 +640,55 @@ document.getElementById('loadMoreBtn').addEventListener('click',function(){
   if(cat) setTimeout(function(){ filterPosts(cat); }, 200);
 })();
 </script>
+<!-- MOBILE DRAWER -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <div class="mobile-drawer-bg" id="mobileDrawerBg"></div>
+  <div class="mobile-drawer-panel">
+    <div class="mobile-drawer-head">
+      <a href="/index.html" class="mobile-drawer-logo">H<span>PHONE</span></a>
+      <button class="mobile-drawer-close" id="mobileDrawerClose" aria-label="Đóng menu"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mobile-drawer-search">
+      <div class="mobile-search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="drawerSearchInput" placeholder="Tìm iPhone..." autocomplete="off">
+      </div>
+    </div>
+    <nav class="mobile-drawer-nav">
+      <a href="/danh-sach-san-pham.html" class="mobile-nav-link"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>iPhone</a>
+      <a href="/thu-cu-doi-moi.html" class="mobile-nav-link"><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>Thu Cũ Đổi Mới</a>
+      <a href="/bao-hanh.html" class="mobile-nav-link"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Bảo Hành</a>
+      <a href="/blog.html" class="mobile-nav-link active"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Blog</a>
+      <a href="/lien-he.html" class="mobile-nav-link"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.33A2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 5.99 5.99l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Liên Hệ</a>
+    </nav>
+    <div class="mobile-drawer-footer">
+      <a href="https://zalo.me/0379443613" target="_blank" rel="noopener" class="mobile-drawer-zalo"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 2.17.7 4.19 1.87 5.83L2.5 21.5l3.83-1.33C7.83 21.33 9.85 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>Chat Zalo</a>
+      <a href="tel:0379443613" class="mobile-drawer-phone"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.33A2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 5.99 5.99l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Gọi ngay</a>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var drawer=document.getElementById('mobileDrawer');
+  var btn=document.getElementById('navHamburger');
+  var bg=document.getElementById('mobileDrawerBg');
+  var closeBtn=document.getElementById('mobileDrawerClose');
+  var search=document.getElementById('drawerSearchInput');
+  if(!drawer||!btn) return;
+  function open(){drawer.classList.add('open');btn.classList.add('open');document.body.classList.add('drawer-open');}
+  function close(){drawer.classList.remove('open');btn.classList.remove('open');document.body.classList.remove('drawer-open');}
+  btn.addEventListener('click',function(){drawer.classList.contains('open')?close():open();});
+  if(bg) bg.addEventListener('click',close);
+  if(closeBtn) closeBtn.addEventListener('click',close);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  if(search){
+    search.addEventListener('keydown',function(e){
+      if(e.key==='Enter'){var q=search.value.trim();if(q)window.location.href='/danh-sach-san-pham.html?q='+encodeURIComponent(q);}
+    });
+  }
+})();
+</script>
+
 <!-- hp-float-widget : Zalo / Messenger / Gọi -->
 <style>
 .hp-float{position:fixed;bottom:24px;right:20px;z-index:9999;display:flex;flex-direction:column;align-items:center;gap:12px}
