@@ -132,6 +132,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.9
 .product-specs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
 .spec-tag{font-size:11px;font-weight:500;color:var(--gray-600);background:var(--gray-100);border-radius:6px;padding:3px 8px}
 .spec-tag.highlight{background:rgba(200,169,110,0.12);color:#8a6a30}
+.price-meta{display:flex;align-items:center;gap:7px;margin-bottom:4px;min-height:20px}
+.price-old{font-size:13px;font-weight:400;color:var(--gray-400);text-decoration:line-through}
+.price-disc{font-size:11px;font-weight:700;color:#fff;background:#e03e3e;border-radius:20px;padding:2px 8px;letter-spacing:0.2px}
 .product-price{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--black);margin-bottom:14px}
 .product-price .currency{font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--gray-600);margin-left:2px}
 .product-name a{color:inherit;text-decoration:none}
@@ -848,7 +851,7 @@ document.querySelector('.modal-close').addEventListener('click', function() {
     // ✅ Chỉ select đúng field cần cho card — bỏ các cột nặng không dùng
     const {data, error} = await sb
       .from('products')
-      .select('id,name,slug,short,price,storage,battery,condition,warranty,img,status')
+      .select('id,name,slug,short,price,old_price,storage,battery,condition,warranty,img,status')
       .eq('status','instock')
       .order('id',{ascending:false})
       .limit(60); // Giới hạn số lượng fetch — trang home không cần tất cả
@@ -911,6 +914,12 @@ document.querySelector('.modal-close').addEventListener('click', function() {
       ? `<img src="${p.img}" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:inherit">`
       : `<div class="product-img-inner"><span class="product-model-label">${p.short||p.name}</span></div>`;
     const pData = JSON.stringify(p).replace(/"/g,'&quot;');
+    const oldP = parseInt(String(p.old_price||'').replace(/[^\d]/g,'')) || 0;
+    const newP = parseInt(String(p.price||'').replace(/[^\d]/g,'')) || 0;
+    const pct = (oldP > newP && oldP > 0) ? Math.round((oldP - newP) / oldP * 100) : 0;
+    const discHTML = pct > 0
+      ? `<div class="price-meta"><span class="price-old">${fmtPrice(oldP)}₫</span><span class="price-disc">-${pct}%</span></div>`
+      : '<div class="price-meta"></div>';
     return `<div class="product-card" onclick="location.href='/${p.slug||p.id}'">
       <div class="product-img" style="position:relative">
         ${imgHTML}
@@ -926,6 +935,7 @@ document.querySelector('.modal-close').addEventListener('click', function() {
           ${p.condition ? `<span class="spec-tag">${p.condition}</span>` : ''}
           ${p.warranty ? `<span class="spec-tag">BH ${p.warranty}</span>` : ''}
         </div>
+        ${discHTML}
         <div class="product-price">${fmtPrice(p.price)}<span class="currency">₫</span></div>
       </div>
     </div>`;
