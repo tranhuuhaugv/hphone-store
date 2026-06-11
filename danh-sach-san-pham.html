@@ -203,11 +203,10 @@ body.drawer-open{overflow:hidden}
 </style>
 <link rel="preconnect" href="https://pkmigreebudnbfkujplu.supabase.co">
 <link rel="dns-prefetch" href="https://pkmigreebudnbfkujplu.supabase.co">
-<script id="sb-js" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
 <script>
 const _SB_URL="https://pkmigreebudnbfkujplu.supabase.co";
 const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrbWlncmVlYnVkbmJma3VqcGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTAyMjYsImV4cCI6MjA5NTYyNjIyNn0.Bb9Y6-FKshYfmxUrEU8GJfJKnnrbJ--vMtXzAwCHFns";
-</script>
+function createSbClient(url,key){var hdr={apikey:key,Authorization:'Bearer '+key};return{from:function(t){var _s='*',_f=[],_o='',_l='';var q={select:function(s){_s=s||'*';return q;},eq:function(c,v){_f.push(c+'=eq.'+encodeURIComponent(v));return q;},neq:function(c,v){_f.push(c+'=neq.'+encodeURIComponent(v));return q;},order:function(c,o){_o='order='+c+'.'+(o&&o.ascending===false?'desc':'asc');return q;},limit:function(n){_l='limit='+n;return q;},single:function(){return _r(true);},maybeSingle:function(){return _r(true);},then:function(a,b){return _r(false).then(a,b);},catch:function(b){return _r(false).catch(b);}};function _r(one){var p=['select='+encodeURIComponent(_s)].concat(_f);if(_o)p.push(_o);if(_l)p.push(_l);return fetch(url+'/rest/v1/'+t+'?'+p.join('&'),{headers:hdr}).then(function(r){if(!r.ok)return r.text().then(function(x){return{data:null,error:{message:x}};});return r.json().then(function(a){return{data:one?(a[0]||null):a,error:null};});}).catch(function(e){return{data:null,error:e};});}return q;}};}</script>
 <style>
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-spinner{width:36px;height:36px;border:3px solid #e8e8e8;border-top-color:#c8a96e;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
@@ -367,9 +366,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 
 <script>
 (async function(){
-  if(!window.supabase) await new Promise(function(r,j){ var s=document.getElementById('sb-js'); s.addEventListener('load',r,{once:true}); s.addEventListener('error',j,{once:true}); });
-  if(!window.supabase){ document.getElementById('plGrid').innerHTML='<div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--gray-400)">Không thể kết nối dữ liệu. Vui lòng tải lại trang.</div>'; return; }
-  const sb = window.supabase.createClient(_SB_URL, _SB_KEY);
+  const sb = createSbClient(_SB_URL, _SB_KEY);
   let allProducts = [];
 
   async function loadAll(){
