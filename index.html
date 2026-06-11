@@ -291,6 +291,8 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
   .modal-inner{grid-template-columns:1fr}
   .footer-top{grid-template-columns:1fr 1fr}
 }
+/* hero mobile nav — chỉ hiện trên mobile homepage */
+.hero-mobile-nav{display:none}
 @media(max-width:768px){
   .nav-links{display:none}
   .nav-search{display:none}
@@ -299,6 +301,30 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
   .hero-inner{padding-top:72px}
   .footer-top{grid-template-columns:1fr}
   .nav-hamburger{display:none!important}
+  .hero-mobile-nav{
+    display:flex;
+    gap:0;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    margin-bottom:28px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    padding-bottom:16px;
+  }
+  .hero-mobile-nav::-webkit-scrollbar{display:none}
+  .hero-mobile-nav a{
+    flex-shrink:0;
+    font-size:13px;
+    font-weight:500;
+    color:rgba(255,255,255,0.6);
+    text-decoration:none;
+    padding:6px 14px;
+    border-radius:20px;
+    white-space:nowrap;
+    transition:color 0.2s,background 0.2s;
+  }
+  .hero-mobile-nav a:hover{color:var(--white);background:rgba(255,255,255,0.08)}
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -445,6 +471,13 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
   <div class="hero-inner">
+    <div class="hero-mobile-nav">
+      <a href="/danh-sach-san-pham.html">iPhone</a>
+      <a href="/thu-cu-doi-moi.html">Thu Cũ Đổi Mới</a>
+      <a href="/bao-hanh.html">Bảo Hành</a>
+      <a href="/blog.html">Blog</a>
+      <a href="/lien-he.html">Liên Hệ</a>
+    </div>
     <div class="hero-content">
       <div class="hero-badge">Chuyên iPhone cũ chất lượng cao</div>
       <h1>HPHONE – Điện thoại <em>tuyển chọn</em>, giá hợp lý</h1>
