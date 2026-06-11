@@ -15,7 +15,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -227,12 +227,9 @@ footer{background:var(--black);padding:64px 24px 32px;margin-top:80px}
   .sidebar{position:static}
 }
 </style>
-<script>
-(function(){
-  var l=document.createElement('link');l.rel='preconnect';l.href='https://pkmigreebudnbfkujplu.supabase.co';document.head.appendChild(l);
-})();
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+<link rel="preconnect" href="https://pkmigreebudnbfkujplu.supabase.co">
+<link rel="dns-prefetch" href="https://pkmigreebudnbfkujplu.supabase.co">
+<script id="sb-js" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
 <script>
 const _SB_URL="https://pkmigreebudnbfkujplu.supabase.co";
 const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrbWlncmVlYnVkbmJma3VqcGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTAyMjYsImV4cCI6MjA5NTYyNjIyNn0.Bb9Y6-FKshYfmxUrEU8GJfJKnnrbJ--vMtXzAwCHFns";
@@ -392,11 +389,9 @@ var CAT_LABELS = {
   'bao-tri':'Bảo trì & Sửa chữa'
 };
 
-function waitForSupabase(cb, tries) {
-  tries=tries||0;
+function waitForSupabase(cb) {
   if(window.supabase){cb();return;}
-  if(tries>40)return;
-  setTimeout(function(){waitForSupabase(cb,tries+1);},50);
+  document.getElementById('sb-js').addEventListener('load',cb,{once:true});
 }
 
 function fmtDate(d){

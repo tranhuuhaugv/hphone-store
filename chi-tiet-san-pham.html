@@ -19,7 +19,7 @@
 <meta name="twitter:image" id="twitterImage" content="">
 <meta name="description" id="metaDesc" content="iPhone qua sử dụng chất lượng cao tại HPHONE. Kiểm tra 20 bước, bảo hành rõ ràng, giá minh bạch.">
 <link rel="canonical" id="canonicalTag" href="">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
 <style>
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -321,7 +321,9 @@ body.drawer-open{overflow:hidden}
 }
 
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+<link rel="preconnect" href="https://pkmigreebudnbfkujplu.supabase.co">
+<link rel="dns-prefetch" href="https://pkmigreebudnbfkujplu.supabase.co">
+<script id="sb-js" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
 <script>
 const _SB_URL="https://pkmigreebudnbfkujplu.supabase.co";
 const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrbWlncmVlYnVkbmJma3VqcGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTAyMjYsImV4cCI6MjA5NTYyNjIyNn0.Bb9Y6-FKshYfmxUrEU8GJfJKnnrbJ--vMtXzAwCHFns";
@@ -478,20 +480,9 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 
 <script>
 (function(){
-  // Chờ supabase-js defer load xong
-  function waitForSupabase(cb, tries) {
-    tries = tries || 0;
-    if (window.supabase) { cb(); return; }
-    if (tries > 60) {
-      const sk2 = document.getElementById('pdSkeleton'); if(sk2) sk2.style.display='none';
-      const w = document.getElementById('pdWrap'); w.style.display=''; w.innerHTML = '<div style="grid-column:1/-1;padding:80px 24px;text-align:center;color:var(--gray-400)">Không thể kết nối dữ liệu. Vui lòng thử lại.</div>';
-      return;
-    }
-    setTimeout(function(){ waitForSupabase(cb, tries + 1); }, 50);
-  }
-
-  waitForSupabase(function(){
-(async function(){
+  (async function(){
+  if(!window.supabase){ try{ await new Promise(function(r,j){ var s=document.getElementById('sb-js'); s.addEventListener('load',r,{once:true}); s.addEventListener('error',j,{once:true}); }); }catch(e){ const sk2=document.getElementById('pdSkeleton'); if(sk2) sk2.style.display='none'; const w=document.getElementById('pdWrap'); w.style.display=''; w.innerHTML='<div style="grid-column:1/-1;padding:80px 24px;text-align:center;color:var(--gray-400)">Không thể kết nối dữ liệu. Vui lòng thử lại.</div>'; return; } }
+  (async function(){
   const params = new URLSearchParams(window.location.search);
   const pslug = params.get('slug')
     || (window.location.pathname !== '/' ? window.location.pathname.replace(/^\/+/, '').split('/')[0] : null)
@@ -1121,7 +1112,7 @@ const _SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
   });
 
 })(); // end async main
-  }); // end waitForSupabase
+  })(); // end outer async
 })();
 </script>
 
