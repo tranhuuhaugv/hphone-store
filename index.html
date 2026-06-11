@@ -29,6 +29,7 @@
   --transition:0.3s cubic-bezier(0.4,0,0.2,1);
 }
 html{scroll-behavior:smooth}
+html{overflow-x:hidden}
 body{font-family:var(--font-body);background:var(--white);color:var(--black);font-size:15px;line-height:1.6;overflow-x:hidden}
 
 /* ── NAV ── */
@@ -298,16 +299,17 @@ footer{background:#050505;padding:60px 24px 32px;border-top:1px solid rgba(255,2
   .nav-search{display:none}
   .section{padding:64px 16px}
   .hero{min-height:100svh;min-height:100vh;align-items:flex-start}
-  .hero-inner{padding-top:72px}
+  .hero-inner{padding-top:72px;gap:0}
   .footer-top{grid-template-columns:1fr}
   .nav-hamburger{display:none!important}
   .hero-mobile-nav{
     display:flex;
     flex-wrap:wrap;
+    justify-content:center;
     gap:4px;
-    margin-bottom:28px;
-    border-bottom:1px solid rgba(255,255,255,0.08);
+    margin-bottom:20px;
     padding-bottom:16px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
   }
   .hero-mobile-nav a{
     flex-shrink:0;
