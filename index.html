@@ -850,6 +850,7 @@ document.querySelector('.modal-close').addEventListener('click', function() {
   await waitForSupabase();
   (async function() {
     const sb = window.supabase.createClient(_SB_URL, _SB_KEY);
+    window._hp_sb = sb; // expose for hover data-prefetch
     const grid = document.getElementById('homeProductGrid');
 
     // ✅ Chỉ select đúng field cần cho card — bỏ các cột nặng không dùng
@@ -1021,10 +1022,12 @@ function tcBuyNow(p) {
 })();
 
 // ── PREFETCH KHI HOVER ──
-// Khi user di chuột vào card → browser tải sẵn trang chi tiết
-// Đến lúc click thì gần như instant vì HTML đã có trong cache
+// HTML prefetch: browser tải sẵn trang chi tiết → click gần như instant
+// Data prefetch: fetch full product data từ Supabase và lưu sessionStorage
+// → chi-tiet-san-pham.html đọc từ cache, bỏ qua Supabase hoàn toàn
 (function(){
   const prefetched = new Set();
+  const dataPrefetched = new Set();
 
   function prefetchUrl(url) {
     if(prefetched.has(url)) return;
@@ -1036,21 +1039,38 @@ function tcBuyNow(p) {
     document.head.appendChild(link);
   }
 
-  // Lắng nghe hover trên toàn bộ product grid (event delegation)
+  function prefetchData(slug) {
+    if(!slug || dataPrefetched.has(slug)) return;
+    const key = 'hphone_pd_' + slug;
+    if(sessionStorage.getItem(key)) return;
+    dataPrefetched.add(slug);
+    const client = window._hp_sb;
+    if(!client) return;
+    client.from('products').select('*').eq('slug', slug).maybeSingle()
+      .then(function(res){
+        if(res && res.data) {
+          try { sessionStorage.setItem(key, JSON.stringify(res.data)); } catch(e) {}
+        }
+      }).catch(function(){});
+  }
+
+  function handleCard(card) {
+    const a = card.querySelector('a[href]');
+    if(!a) return;
+    prefetchUrl(a.href);
+    // Trích slug từ href: https://hphone.store/iphone-15-pro → "iphone-15-pro"
+    const slug = a.pathname ? a.pathname.replace(/^\/+/,'') : a.href.replace(/^[^/]*\/\/[^/]*\//,'');
+    if(slug) prefetchData(slug);
+  }
+
   document.addEventListener('mouseover', function(e) {
     const card = e.target.closest('.product-card');
-    if(!card) return;
-    // Lấy href từ thẻ <a> bên trong card
-    const a = card.querySelector('a[href]');
-    if(a) prefetchUrl(a.href);
+    if(card) handleCard(card);
   }, { passive: true });
 
-  // Mobile: touchstart thay cho hover
   document.addEventListener('touchstart', function(e) {
     const card = e.target.closest('.product-card');
-    if(!card) return;
-    const a = card.querySelector('a[href]');
-    if(a) prefetchUrl(a.href);
+    if(card) handleCard(card);
   }, { passive: true });
 })();
 </script>
