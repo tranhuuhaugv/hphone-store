@@ -17,29 +17,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+<link rel="stylesheet" href="/assets/style.css">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --black:#0a0a0a;
-  --white:#fafafa;
-  --gray-100:#f5f5f5;
-  --gray-200:#e8e8e8;
-  --gray-400:#a0a0a0;
-  --gray-600:#606060;
-  --gray-800:#2a2a2a;
-  --accent:#c8a96e;
-  --accent-light:#e8d5a8;
-  --font-display:'Inter',sans-serif;
-  --font-body:'Inter',sans-serif;
-  --radius-sm:8px;
-  --radius-md:14px;
-  --radius-lg:20px;
-  --radius-xl:28px;
-  --transition:0.3s cubic-bezier(0.4,0,0.2,1);
-}
-html{scroll-behavior:smooth}
-body{font-family:var(--font-body);background:var(--white);color:var(--black);font-size:15px;line-height:1.6;overflow-x:hidden}
-
 /* ── NAV ── */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.07)}
 .nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:20px;height:64px}
@@ -664,42 +643,9 @@ waitForSupabase(async function(){
     </div>
   </div>
 </div>
-<script>
-(function(){
-  var drawer=document.getElementById('mobileDrawer');
-  var btn=document.getElementById('navHamburger');
-  var bg=document.getElementById('mobileDrawerBg');
-  var closeBtn=document.getElementById('mobileDrawerClose');
-  var search=document.getElementById('drawerSearchInput');
-  if(!drawer||!btn) return;
-  function open(){drawer.classList.add('open');btn.classList.add('open');document.body.classList.add('drawer-open');}
-  function close(){drawer.classList.remove('open');btn.classList.remove('open');document.body.classList.remove('drawer-open');}
-  btn.addEventListener('click',function(){drawer.classList.contains('open')?close():open();});
-  if(bg) bg.addEventListener('click',close);
-  if(closeBtn) closeBtn.addEventListener('click',close);
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
-  if(search){
-    search.addEventListener('keydown',function(e){
-      if(e.key==='Enter'){var q=search.value.trim();if(q)window.location.href='/danh-sach-san-pham.html?q='+encodeURIComponent(q);}
-    });
-  }
-})();
-</script>
+<script src="/assets/app.js" defer></script>
 
 <!-- hp-float-widget : Zalo / Messenger / Gọi -->
-<style>
-.hp-float{position:fixed;bottom:24px;right:20px;z-index:9999;display:flex;flex-direction:column;align-items:center;gap:12px}
-.hp-fbtn{position:relative;width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;text-decoration:none;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.18);transition:transform .2s ease,box-shadow .2s ease;overflow:hidden}
-.hp-fbtn:hover{transform:translateY(-3px) scale(1.06);box-shadow:0 10px 28px rgba(0,0,0,.26)}
-.hp-fbtn img{width:100%;height:100%;object-fit:contain}
-.hp-fbtn.hp-phone{background:linear-gradient(135deg,#11998e,#38ef7d)}
-.hp-fbtn.hp-phone svg{width:24px;height:24px;fill:#fff}
-.hp-fbtn .hp-tip{position:absolute;right:64px;top:50%;transform:translateY(-50%);background:rgba(10,10,10,.88);color:#fff;font-size:12px;font-weight:500;padding:6px 11px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
-.hp-fbtn:hover .hp-tip{opacity:1}
-.hp-fbtn.hp-phone::after{content:'';position:absolute;inset:-4px;border-radius:18px;border:2px solid rgba(56,239,125,.55);animation:hp-ring 1.8s ease-out infinite}
-@keyframes hp-ring{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.35);opacity:0}}
-@media(max-width:600px){.hp-float{bottom:18px;right:14px}.hp-fbtn{width:48px;height:48px}}
-</style>
 <div class="hp-float">
   <a href="https://m.me/hphone.iphonedanang" target="_blank" rel="noopener" class="hp-fbtn" aria-label="Chat Messenger">
     <span class="hp-tip">Nhắn tin Messenger</span>

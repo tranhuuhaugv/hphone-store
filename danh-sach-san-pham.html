@@ -6,23 +6,21 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>iPhone cũ tuyển chọn – HPHONE</title>
+<meta name="description" content="Danh sách iPhone cũ tuyển chọn tại HPHONE: đa dạng dòng máy, kiểm tra 20 bước, giá minh bạch, bảo hành rõ ràng.">
+<link rel="canonical" href="https://hphone.store/danh-sach-san-pham">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="HPHONE">
+<meta property="og:title" content="iPhone cũ tuyển chọn – HPHONE">
+<meta property="og:description" content="Danh sách iPhone cũ tuyển chọn tại HPHONE: đa dạng dòng máy, kiểm tra 20 bước, giá minh bạch, bảo hành rõ ràng.">
+<meta property="og:url" content="https://hphone.store/danh-sach-san-pham">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iPhone cũ tuyển chọn – HPHONE">
+<meta name="twitter:description" content="Danh sách iPhone cũ tuyển chọn tại HPHONE: đa dạng dòng máy, kiểm tra 20 bước, giá minh bạch.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+<link rel="stylesheet" href="/assets/style.css">
 <style>
-
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --black:#0a0a0a;--white:#fafafa;--gray-100:#f5f5f5;--gray-200:#e8e8e8;
-  --gray-400:#a0a0a0;--gray-600:#606060;--gray-800:#2a2a2a;
-  --accent:#c8a96e;--accent-light:#e8d5a8;
-  --font-display:'Inter',sans-serif;--font-body:'Inter',sans-serif;
-  --radius-sm:8px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;
-  --transition:0.3s cubic-bezier(0.4,0,0.2,1);
-}
-html{scroll-behavior:smooth}
-body{font-family:var(--font-body);background:var(--white);color:var(--black);font-size:15px;line-height:1.6;overflow-x:hidden}
-a{color:inherit}
 
 /* announce + nav */
 nav{position:sticky;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.07)}
@@ -530,40 +528,7 @@ function buyNow(p) {
 }
 </script>
 
-<script>
-/* ── MOBILE DRAWER ── */
-(function(){
-  var drawer = document.getElementById('mobileDrawer');
-  var btn    = document.getElementById('navHamburger');
-  var bg     = document.getElementById('mobileDrawerBg');
-  var closeBtn = document.getElementById('mobileDrawerClose');
-  var mSearch  = document.getElementById('mobileSearchInput');
-  if(!drawer||!btn) return;
-  function open(){
-    drawer.classList.add('open');
-    btn.classList.add('open');
-    document.body.classList.add('drawer-open');
-    if(mSearch) setTimeout(function(){ mSearch.focus(); }, 320);
-  }
-  function close(){
-    drawer.classList.remove('open');
-    btn.classList.remove('open');
-    document.body.classList.remove('drawer-open');
-  }
-  btn.addEventListener('click', function(){ drawer.classList.contains('open') ? close() : open(); });
-  if(bg) bg.addEventListener('click', close);
-  if(closeBtn) closeBtn.addEventListener('click', close);
-  document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
-  if(mSearch){
-    mSearch.addEventListener('keydown', function(e){
-      if(e.key==='Enter'){
-        var q = mSearch.value.trim();
-        if(q) window.location.href = 'danh-sach-san-pham.html?q='+encodeURIComponent(q);
-      }
-    });
-  }
-})();
-</script>
+<script src="/assets/app.js" defer></script>
 
 <!-- MOBILE DRAWER -->
 <div class="mobile-drawer" id="mobileDrawer">
@@ -593,20 +558,7 @@ function buyNow(p) {
   </div>
 </div>
 
-<!-- hp-float-widget : Zalo / Messenger / Gọi -->
-<style>
-.hp-float{position:fixed;bottom:24px;right:20px;z-index:9999;display:flex;flex-direction:column;align-items:center;gap:12px}
-.hp-fbtn{position:relative;width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;text-decoration:none;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.18);transition:transform .2s ease,box-shadow .2s ease;overflow:hidden}
-.hp-fbtn:hover{transform:translateY(-3px) scale(1.06);box-shadow:0 10px 28px rgba(0,0,0,.26)}
-.hp-fbtn img{width:100%;height:100%;object-fit:contain}
-.hp-fbtn.hp-phone{background:linear-gradient(135deg,#11998e,#38ef7d)}
-.hp-fbtn.hp-phone svg{width:24px;height:24px;fill:#fff}
-.hp-fbtn .hp-tip{position:absolute;right:64px;top:50%;transform:translateY(-50%);background:rgba(10,10,10,.88);color:#fff;font-size:12px;font-weight:500;padding:6px 11px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
-.hp-fbtn:hover .hp-tip{opacity:1}
-.hp-fbtn.hp-phone::after{content:'';position:absolute;inset:-4px;border-radius:18px;border:2px solid rgba(56,239,125,.55);animation:hp-ring 1.8s ease-out infinite}
-@keyframes hp-ring{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.35);opacity:0}}
-@media(max-width:600px){.hp-float{bottom:18px;right:14px}.hp-fbtn{width:48px;height:48px}}
-</style>
+<!-- hp-float-widget : Zalo / Messenger / Gọi (CSS dùng chung trong /assets/style.css) -->
 <div class="hp-float">
   <a href="https://m.me/hphone.iphonedanang" target="_blank" rel="noopener" class="hp-fbtn" aria-label="Chat Messenger">
     <span class="hp-tip">Nhắn tin Messenger</span>
@@ -622,95 +574,8 @@ function buyNow(p) {
   </a>
 </div>
 
-<!-- hp-search-autocomplete : dropdown gợi ý sản phẩm ở ô tìm kiếm -->
-<style>
-.nav-search{position:relative}
-.hp-ac{position:absolute;top:calc(100% + 10px);right:0;width:340px;max-width:82vw;background:#fff;border-radius:14px;box-shadow:0 14px 44px rgba(0,0,0,.3);overflow:hidden;z-index:1000;display:none;font-family:var(--font-body,'Inter',Arial,sans-serif);text-align:left}
-.hp-ac.open{display:block}
-.hp-ac-item{display:flex;align-items:center;gap:12px;padding:10px 14px;text-decoration:none;color:#0a0a0a;border-bottom:1px solid #f1f1f1;cursor:pointer;transition:background .15s}
-.hp-ac-item:last-of-type{border-bottom:none}
-.hp-ac-item:hover,.hp-ac-item.active{background:#f5f5f5}
-.hp-ac-thumb{width:44px;height:44px;border-radius:10px;object-fit:cover;background:#f0f0f0;flex-shrink:0}
-.hp-ac-info{min-width:0;flex:1}
-.hp-ac-name{font-size:13px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hp-ac-meta{font-size:12.5px;color:#8a6a30;font-weight:700;margin-top:3px}
-.hp-ac-sub{color:#999;font-weight:400;font-size:11px}
-.hp-ac-foot{display:block;padding:11px 14px;text-align:center;font-size:12px;font-weight:600;color:#0a0a0a;background:#fafafa;text-decoration:none;border-top:1px solid #eee}
-.hp-ac-foot:hover{background:#eee}
-.hp-ac-empty{padding:20px 14px;text-align:center;font-size:13px;color:#999}
-.hp-ac-loading{padding:18px;text-align:center;font-size:12px;color:#bbb}
-@media(max-width:600px){.hp-ac{width:290px}}
-</style>
-<script>
-(function(){
-  var SB='https://pkmigreebudnbfkujplu.supabase.co';
-  var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBrbWlncmVlYnVkbmJma3VqcGx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTAyMjYsImV4cCI6MjA5NTYyNjIyNn0.Bb9Y6-FKshYfmxUrEU8GJfJKnnrbJ--vMtXzAwCHFns';
-  var inputs=document.querySelectorAll('.nav-search input, .mobile-nav-search input, #mobileSearchInput');
-  if(!inputs.length) return;
-  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-
-  Array.prototype.forEach.call(inputs,function(input){
-    var ph=(input.getAttribute('placeholder')||'').toLowerCase();
-    if(ph.indexOf('bài')>=0) return; // bỏ ô tìm bài viết (blog)
-
-    var box=input.closest('.nav-search')||input.closest('.mobile-nav-search')||input.parentElement;
-    if(getComputedStyle(box).position==='static') box.style.position='relative';
-    var dd=document.createElement('div'); dd.className='hp-ac'; box.appendChild(dd);
-    var timer=null,ctrl=null,active=-1,lastQ='',count=0;
-
-    function close(){dd.classList.remove('open');active=-1;}
-    function open(){dd.classList.add('open');}
-
-    function render(list,q){
-      count=list.length;
-      if(!list.length){dd.innerHTML='<div class="hp-ac-empty">Không tìm thấy &ldquo;'+esc(q)+'&rdquo;</div>';open();return;}
-      var html=list.map(function(p,i){
-        var img=p.img?'<img class="hp-ac-thumb" src="'+p.img+'" alt="">':'<div class="hp-ac-thumb"></div>';
-        var sub=[p.storage,p.condition].filter(Boolean).join(' · ');
-        return '<a class="hp-ac-item" href="/'+(p.slug||p.id)+'" data-i="'+i+'">'+img+
-          '<div class="hp-ac-info"><div class="hp-ac-name">'+esc(p.name)+'</div>'+
-          '<div class="hp-ac-meta">'+esc(String(p.price||''))+(p.price?'₫':'')+
-          (sub?' <span class="hp-ac-sub">· '+esc(sub)+'</span>':'')+'</div></div></a>';
-      }).join('');
-      html+='<a class="hp-ac-foot" href="/danh-sach-san-pham?q='+encodeURIComponent(q)+'">Xem tất cả kết quả &rarr;</a>';
-      dd.innerHTML=html;active=-1;open();
-    }
-
-    function search(q){
-      if(ctrl) ctrl.abort();
-      ctrl=new AbortController();
-      dd.innerHTML='<div class="hp-ac-loading">Đang tìm…</div>';open();
-      var url=SB+'/rest/v1/products?select=id,name,slug,price,storage,condition,img&name=ilike.*'+encodeURIComponent(q)+'*&limit=6&order=id.desc';
-      fetch(url,{headers:{apikey:KEY,authorization:'Bearer '+KEY},signal:ctrl.signal})
-        .then(function(r){return r.json();})
-        .then(function(d){ if(input.value.trim()===q) render(Array.isArray(d)?d:[],q); })
-        .catch(function(e){ if(e.name!=='AbortError') dd.innerHTML='<div class="hp-ac-empty">Lỗi tìm kiếm, thử lại.</div>'; });
-    }
-
-    input.setAttribute('autocomplete','off');
-    input.addEventListener('input',function(){
-      var q=input.value.trim();
-      if(timer) clearTimeout(timer);
-      if(q.length<1){close();lastQ='';return;}
-      timer=setTimeout(function(){ if(q!==lastQ){lastQ=q;search(q);} },220);
-    });
-    input.addEventListener('focus',function(){ if(count && input.value.trim()) open(); });
-
-    // capture phase: chặn handler Enter cũ CHỈ khi đang chọn item / dùng phím mũi tên
-    input.addEventListener('keydown',function(e){
-      if(!dd.classList.contains('open')) return;
-      var links=dd.querySelectorAll('.hp-ac-item');
-      if(e.key==='ArrowDown'){e.preventDefault();e.stopImmediatePropagation();active=Math.min(active+1,links.length-1);hl(links);}
-      else if(e.key==='ArrowUp'){e.preventDefault();e.stopImmediatePropagation();active=Math.max(active-1,-1);hl(links);}
-      else if(e.key==='Enter'){ if(active>=0&&links[active]){e.preventDefault();e.stopImmediatePropagation();window.location.href=links[active].getAttribute('href');} }
-      else if(e.key==='Escape'){e.stopImmediatePropagation();close();}
-    },true);
-    function hl(links){ Array.prototype.forEach.call(links,function(l,i){l.classList.toggle('active',i===active);}); if(active>=0&&links[active]) links[active].scrollIntoView({block:'nearest'}); }
-
-    document.addEventListener('click',function(e){ if(!box.contains(e.target)) close(); });
-  });
-})();
-</script>
+<!-- hp-search-autocomplete : dropdown gợi ý sản phẩm (CSS/JS dùng chung trong /assets) -->
+<script src="/assets/search-autocomplete.js" defer></script>
 
 </body>
 </html>
